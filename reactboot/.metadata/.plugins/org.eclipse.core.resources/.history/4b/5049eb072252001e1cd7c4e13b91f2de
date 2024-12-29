@@ -1,0 +1,66 @@
+package com.example.firstproject.controller;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.firstproject.Dto.Weather.AreaRequestDto;
+import com.example.firstproject.Service.WeatherService;
+
+@RestController
+public class Weathercontroller {
+
+	@Autowired
+	private WeatherService weatherservice;
+	/*
+	@GetMapping("/weather.do")
+	public String openWeatherpage() {
+		return "weather";
+	}
+	
+	@PostMapping("/weatherresult")
+	public List<AreaRequestDto> getareastep(AreaRequestDto areaRequestDto){
+		AreaRequestDTO coordinate = this.weatherservice.getCoordinate(areaRequestDto.getAreacode());
+        areaRequestDTO.setNx(coordinate.getNx());
+        areaRequestDTO.setNy(coordinate.getNy());
+
+        List<WeatherDTO> weatherList = this.weatherservice.getWeather(areaRequestDto);
+        return weatherList;
+		
+	}
+
+	*/
+	
+	@GetMapping("/regionsearch")
+	public List<String> weathersearch(@RequestParam String keyword) {
+		System.out.println("검색값" +keyword);
+		List<String> search=weatherservice.weathersearch(keyword);
+		System.out.println("search");
+		
+		return search;
+		
+	}
+
+	@GetMapping("/weatherdata")
+	public String weatherdata(@RequestParam String region) {
+		String reg1=region.split("  ")[0];
+		String reg2=region.split("  ")[1];
+		String reg3=region.split("  ")[2];
+		System.out.println(reg1+"  "+reg2+"  "+reg3);
+		
+		weatherservice.getweatherdata(String reg1,String reg2,String reg3);
+		return reg1;
+	}
+	 @PostMapping(value = "/board/weatherStep.do")
+	    @ResponseBody
+	    public List<AreaRequestDto> getAreaStep(@RequestParam Map<String, String> params)
+	    {
+	        return this.weatherservice.getArea(params);
+	    }
+}

@@ -1,0 +1,31 @@
+package com.example.firstproject.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.firstproject.Dto.Weather.AreaRequestDto;
+
+@RestController
+public class Weathercontroller {
+
+	@Autowired
+	private WeatherService weatherservice
+	
+	@GetMapping("/weather.do")
+	public String openWeatherpage() {
+		return "weather";
+	}
+	@PostMapping("/weatherresult")
+	public List<AreaRequestDto> getareastep(AreaRequestDto areaRequestDto){
+		AreaRequestDTO coordinate = this.weatherservice.getCoordinate(areaRequestDTO.getAreacode());
+        areaRequestDTO.setNx(coordinate.getNx());
+        areaRequestDTO.setNy(coordinate.getNy());
+
+        List<WeatherDTO> weatherList = this.weatherService.getWeather(areaRequestDTO);
+        return weatherList;
+		
+	}
+}

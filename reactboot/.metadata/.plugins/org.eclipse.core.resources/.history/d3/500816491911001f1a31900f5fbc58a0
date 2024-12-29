@@ -1,0 +1,52 @@
+package com.example.firstproject.Entity.StompRoom;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
+import com.example.firstproject.Entity.Address;
+import com.example.firstproject.Entity.CommentEntity;
+import com.example.firstproject.Entity.MemberEntity;
+import com.example.firstproject.Entity.NoticeEntity;
+import com.example.firstproject.Entity.Notification;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class MemberRoom extends BaseTime{
+
+	//중간테이블 manytomnay가 자동으로 만들어주긴하지만 실제론 여기서 필요한 메소드가 있을수도있기때문에 직접만들어야함 ex)업데이트시간같은ㅌ거
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+	@ManyToOne
+	@Cascade(CascadeType.ALL)
+	@JoinColumn(name="member_id")
+	private MemberEntity member;
+	
+	@ManyToOne
+	@Cascade(CascadeType.ALL)
+	@JoinColumn(name="room_id")
+	private Room room;
+
+	
+}

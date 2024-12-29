@@ -1,0 +1,86 @@
+package com.example.firstproject.controller;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.firstproject.Dto.ChatDto.ChatRoomDto;
+import com.example.firstproject.Dto.ChatDto.roomlistresponseDto;
+import com.example.firstproject.Entity.MemberEntity;
+import com.example.firstproject.Entity.StompRoom.MemberRoom;
+import com.example.firstproject.Entity.StompRoom.Room;
+import com.example.firstproject.Repository.MemberRepository;
+import com.example.firstproject.Service.Memberservice.MemberService;
+import com.example.firstproject.Service.chatService.ChatService;
+import com.example.firstproject.configure.PrincipalDetails;
+
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@RestController
+@Slf4j
+@RequiredArgsConstructor
+public class ChatMemberController {
+
+	private final MemberRepository memberrepository;
+	
+	private final ChatService chatservice;
+	//채팅방 만들기 
+	@PostMapping("/createchatroom")
+	public Long createchatroom(@RequestBody ChatRoomDto dto) {//참여자리스트랑 채팅방이름 없으면 기본으로 유저아이디
+		//리스트로 참여목록을 만든다 
+		//리턴값은구지필요한지? 
+		
+		log.info(dto.getRoomname());
+		for(String asd:dto.getMemberlist()) {
+		log.info(asd);
+		}
+		Long roomid=chatservice.createChatroom(dto.getRoomname(),dto.getMemberlist());
+		log.info("완료후룸아이디:"+roomid);
+		return roomid;
+		
+	}
+	//유저의채팅방목록검색 
+	@GetMapping("/findchatroomlist")
+	public List<roomlistresponseDto> findchatroom(Authentication userdata) {
+		log.info("유저데이터:"+userdata.getName());
+		log.info("유저디테일"+userdata.getPrincipal());
+		PrincipalDetails member=(PrincipalDetails) userdata.getPrincipal();
+		Long memberid=member.getMember().getId();
+		
+		MemberEntity members=memberrepository.findById(memberid).orElseThrow();
+		
+		List<roomlistresponseDto> userroomlist=new ArrayList<>(); //리턴할 데이터형식
+		
+		for(MemberRoom list:members.getChatrooms()) {
+			Room roomdata=list.getRoom();
+			log.info("룸데이터:"+roomdata);
+			roomlistresponseDto dto = roomlistresponseDto.builder()
+					.roomid(roomdata.getId())
+					.roomname(roomdata.getRoomname())
+					.namelist(roomdata.getUserlist())
+					.time(roomdata.getUpdatedDate())
+					.build();
+			userroomlist.add(dto);
+		}
+		//람다함수로 
+		//Collections.sort(userroomlist,(a,b)->b.getTime()-a.getTime());
+		//내림차순
+		userroomlist.sort(Comparator.comparing(roomlistresponseDto::getTime));
+		
+		//스트림으로
+		// List<roomlistresponseDto> sortlist=userroomlist.stream().sorted((a,b)->b.getTime()-a.getTime())
+		//		.collect(Collectors.toList());
+		
+		return userroomlist;
+		}
+}

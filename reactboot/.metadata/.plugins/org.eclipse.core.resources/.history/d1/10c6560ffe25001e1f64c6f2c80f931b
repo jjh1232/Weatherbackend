@@ -1,0 +1,176 @@
+package com.example.firstproject.controller;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.firstproject.Dto.MemberDto;
+import com.example.firstproject.Dto.Memberform;
+import com.example.firstproject.Entity.MemberEntity;
+import com.example.firstproject.Service.MemberService;
+
+import lombok.extern.slf4j.Slf4j;
+
+
+@CrossOrigin(origins ="http://localhost:3000")
+@RestController
+@Slf4j
+public class MemberController {
+
+
+	@Autowired
+	MemberService memberservice;
+	
+	@PostMapping(value="/membercreate")
+	public MemberDto Member(@Validated @RequestBody Memberform form) {
+		log.info(form.toString());
+		MemberDto dto= memberservice.membercreate(form);
+		return dto;
+	}
+	
+	@GetMapping(value="/emailcheck")
+	public  Map<String,Object> emailcheck(@RequestParam String email) {
+		log.info(email);
+		
+		
+		Map<String,Object> chemap=new HashMap<String,Object>();
+		Long check = memberservice.findbyemail(email);
+		int em=check.intValue();
+		if(em==1) {
+			chemap.put("check", check);
+			
+			log.info(chemap.toString());
+			
+			return chemap;
+		}
+		else {
+			String authokey=memberservice.Emailauth(email);
+			chemap.put("check", check);
+			chemap.put("authokey", authokey);
+			return chemap;
+		}
+		
+		
+		
+	}
+	
+	@PostMapping("/memberlogin")
+	public Map<String,Object> memberlogin(
+			@RequestBody HashMap<String,Object> reqjsonhashmap
+			,HttpServletResponse res
+			,HttpServletRequest req) {	
+		
+		//responseData
+		
+		//ArrayList<HashMap<String,Object>> data=new ArrayList<HashMap<String,Object>>();
+		/* HttpServletRequest req 이걸로 데이터받아서 함 form data형식 
+		 * HashMap<String,Object> ddata=new HashMap<String,Object>();
+		 * ddata.put("RequestData1", req.getParameter("email"));
+		 * ddata.put("RequestData2", req.getParameter("password"));
+		 * log.info(ddata.toString());
+		 */
+		
+		//response Data
+		
+		HashMap<String, Object> output = new HashMap<String, Object>();
+//		rtnMap.put("data", reqjsonhashmap.get("password"));      
+		String email = reqjsonhashmap.get("email").toString();
+		String password = reqjsonhashmap.get("password").toString();
+		
+		Object result=memberservice.memberlogin(email,password);
+		if(result == null) {
+			output.put("result", "x");
+			log.info(output.toString());
+			return output;
+		}
+		else if(result.equals("x")) {
+			output.put("result","notpass");
+			log.info(output.toString());
+			return output;
+		}
+		else {
+			MemberEntity loginmem=(MemberEntity) result;
+			output.put("member", loginmem);
+			
+			
+			 //쿠키
+			 Cookie cookie=new Cookie("member",loginmem.getName());
+			 cookie.setMaxAge(60*40);
+			cookie.setPath("/");
+			cookie.setSecure(true);
+			  res.addCookie(cookie);
+			/*
+			HttpSession session = req.getSession(true);//세션이이미있으면반환
+			session.setAttribute("loginmember", loginmem);
+			session.setMaxInactiveInterval(3600);*/
+			
+			
+			
+			return output;
+	}}
+
+	@GetMapping("/passwordfind")
+	public String passfind(@RequestParam String email) {
+		Long check=memberservice.findbyemail(email);
+		if(check==0) {
+			return "x";
+		}
+		else {
+			String authokey=memberservice.passfind(email);
+			memberservice.memberpasswordupdate(email,authokey);
+			return "o";
+		}
+	
+		
+		
+	}
+	
+	@PutMapping("/memberupdate/{email}")
+	public String memberupdate(@PathVariable String email,@RequestBody HashMap<String,Object> data) {
+		String name=data.get("name").toString();
+		String password=data.get("password").toString();
+		
+		Optional<MemberDto> opdto=memberservice.findemail(email,name,password);
+		if(opdto==null) {
+			//Map<String,Object> map=new HashMap();
+			//map.put("data", "samepassword");
+			return "같은비밀번호로변경할수없습니다";
+		}
+		else {
+			//Map<String,Object> map=new HashMap();
+			//map.put("data", "success");맵안해도되네
+			return "성공적으로정보를변경하였습니다.다시로그인해주세요";
+		}
+		
+	}
+	
+	@PostMapping("/memberdeletemail")
+	public String memberdeleteemail(@RequestBody HashMap<String,Object> data) {
+		String email=data.get("email").toString();
+		String deletecode=memberservice.deletecodesend(email);
+		return deletecode;
+	
+	}
+	
+	@DeleteMapping("/memberdelete/{email}")
+	public void memberdelete(@PathVariable String email) {
+		memberservice.deletemember(email);
+	}
+	
+}

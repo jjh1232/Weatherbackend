@@ -1,0 +1,131 @@
+package com.example.firstproject.configure;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.example.firstproject.Repository.MemberRepository;
+import com.example.firstproject.Service.JwtService;
+import com.example.firstproject.Service.Memberservice.HistoryService;
+import com.example.firstproject.configure.auth.Authorizationdfilter;
+import com.example.firstproject.configure.auth.authenticationfilter;
+import com.example.firstproject.configure.auth.jwtservicetestfilter;
+import com.example.firstproject.configure.auth.oauth2failservice;
+import com.example.firstproject.configure.auth.oauth2successfilter;
+import com.example.firstproject.configure.websocket.ChatErrorHandler;
+
+@Configuration
+@EnableWebSecurity
+public class securityconfig {
+
+	@Autowired
+	private oauth2loginservice loginservice;
+	
+	@Autowired
+	oauth2successfilter success;
+	
+	@Autowired
+	oauth2failservice fail;
+	
+	@Autowired
+	private JwtService jwtservice;
+
+	@Autowired
+	private MemberRepository repository;
+	
+	@Autowired
+	private BCryptPasswordEncoder encode;
+	
+	@Autowired
+	private HistoryService historyservice;
+
+	//아래스프링security의 필터체인은 인증인가없이 체인을 진행하지만 예외처리로 자동으로넘어가 결국api가실행안됨
+	//따라서 시큐리티필터체인을 생략하기위해서는 웹시큐리티를등록하고 해당주소로 진행시 시큐리티적용을 생략할수있다
+	//웹시큐리티는 http시큐리티의 상위에 있고 이것의 ignoring은 필터체인을 걸리진않지만 각종공격에취약해짐
+	//httpsecurity에서 permit은 인증처리결과를 무시하는것이지 필터체인의적용은 된다 
+	//따라서 websecurity는 보안과 전혀상관없는 로그인과 공개페이지등에만 이용하는게 좋다
+	@Bean 
+	public WebSecurityCustomizer webSecurityCustomizaer() { //2.7버전이상엔선 웹도해야함
+		return (web)->web.ignoring().antMatchers("/open/**");
+				//.antMatchers("/**");
+				
+		//자세한설명링크 
+		//https://velog.io/@ksiisk99/SpringSecurity1
+		
+	}
+
+	
+	
+	
+	@Bean
+	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		
+	
+		
+		
+		http.csrf().disable()
+			.cors()
+			.and()
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			.and()
+			.formLogin().disable()
+			.httpBasic().disable()
+			.authorizeRequests()
+			.antMatchers("/**").permitAll()// 필터체인동작에서 인증/인가예외가발생해도 
+			//exception필터를 거치지 않고 인증객체 존재여부상관없이 api호출이 이루어지는것
+			//지금못쓰는데..이상함
+			.and()
+			.oauth2Login()
+			.authorizationEndpoint() //요청url설정
+			.baseUri("/oauth2/authorization") //이렇게시작하면 요청인것으로 통일설정
+			.and()
+			.redirectionEndpoint() //콜백주소설정
+			.baseUri("/callback/**") //이걸로시작해야 콜백주소로 간다 시큐리티처리할수있게
+									//yml설정에 리다이렉트는또각자
+			.and()
+			.userInfoEndpoint()
+			.userService(loginservice)
+			.and()
+			.successHandler(success)
+			.failureHandler(fail)
+			.and()
+			.apply(new Customfilter1());
+			//.and()
+			//.addFilterBefore(new jwtservicetestfilter(jwtservice), UsernamePasswordAuthenticationFilter.class);
+			
+		
+		return http.build();
+		
+	}
+	
+	
+	//머미리생성해서 매니저주입이안된다는데 잘모루것다
+	public class Customfilter1 extends AbstractHttpConfigurer<Customfilter1,HttpSecurity>{
+
+	public void configure(HttpSecurity http) {
+		//시큐리티객체에 공유된 Authenticationmanegerbuilder인스턴스를검색
+		AuthenticationManager manager=http.getSharedObject(AuthenticationManager.class);
+		
+		http.addFilter(new authenticationfilter(manager,jwtservice,encode,repository,historyservice));
+		http.addFilter(new Authorizationdfilter(manager,repository,jwtservice));
+	}
+	
+	
+	}
+	
+}

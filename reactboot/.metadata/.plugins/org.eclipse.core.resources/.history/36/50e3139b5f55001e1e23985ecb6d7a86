@@ -1,0 +1,5 @@
+package com.example.firstproject.Dto.Weather;
+
+public class Weatherapiresponse {
+
+}

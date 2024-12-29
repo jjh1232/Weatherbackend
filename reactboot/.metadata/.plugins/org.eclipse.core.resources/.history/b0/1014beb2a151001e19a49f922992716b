@@ -1,0 +1,5 @@
+package com.example.firstproject.Service;
+
+public interface WeatherService {
+
+}

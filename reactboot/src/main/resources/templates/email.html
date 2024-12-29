@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<div style="margin:100px;">
+    <h1> 안녕하세요.</h1>
+    <h1> 이메일인증코드입니다.</h1>
+    <br>
+    <p> 아래의 인증완료를 클릭하면 회원가입이완료됩니다!</p>
+    <br>
+
+    <div align="center" style="border:1px solid black; font-family:verdana;">
+        <h3 style="color:blue"> 회원가입 인증 링크 입니다. </h3>
+        <div style="font-size:130%">
+       
+        <a th:href="@{http://localhost:8081/open/member/register(username=
+        ${username},authokey=${code})}"> 
+        인증완료</a>
+         </div>
+    </div>
+    <br/>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+package com.example.firstproject.Service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.example.firstproject.Dto.Weather.AreaRequestDto;
+import com.example.firstproject.Entity.Weather.WeatherdataEntity;
+
+public interface WeatherService {
+
+	
+	List<AreaRequestDto> getArea(Map<String,String> params);
+	
+	List<String> weathersearch(String keyword);
+	
+	List<WeatherdataEntity> getweatherdata(String reg1,String reg2,String reg3);
+	
+	//List<WeatherDto> getWeather(AreaRequestDto areaRequestDto);
+	
+	AreaRequestDto getCoordinate(String areacode);
+	
+	//ResponseEntity<WeatherApiResponseDto> requestWeatherApi(AreaRequestDto arearequestDto);
+}

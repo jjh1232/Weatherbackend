@@ -1,0 +1,13 @@
+package com.example.firstproject.Handler;
+
+import java.util.List;
+
+import com.example.firstproject.Dto.Weather.AreaRequestDto;
+
+public interface WeatherServiceHandler {
+
+	
+	public List<String> weathersearch(String keyword);
+	
+	public List<AreaRequestDto> getweatherdata(String reg1,String reg2,String reg3);
+}

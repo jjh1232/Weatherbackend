@@ -1,0 +1,54 @@
+package com.example.firstproject.Service;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.firstproject.Dto.Weather.AreaRequestDto;
+import com.example.firstproject.Entity.Weather.WeatherdataEntity;
+import com.example.firstproject.Handler.WeatherServiceHandler;
+
+@Service
+public class WeatherServiceimpl implements WeatherService{
+
+	@Autowired
+	private WeatherServiceHandler weatherhandler;
+	
+	@Override
+	public List<AreaRequestDto> getArea(Map<String, String> params) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+
+	@Override
+	public AreaRequestDto getCoordinate(String areacode) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public List<String> weathersearch(String keyword) {
+		// TODO Auto-generated method stub
+		List<String> search=weatherhandler.weathersearch(keyword);
+		
+		return  search;
+	}
+
+
+
+	@Override
+	public List<WeatherdataEntity> getweatherdata(String reg1, String reg2, String reg3) {
+		// TODO Auto-generated method stub
+		weatherhandler.getweatherdata(reg1, reg2, reg3);
+		return null;
+	}
+
+	
+
+}

@@ -1,0 +1,11 @@
+package com.example.firstproject.Handler;
+
+import java.util.List;
+
+public interface WeatherServiceHandler {
+
+	
+	public List<String> weathersearch(String keyword);
+	
+	public List<String> getweatherdata(String reg1,String reg2,String reg3);
+}

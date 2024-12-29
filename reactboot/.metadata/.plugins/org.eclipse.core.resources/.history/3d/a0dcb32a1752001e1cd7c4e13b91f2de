@@ -1,0 +1,20 @@
+package com.example.firstproject.Service;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
+
+import com.example.firstproject.Dto.Weather.AreaRequestDto;
+
+public interface WeatherService {
+
+	
+	List<AreaRequestDto> getArea(Map<String,String> params);
+	
+	List<WeatherDto> getWeather(AreaRequestDto areaRequestDto);
+	
+	AreaRequestDto getCoordinate(String areacode);
+	
+	ResponseEntity<WeatherApiResponseDto> requestWeatherApi(AreaRequestDto arearequestDto);
+}

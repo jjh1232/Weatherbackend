@@ -1,0 +1,118 @@
+package com.example.firstproject.Service;
+
+
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+
+import com.example.firstproject.Dto.Weather.AreaRequestDto;
+import com.example.firstproject.Dto.Weather.Weatherapiresponse;
+import com.example.firstproject.Entity.Weather.WeatherdataEntity;
+import com.example.firstproject.Handler.WeatherServiceHandler;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+@Service
+public class WeatherServiceimpl implements WeatherService{
+
+	@Autowired
+	private WeatherServiceHandler weatherhandler;
+	
+	@Override
+	public List<AreaRequestDto> getArea(Map<String, String> params) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+
+	@Override
+	public AreaRequestDto getCoordinate(String areacode) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public List<String> weathersearch(String keyword) {
+		// TODO Auto-generated method stub
+		List<String> search=weatherhandler.weathersearch(keyword);
+		
+		return  search;
+	}
+
+
+
+	@Override
+	public List<WeatherdataEntity> getweatherdata(String reg1, String reg2, String reg3) throws URISyntaxException, UnsupportedEncodingException {
+		// TODO Auto-generated method stub
+		String servicekey ="1UxOsFtGRc1qt%2FBSr5YDb%2B%2BBfx9rWkUUCg9Pbt8%2BbpYlHmJLRPr4aiWZINe4hGjWTia37Y5QAVtOO9D%2B6HyRFA%3D%3D";
+		String url="http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst";
+		
+		Date currentdate=new Date(System.currentTimeMillis());
+		System.out.println(currentdate.toString());
+		
+		
+		WeatherdataEntity userdata=weatherhandler.getweatherdata(reg1, reg2, reg3);
+		RestTemplate weather=new RestTemplate();
+		HttpHeaders headers=new HttpHeaders();
+		//headers.setContentType(new MediaType("application", "JSON", Charset.forName("UTF-8")));딱히명시없어서혹시햇는데없어도댐
+		StringBuilder builder = new StringBuilder(url);
+		builder.append("?"+"ServiceKey="+servicekey);
+		builder.append("&"+"pageNo="+"1");
+		builder.append("&"+"numOfRows="+"1000");
+		builder.append("&"+"dataType="+"JSON");
+		builder.append("&"+"base_date="+"20230917");
+		builder.append("&"+"base_time="+"1200");
+		builder.append("&"+"nx="+userdata.getGridx());
+		builder.append("&"+"ny="+userdata.getGridy());
+		System.out.println("url값"+builder);
+		URI uri=new URI(builder.toString());
+		
+		HttpEntity<MultiValueMap<String,Object>> asd=new HttpEntity<>(headers);
+		
+		ResponseEntity response=weather.exchange(uri,
+				HttpMethod.GET,
+				asd,
+				String.class
+				);
+		
+		System.out.println(response.getBody());
+		
+		Weatherapiresponse weatherresponse=null;//내부클래스를 static 으로 해줘야하는데 설명좀봐야할듯
+		ObjectMapper obmap=new ObjectMapper();
+		try {
+			weatherresponse=obmap.readValue(response.getBody().toString(), Weatherapiresponse.class);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 List getit=new ArrayList();
+		 
+				System.out.println(weatherresponse.getResponse().getBody().getItems().getItem().get(0));
+				System.out.println(weatherresponse.getResponse().getBody().getItems().getItem().get(1));
+				
+		return null;
+	}
+
+	
+
+}

@@ -1,0 +1,18 @@
+package com.example.firstproject.Repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import com.example.firstproject.Dto.Weather.AreaRequestDto;
+@Repository
+public interface WeatherReposiotry extends JpaRepository<AreaRequestDto, String>{
+
+	
+	
+	@Query(nativeQuery = true,value = "Select concat(step1,\"  \",step2,\"  \",step3,\"  \") as juso from  weatherregion where concat(step1,step2,step3) like '%부산%'")
+	public String weathersearch(String keyword);
+	
+	
+	
+}

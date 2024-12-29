@@ -1,0 +1,59 @@
+package com.example.firstproject.Dto.Weather;
+
+import java.util.List;
+
+import lombok.Data;
+
+@Data
+public class Weatherapiresponse {
+
+	private Response response;
+	
+	@Data
+	public class Response{
+	private WeatherHeader header;
+	
+	private WeatherBody body;
+	
+	
+	@Data
+	public class WeatherHeader{
+		private String resultCode;
+		private String resultMsg;
+	}
+	
+	@Data
+	public class WeatherBody{
+		private String dataType;
+		
+		private Weatheritems items;
+		
+		private int pageNo;
+		private int numOfRows;
+		
+		private int totalCount;
+		
+		@Data
+		public class Weatheritems{
+			
+			private List<Weatheritem> item;
+			
+			
+			@Data
+			public class Weatheritem{
+				
+				private String baseDate;
+				
+				private String baseTime;
+				
+				private String category;
+				private String nx;
+				
+				private String ny;
+				private Double obsrValue;
+			}
+		
+		}
+	}
+	}
+}

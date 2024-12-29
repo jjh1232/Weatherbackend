@@ -1,0 +1,28 @@
+package com.example.firstproject.Handler;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.firstproject.Dto.Weather.AreaRequestDto;
+import com.example.firstproject.Repository.WeatherReposiotry;
+
+@Service
+public class WeatherServiceHandlerImpl implements WeatherServiceHandler{
+
+	@Autowired
+	WeatherReposiotry weatherrepository;
+	
+	@Override
+	public List<String> weathersearch(String keyword) {
+		// TODO Auto-generated method stub
+		List<String> search=weatherrepository.weathersearch(keyword);
+		
+		System.out.println("핸들러 서치"+search.get(0).toString());
+		
+		return search;
+	}
+
+}

@@ -1,0 +1,12 @@
+package te;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class test111 {
+	
+	
+	public void asd() {
+	log.info("음");
+	}
+}
