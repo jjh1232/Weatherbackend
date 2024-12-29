@@ -29,6 +29,8 @@ public class ErrorController {
 		System.out.println(bindresult.getErrorCount());
 		System.out.println(bindresult.getFieldError().getDefaultMessage().toString());
 		System.out.println("url:"+req.getRequestURI());//요청정보에서필요한데이터가져오기
+		
+		System.out.println("깃확인용");
 		return new ResponseEntity<>(message,HttpStatus.BAD_REQUEST);
 	}
 	
