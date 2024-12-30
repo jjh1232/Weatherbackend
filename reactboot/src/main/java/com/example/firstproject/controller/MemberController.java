@@ -233,6 +233,7 @@ public class MemberController {
 		
 		System.out.println("현재닉네임"+dto.getEmail());
 	    System.out.println("현재닉네임"+dto.getName());
+	    System.out.println("멤버주소"+dto.getRegion());
 	    
 	    System.out.println("현재프로파일"+dto.getProfileimage());
 	    System.out.println("현재프로파일"+newprofile);
@@ -243,14 +244,14 @@ public class MemberController {
 	   String profileurl=memberservice.profileimagesave(newprofile, email);
 	   
 	   log.info(profileurl);
-	  member=memberservice.memberupdate(dto.getEmail(),dto.getName(), profileurl);
+	  member=memberservice.memberupdate(dto.getEmail(),dto, profileurl);
 	   if(dto.getProfileimage() !=null) {
 		   log.info("기존프로필이미지삭제");
 		   memberservice.existingprofile(dto.getProfileimage());
 	   }
 	   
 	   }else {
-		 member=memberservice.memberupdate(dto.getEmail(),dto.getName(), dto.profileimage);
+		 member=memberservice.memberupdate(dto.getEmail(),dto, dto.profileimage);
 	   }
 	   
 	   //새유저인포쿠키

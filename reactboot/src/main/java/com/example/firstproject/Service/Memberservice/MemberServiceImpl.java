@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import com.example.firstproject.Dto.MemberDto;
 import com.example.firstproject.Dto.Memberform;
+import com.example.firstproject.Dto.Weather.MemberUpdateDto;
 import com.example.firstproject.Dto.Weather.userregionDto;
 import com.example.firstproject.Dto.follow.findDto;
 import com.example.firstproject.Entity.Address;
@@ -308,17 +309,21 @@ public class MemberServiceImpl implements MemberService{
 
 
 	@Override
-	public MemberEntity memberupdate(String email,String nickname, String profileurl) {
+	public MemberEntity memberupdate(String email,MemberUpdateDto dto, String profileurl) {
 		// TODO Auto-generated method stub
+		Address regions=Address.builder().juso(dto.getRegion()).gridx(dto.getGridx()).gridy(dto.getGridy())
+				.build();
 		MemberEntity member=handler.findemail(email).orElseThrow(()->{
 			return new IllegalArgumentException("이메일이존재하지않아수정실패");
 		});
 		if(profileurl !=null) {
-			member.setNickname(nickname);
+			member.setNickname(dto.name);
 			member.setProfileimg(profileurl);
+			member.setHomeaddress(regions);
 			//닉네임과프로필변경
 		}else {
-			member.setNickname(nickname);
+			member.setNickname(dto.name);
+			member.setHomeaddress(regions);
 			//닉네임만변경
 		}
 		//트랜잭션사용시 리턴될떄 자동 수정(더티체킹)

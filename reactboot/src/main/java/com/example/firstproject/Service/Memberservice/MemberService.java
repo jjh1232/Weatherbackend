@@ -8,6 +8,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import com.example.firstproject.Dto.MemberDto;
 import com.example.firstproject.Dto.Memberform;
+import com.example.firstproject.Dto.Weather.MemberUpdateDto;
 import com.example.firstproject.Dto.follow.findDto;
 import com.example.firstproject.Entity.MemberEntity;
 
@@ -38,7 +39,7 @@ public interface MemberService {
 
 	public String profileimagesave(MultipartFile files,String useremail);
 	
-	public MemberEntity memberupdate(String email,String nickname,String profileurl);
+	public MemberEntity memberupdate(String email,MemberUpdateDto dto,String profileurl);
 	
 	public String existingprofile(String profileurl);
 
