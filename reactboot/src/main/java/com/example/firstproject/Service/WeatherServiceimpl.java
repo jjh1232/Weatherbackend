@@ -82,7 +82,7 @@ public class WeatherServiceimpl implements WeatherService{
 
 	@Override   //콘피그에서만든캐쉬매니저네임
 	@Cacheable(value = "codeCache",key="#reg1+#reg2+#reg3",unless = "#result==null")
-	public List<frontweather> getweatherdata(String reg1, String reg2, String reg3) throws URISyntaxException, UnsupportedEncodingException {
+	public List<frontweather> getweatherdata(String reg1, String reg2, String reg3,String gridx,String gridy) throws URISyntaxException, UnsupportedEncodingException {
 		// TODO Auto-generated method stub
 		String servicekey ="1UxOsFtGRc1qt%2FBSr5YDb%2B%2BBfx9rWkUUCg9Pbt8%2BbpYlHmJLRPr4aiWZINe4hGjWTia37Y5QAVtOO9D%2B6HyRFA%3D%3D";
 		String url="http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst";
@@ -100,8 +100,9 @@ public class WeatherServiceimpl implements WeatherService{
 		String strnowtime=simpleformattime.format(currentdate)+"00";
 		System.out.println("포맷후"+strnowdate);
 		System.out.println("시간"+strnowtime);
+		//그냥파람으로받기
+		//WeatherdataEntity userdata=weatherhandler.getweatherdata(reg1, reg2, reg3);
 		
-		WeatherdataEntity userdata=weatherhandler.getweatherdata(reg1, reg2, reg3);
 		RestTemplate weather=new RestTemplate();
 		HttpHeaders headers=new HttpHeaders();
 		//headers.setContentType(new MediaType("application", "JSON", Charset.forName("UTF-8")));딱히명시없어서혹시햇는데없어도댐
@@ -113,8 +114,8 @@ public class WeatherServiceimpl implements WeatherService{
 		builder.append("&"+"base_date="+strnowdate);
 		builder.append("&"+"base_time="+strnowtime);
 		//builder.append("&"+"base_time="+strnowtime);
-		builder.append("&"+"nx="+userdata.getGridx());
-		builder.append("&"+"ny="+userdata.getGridy());
+		builder.append("&"+"nx="+gridx);
+		builder.append("&"+"ny="+gridy);
 		System.out.println("url값"+builder);
 		URI uri=new URI(builder.toString());
 		
@@ -176,6 +177,7 @@ public class WeatherServiceimpl implements WeatherService{
 			frontweather data4=new frontweather();
 			frontweather data5=new frontweather();
 			frontweather data6=new frontweather();
+			
 			for(WeatherDataDto wea:item) { //쩔수없이 노가다..
 				
 				if(wea.getTime().equals(item.get(0).getTime())){
@@ -342,7 +344,7 @@ public class WeatherServiceimpl implements WeatherService{
 			
 		Page<userregionDto> juso=jusodata.map(m->
 				userregionDto.builder().
-				juso(m.getstep1()+" "+m.getstep2()+" "+m.getstep3())
+				region(m.getstep1()+"  "+m.getstep2()+"  "+m.getstep3())
 				.gridx(m.getgridx())
 				.gridy(m.getgridy())
 				.build()

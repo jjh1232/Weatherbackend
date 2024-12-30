@@ -464,7 +464,7 @@ public class NoticeServiceImpl implements NoticeService {
 		log.info("날짜포맷생성"+filesaveData);
 		String fileforder=filesaveData.replace("/", File.separator);
 		log.info("날짜포맷경로sepa:"+fileforder);
-		File savefolder=new File("D:/study프로그램/react/bootproject/public/noticeimages",fileforder);
+		File savefolder=new File("D:/프로젝트간단정리/weathertw/frontend/bootproject/public/noticeimages",fileforder);
 		if(savefolder.exists()==false) {//폴더가 있으면 트루없으면폴스
 			savefolder.mkdirs();
 			
@@ -498,7 +498,7 @@ public class NoticeServiceImpl implements NoticeService {
 	public void saveimagecut(String id,String path) {
 		// TODO Auto-generated method stub
 		log.info("서비스단"+path);
-		String pathre="D:/study프로그램/react/bootproject/public/"+path;
+		String pathre="D:/프로젝트간단정리/weathertw/frontend/bootproject/public"+path;
 		String repath=pathre.replace("/", File.separator);
 		log.info("수정패스:"+repath);
 		Path deletepath=Paths.get(repath);
@@ -593,7 +593,7 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public ResponseEntity getdetach(detachVo detach) {
 		// TODO Auto-generated method stub
-		Path filepath = Paths.get("D:/study프로그램/react/bootproject/public"+detach.getUri());
+		Path filepath = Paths.get("D:/프로젝트간단정리/weathertw/frontend/bootproject/public"+detach.getUri());
 		try {
 			UrlResource resource=new UrlResource(filepath.toUri());
 			//한글파일이름 꺠질수있으니인코딩

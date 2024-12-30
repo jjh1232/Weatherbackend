@@ -37,7 +37,7 @@ public class Naverprovider implements Provider{
 
 	@Override
 	public String getnickname() {
-		return (String) attributes.get("nickname");
+		return (String) attributes.get("name");
 	}
 	
 }

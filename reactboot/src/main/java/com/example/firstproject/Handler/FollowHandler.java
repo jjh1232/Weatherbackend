@@ -54,5 +54,10 @@ public class FollowHandler {
 		
 		return followrepository.findBytoMemberandfavorite(member.getId());
 	}
+	//연관관계 삭제용
+	public List<FollowEntity>  findbytofrom(Long userid) {
+		List<FollowEntity> followentity=followrepository.findByTomemberOrfindByFrommember(userid);
+	return followentity;
+	}
 	
 }

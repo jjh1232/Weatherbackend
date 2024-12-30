@@ -12,6 +12,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException.BadRequest;
 
+import com.example.firstproject.Entity.Address;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Repository.MemberRepository;
 import com.example.firstproject.configure.auth.provider.Googleprovider;
@@ -76,13 +77,17 @@ public class oauth2loginservice extends DefaultOAuth2UserService{
 			String provider=oauth2user.provider();
 			String providerid=oauth2user.prividerid();
 			String auth="Y";
+			//디폴트값이안들어가서직접
+			Address address=Address.builder().juso("서울특별시  종로구  청운효자동").gridx("60").gridy("127")
+					.build();
 			entity=MemberEntity.builder()
 					.username(username)
 					
-					.nickname(name)
+					.nickname(nickname)
 					.password(password)
 					.role(role)
 					.auth(auth)
+					.homeaddress(address)
 					.provider(provider)
 					.providerid(providerid)
 					.build();

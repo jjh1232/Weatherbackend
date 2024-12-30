@@ -7,10 +7,12 @@ import org.hibernate.annotations.ColumnDefault;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Embeddable  //임베디드
 @NoArgsConstructor
+@Getter
 public class Address {
 
 	@Column(name="adress")

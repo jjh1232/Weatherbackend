@@ -63,7 +63,11 @@ public class Weathercontroller {
 	//레기온 데이터로 당일 날씨 가져오기 
 	@GetMapping("/open/weatherdata")
 	@Logoutano 
-	public List<frontweather> weatherdata(@RequestParam(defaultValue = "서울특별시  종로구  청운효자동") String region) throws URISyntaxException, UnsupportedEncodingException {
+	public List<frontweather> weatherdata(
+			@RequestParam(defaultValue = "서울특별시  종로구  청운효자동") String region,
+			@RequestParam(defaultValue = "60") String gridx,
+			@RequestParam(defaultValue = "127") String gridy
+			) throws URISyntaxException, UnsupportedEncodingException {
 		log.info(region.toString());
 		System.out.println("날씨데이터시작");
 		
@@ -77,7 +81,7 @@ public class Weathercontroller {
 		
 		System.out.println(reg1+"  "+reg2+"  "+reg3);
 		
-		List<frontweather> info=weatherservice.getweatherdata(reg1,reg2,reg3);
+		List<frontweather> info=weatherservice.getweatherdata(reg1,reg2,reg3,gridx,gridy);
 	
 		return info;
 	

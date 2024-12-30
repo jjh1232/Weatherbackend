@@ -65,7 +65,9 @@ public class oauth2successfilter implements AuthenticationSuccessHandler{
 		
 			json.put("nickname",principal.getMember().getNickname());
 			
-			json.put("region", principal.getMember().getHomeaddress());
+			json.put("region", principal.getMember().getHomeaddress().getJuso());
+			json.put("gridx", principal.getMember().getHomeaddress().getGridx());
+			json.put("gridy", principal.getMember().getHomeaddress().getGridy());
 			json.put("profileimg", principal.getMember().getProfileimg());
 			//쿠키에 = 등의기호와 한글은 저장안되기때문에 URLEncoder사용해서 저장
 			   Cookie cookie1=new Cookie("Acesstoken",jwttoken);

@@ -261,7 +261,9 @@ public class MemberController {
 	
 		json.put("nickname",member.getNickname());
 		
-		json.put("region", member.getHomeaddress());
+		json.put("region", member.getHomeaddress().getJuso());
+		json.put("gridx", member.getHomeaddress().getGridx());
+		json.put("gridy", member.getHomeaddress().getGridy());
 		json.put("profileimg", member.getProfileimg());
 		
 	   Cookie idCookie=new Cookie("userinfo",URLEncoder.encode(json.toJSONString(),"UTF-8"));

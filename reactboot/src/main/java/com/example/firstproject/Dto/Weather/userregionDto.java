@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class userregionDto {
 
 	
-	String juso;
+	String region;
 	
 	String gridx;
 	

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import javax.transaction.Transactional;
 
@@ -26,6 +27,8 @@ import com.example.firstproject.Dto.follow.findDto;
 import com.example.firstproject.Entity.Address;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
+import com.example.firstproject.Entity.follow.FollowEntity;
+import com.example.firstproject.Handler.FollowHandler;
 import com.example.firstproject.Handler.MemberHandler;
 import com.example.firstproject.Handler.WeatherServiceHandler;
 import com.example.firstproject.Repository.EmitterRepository;
@@ -59,6 +62,7 @@ public class MemberServiceImpl implements MemberService{
 	
 	private final Memberdeleterepository deleterepo;
 	
+	private final FollowHandler followhandler;
 	@Override
 	public MemberDto membercreate(Memberform form) {
 		// TODO Auto-generated method stub
@@ -208,14 +212,24 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public String deletemember(String username,String authkey) {
 		// TODO Auto-generated method stub
+		MemberEntity entity=handler.findemail(username).get();
 		log.info("유저네임:"+username);
 		log.info("인증키:"+authkey);
 		String authkeyconfirm=deleterepo.getdeletecode(username);
 		log.info("저장소확인:"+authkeyconfirm);
+		
+		//일단 팔로우 연관관계 삭제
+		List<FollowEntity> followlist=followhandler.findbytofrom(entity.getId());
+		
+		followlist.stream().forEach(System.out::println);
+		
 		if(authkey.equals(authkeyconfirm)) {
 			log.info("인증키가같습니다!");
+			for (FollowEntity fols:followlist) {
+				fols.setFrommember(null);
+				fols.setTomember(null);
+			}
 			
-			MemberEntity entity=handler.findemail(username).get();
 			handler.deletemember(entity);
 		}
 		else {
@@ -276,7 +290,7 @@ public class MemberServiceImpl implements MemberService{
 		// TODO Auto-generated method stub
 		
 		
-		File savefolder=new File("D:/study프로그램/react/bootproject/public/userprofileimg");
+		File savefolder=new File("D:/프로젝트간단정리/weathertw/frontend/bootproject/public/userprofileimg");
 		if(savefolder.exists()==false) {//폴더가 있으면 트루없으면폴스
 			savefolder.mkdirs();
 			

@@ -25,4 +25,8 @@ public interface FollowRepository extends JpaRepository<FollowEntity,Long>{
 	@Query("select f from FollowEntity f where f.frommember.id=:from and f.favorite =true")
 	List<FollowEntity> findBytoMemberandfavorite(@Param("from") Long userid);
 
+	//두개안되나..걍네이티브씀
+	@Query("select f from FollowEntity f where f.frommember.id=:userid Or f.tomember.id=:userid")
+	List <FollowEntity> findByTomemberOrfindByFrommember(Long userid);
+
 }

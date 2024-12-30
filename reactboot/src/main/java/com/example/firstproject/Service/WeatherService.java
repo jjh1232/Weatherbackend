@@ -22,7 +22,7 @@ public interface WeatherService {
 	
 	List<String> weathersearch(String keyword,int page);
 	
-	List<frontweather> getweatherdata(String reg1,String reg2,String reg3) throws URISyntaxException, UnsupportedEncodingException;
+	List<frontweather> getweatherdata(String reg1,String reg2,String reg3,String gridx,String gridy) throws URISyntaxException, UnsupportedEncodingException;
 	
 	//List<WeatherDto> getWeather(AreaRequestDto areaRequestDto);
 	
