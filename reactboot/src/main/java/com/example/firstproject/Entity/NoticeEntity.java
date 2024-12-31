@@ -18,6 +18,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.ColumnDefault;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -55,6 +57,8 @@ public class NoticeEntity {
 	@Column(nullable= false)
 	private String text;
 	
+	
+	
 	@OneToMany(mappedBy = "notice",fetch = FetchType.LAZY,cascade=CascadeType.ALL)
 	@Builder.Default
 	private List<detachfile> files=new ArrayList<detachfile>();
@@ -71,6 +75,13 @@ public class NoticeEntity {
 	@OneToMany(mappedBy = "notice",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	private List<CommentEntity> comments;
 	
+	
+	//=================w좋아요 게시글에선삭제하면 좋아요없어지는게맞는듯===============================
+	@OneToMany(mappedBy="notice",fetch = FetchType.LAZY,cascade =CascadeType.ALL)
+	private List<FavoriteEntity> likeuser;
+	
+	
+	
 	public void addcomments(CommentEntity comment) {
 		comments.add(comment);
 	}
@@ -83,7 +94,14 @@ public class NoticeEntity {
 		files.remove(id);
 		
 	}
-	public NoticeDto toDto(Long num,String username,String nickname,String title, String text,LocalDateTime red, List<CommentEntity> comments,List<detachfile> detachfiles) {
+	
+
+	public NoticeDto toDto(Long num,
+			String username,String nickname
+			,String title, String text,LocalDateTime red,
+			List<CommentEntity> comments,
+			List<detachfile> detachfiles
+			,int likes) {
 		return NoticeDto.builder()
 				.num(num)
 				.username(username)
@@ -93,10 +111,13 @@ public class NoticeEntity {
 				.red(red)
 				.comments(comments)
 				.detachfiles(detachfiles)
+				.likes(likes)
 				.build();
 	}
 	
-	public NoticeDto toDto(Long num,String username,String nickname,String title, String text,LocalDateTime red) {
+	public NoticeDto toDto(Long num,String username,String nickname
+			,String title, String text,LocalDateTime red
+			,int likes) {
 		return NoticeDto.builder()
 				.num(num)
 				.username(username)
@@ -104,7 +125,7 @@ public class NoticeEntity {
 				.title(title)
 				.text(text)
 				.red(red)
-				
+				.likes(likes)
 				.build();
 	}
 }

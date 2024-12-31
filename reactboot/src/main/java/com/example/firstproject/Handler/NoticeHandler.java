@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.example.firstproject.Entity.CommentEntity;
+import com.example.firstproject.Entity.FavoriteEntity;
+import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
 import com.example.firstproject.Entity.detachfile;
 
@@ -40,4 +42,9 @@ public interface NoticeHandler {
 	
 	public void deletecomment(Long id);
 	public List<detachfile> getdatachfiles(String path);
+	
+	public Optional<FavoriteEntity>  findbynoticeanduser(MemberEntity member,NoticeEntity notice);
+
+	public void favoritesave(FavoriteEntity favorite);
+	public void favoritedelete(FavoriteEntity favorite);
 }

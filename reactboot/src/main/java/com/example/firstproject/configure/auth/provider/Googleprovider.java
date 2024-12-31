@@ -37,7 +37,7 @@ public class Googleprovider implements Provider{
 	@Override
 	public String getnickname() {
 		// TODO Auto-generated method stub
-		return (String) user.get("nickname");
+		return (String) user.get("name");
 	}
 
 }

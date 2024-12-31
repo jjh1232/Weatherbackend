@@ -14,6 +14,7 @@ import com.example.firstproject.Dto.Noticeform;
 import com.example.firstproject.Dto.detachVo;
 import com.example.firstproject.Dto.Comment.CommentDto;
 import com.example.firstproject.Dto.Comment.Commentform;
+import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
 
 public interface NoticeService {
@@ -50,4 +51,8 @@ public interface NoticeService {
 	public void garbagefiles();
 	
 	public ResponseEntity getdetach(detachVo detach);
+	
+	public ResponseEntity noticelikes(MemberEntity member,Long noticeid);
+	
+	public boolean noticelikecheck(MemberEntity member,Long noticeid);
 }

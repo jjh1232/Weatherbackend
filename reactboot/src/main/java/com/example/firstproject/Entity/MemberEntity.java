@@ -75,6 +75,8 @@ public class MemberEntity {
 	@OneToMany(mappedBy="member",fetch=FetchType.LAZY,cascade = CascadeType.ALL)
 	private List<NoticeEntity> notices;
 	
+	// @OnDelete(action = OnDeleteAction.SET_NULL) 이함수로 널값으로 게시글으남길수도있다
+	//근데이쪽이아니라 연관관계주인인 many쪽에 근데 null로나와도 이상한거같아서 처리고민중
 	@OneToMany(mappedBy="member",fetch=FetchType.LAZY,cascade = CascadeType.ALL)
 	private List<CommentEntity> comments;
 	
@@ -84,7 +86,7 @@ public class MemberEntity {
 	
 	//채팅방목록 //다대다관계는 실무에서못쓰고 중간테이블을 만들어 일대다로 생성
 	//주인필드의 변수명 얘는이거수정안하고조회만
-	@OneToMany(mappedBy="member", fetch=FetchType.LAZY,cascade = CascadeType.ALL)
+	@OneToMany(mappedBy="member", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<MemberRoom> chatrooms;
 	
 	
@@ -107,13 +109,22 @@ public class MemberEntity {
 	
 	 //팔로우================================================
 	
-    @OneToMany(mappedBy = "frommember", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "frommember", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<FollowEntity> followings;
 
-    @OneToMany(mappedBy = "tomember", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tomember", fetch = FetchType.LAZY ,cascade = CascadeType.ALL)
     private List<FollowEntity> followers;
 	
-	public MemberDto toDto(Long id,String username,String password,String nickname,String role,String refreshtoken,String provider,String providerid,Address region,LocalDateTime red,LocalDateTime updatered) {
+    //좋아요 기능---============================================
+    //일단cascade로 하는데  @noDelete 로 null주려해도메소드가안뜸;
+    //아니면 일일히 다 null값으로 set해야하는데 그거까지않닌거같아서
+    @OneToMany(mappedBy="member",fetch= FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<FavoriteEntity> favorite;
+    
+	public MemberDto toDto(Long id,
+			String username,String password,String nickname,String role,
+			String refreshtoken,String provider,String providerid,Address region,
+			LocalDateTime red,LocalDateTime updatered) {
 		return MemberDto.builder()
 				.id(id)
 				.username(username)

@@ -309,6 +309,27 @@ public class MainController {
 		return null;
 	}
 	
+	//==================================게시글좋아요기능 =================================
+	@GetMapping("/noticelike/{noticeid}")
+	public ResponseEntity<Object> likenotice(@PathVariable Long noticeid,Authentication authentication ) {
+		PrincipalDetails detailes=(PrincipalDetails) authentication.getPrincipal();
+		//MemberEntity member=detailes.getMember();
+		log.info("게시판좋아요컨트롤러"+detailes.getMember().getUsername());
+		ResponseEntity message=noticeservice.noticelikes(detailes.getMember(), noticeid);
+		
+		
+		return message;
+		
+	}
+	
+	//=================좋아요 체크해봄=====================================
+	@GetMapping("/noticelikecheck/{noticeid}")
+	public ResponseEntity<Object> noticelikecheck(@PathVariable Long noticeid,Authentication authentication ) {
+		PrincipalDetails detailes=(PrincipalDetails) authentication.getPrincipal();
+		boolean like= noticeservice.noticelikecheck(detailes.getMember(), noticeid);
+		
+		return ResponseEntity.ok(like);
+	}
 	
 	
 }

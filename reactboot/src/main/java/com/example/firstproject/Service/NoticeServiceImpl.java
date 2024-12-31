@@ -43,6 +43,7 @@ import com.example.firstproject.Dto.removetestDto;
 import com.example.firstproject.Dto.Comment.CommentDto;
 import com.example.firstproject.Dto.Comment.Commentform;
 import com.example.firstproject.Entity.CommentEntity;
+import com.example.firstproject.Entity.FavoriteEntity;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
 import com.example.firstproject.Entity.detachfile;
@@ -78,7 +79,13 @@ public class NoticeServiceImpl implements NoticeService {
 		Page<NoticeEntity> entity = noticehandler.read(page);
 		
 		Page<NoticeDto> dtlist =entity.map
-				(m->m.toDto(m.getId(), m.getUsername(),m.getNickname(), m.getTitle(),m.getText(),m.getRed()));
+				(m->m.toDto(m.getId(),
+						m.getUsername(),m.getNickname(), m.getTitle()
+						,m.getText(),m.getRed()
+						,m.getLikeuser().size()
+						)
+						
+						);
 		
 		//Page<NoticeDto> dtlist=entity.map(m-> new NoticeDto());페이지맵핑dto로
 
@@ -138,7 +145,7 @@ public class NoticeServiceImpl implements NoticeService {
 	   List<NoticeEntity> entity =noticehandler.readfd(page);
 	   List<NoticeDto> dtlist=new ArrayList();
 	  for(NoticeEntity a:entity) { NoticeDto dto =a.toDto(a.getId(),a.getUsername(),
-	  a.getNickname(),a.getTitle(),a.getText(),a.getRed());
+	  a.getNickname(),a.getTitle(),a.getText(),a.getRed(),a.getLikeuser().size());
 	  dtlist.add(dto); }
 	  
 	 return dtlist; 
@@ -299,7 +306,9 @@ public class NoticeServiceImpl implements NoticeService {
 		Entity.setFiles(newdetach);
 		
 		NoticeDto dto =Entity.toDto(Entity.getId(),Entity.getUsername(),
-				  Entity.getNickname(),Entity.getTitle(),Entity.getText(),Entity.getRed());;
+				  Entity.getNickname(),Entity.getTitle(),Entity.getText(),Entity.getRed()
+				,Entity.getLikeuser().size()  
+				);;
 				  
 				  return dto;
 	}
@@ -320,7 +329,8 @@ public class NoticeServiceImpl implements NoticeService {
 						Entity.getText(),
 						Entity.getRed(),
 						Entity.getComments(),
-						Entity.getFiles());
+						Entity.getFiles(), 
+						Entity.getLikeuser().size());
 		
 		
 		
@@ -610,6 +620,40 @@ public class NoticeServiceImpl implements NoticeService {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	@Override
+	@Transactional
+	public ResponseEntity noticelikes(MemberEntity member, Long noticeid) {
+		// TODO Auto-generated method stub
+		log.info("좋아요서비스단시작");
+		NoticeEntity notice=noticehandler.findbyId(noticeid).orElseThrow(()->new IllegalAccessError("no notice"));
+		Optional<FavoriteEntity> found=noticehandler.findbynoticeanduser(member, notice);
+		if(found.isEmpty()) {
+			//좋아요누른적없음
+			FavoriteEntity likes=FavoriteEntity.builder()
+					.member(member)
+					.notice(notice)
+					.build();
+			noticehandler.favoritesave(likes);
+			//int likesnum=notice.getLikeuser().size()+1;
+			return ResponseEntity.ok("좋아요");
+		}else {
+			//좋아요누른적있음
+			noticehandler.favoritedelete(found.get());
+			//int likesnum=notice.getLikeuser().size()-1;
+			return ResponseEntity.ok("좋아요해제");
+		}
+		
+	}
+
+	@Override
+	public boolean noticelikecheck(MemberEntity member, Long noticeid) {
+		// TODO Auto-generated method stub
+		NoticeEntity notice=noticehandler.findbyId(noticeid).orElseThrow(()->new IllegalAccessError("no notice"));
+		boolean like=!noticehandler.findbynoticeanduser(member, notice).isEmpty();
+		return like;
+		
 	}
 	}
 	 

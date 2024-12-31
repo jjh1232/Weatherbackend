@@ -9,10 +9,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.firstproject.Entity.CommentEntity;
+import com.example.firstproject.Entity.FavoriteEntity;
+import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
 import com.example.firstproject.Entity.detachfile;
 import com.example.firstproject.Repository.CommentRepository;
 import com.example.firstproject.Repository.DetachfileRepository;
+import com.example.firstproject.Repository.LikeRepository;
 import com.example.firstproject.Repository.NoticeRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -30,6 +33,8 @@ public class NoticeHandlerImpl implements NoticeHandler{
 	private CommentRepository commentrepository;
 	
 	private final DetachfileRepository detachrepo;
+	
+	private final LikeRepository likerepository;
 		
 	@Override
 	public Page<NoticeEntity> read(Pageable page) {
@@ -175,6 +180,40 @@ public class NoticeHandlerImpl implements NoticeHandler{
 		// TODO Auto-generated method stub
 		List<detachfile> file=detachrepo.findByPathContaining(path);//데이터날짜로찾자
 		return file;
+	}
+
+
+
+	@Override
+	public Optional<FavoriteEntity>  findbynoticeanduser(MemberEntity member, NoticeEntity notice) {
+		// TODO Auto-generated method stub
+		log.info("좋아요핸들러");
+		Optional<FavoriteEntity> found=likerepository.findByNoticeAndMember(notice,member);
+		
+		return found;
+	
+	}
+
+
+
+	
+
+
+
+	@Override
+	public void favoritesave(FavoriteEntity favorite) {
+		// TODO Auto-generated method stub
+		log.info("좋아요핸들러");
+		likerepository.save(favorite);
+	}
+
+
+
+	@Override
+	public void favoritedelete(FavoriteEntity favorite) {
+		// TODO Auto-generated method stub
+		log.info("좋아요해제핸들러");
+		likerepository.delete(favorite);
 	}
 	 
 

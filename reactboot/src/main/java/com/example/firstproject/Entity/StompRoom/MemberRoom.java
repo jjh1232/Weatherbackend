@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import com.example.firstproject.Entity.Address;
 import com.example.firstproject.Entity.CommentEntity;
@@ -47,7 +49,7 @@ public class MemberRoom extends BaseTime{
 	//@Cascade(CascadeType.PERSIST)
 	@JoinColumn(name="member_id")//이거자기컬럼이름이고 주인외래키지정은 referencedColumnName의default값임
 								//그냥실행되는이유는 선언한값이 엔티티에있으면알아서하기때문
-	@JsonIgnore//멤버에서멤버룸을ㅊ자고또여기서멤버를찾는 무한참조가일어남 때문에 여기서 null을주는 이거써야함				
+	@JsonIgnore//멤버에서멤버룸을ㅊ자고또여기서멤버를찾는 무한참조가일어남 때문에 여기서 null을주는 이거써야함	
 	private MemberEntity member;
 	
 	@ManyToOne

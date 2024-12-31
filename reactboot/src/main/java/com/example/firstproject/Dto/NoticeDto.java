@@ -30,6 +30,7 @@ public class NoticeDto {
 	private String nickname;
 	private String title;
 	private String text;
+	private int likes;
 	private LocalDateTime red;
 	
 	private List<CommentEntity> comments;
@@ -45,6 +46,7 @@ public class NoticeDto {
 		 text=entity.getText();
 		 red=entity.getRed();
 		 comments=entity.getComments();
+		 likes=entity.getLikeuser().size();
 		 detachfiles=entity.getFiles();
 	}
 	
