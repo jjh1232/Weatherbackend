@@ -83,6 +83,8 @@ public class NoticeServiceImpl implements NoticeService {
 						m.getUsername(),m.getNickname(), m.getTitle()
 						,m.getText(),m.getRed()
 						,m.getLikeuser().size()
+						,m.getTemp(),m.getSky(),m.getPty(),m.getRain()
+						
 						)
 						
 						);
@@ -145,7 +147,9 @@ public class NoticeServiceImpl implements NoticeService {
 	   List<NoticeEntity> entity =noticehandler.readfd(page);
 	   List<NoticeDto> dtlist=new ArrayList();
 	  for(NoticeEntity a:entity) { NoticeDto dto =a.toDto(a.getId(),a.getUsername(),
-	  a.getNickname(),a.getTitle(),a.getText(),a.getRed(),a.getLikeuser().size());
+	  a.getNickname(),a.getTitle(),a.getText(),a.getRed(),a.getLikeuser().size()
+	  ,a.getTemp(),a.getSky(),a.getPty(),a.getRain()
+			  );
 	  dtlist.add(dto); }
 	  
 	 return dtlist; 
@@ -167,7 +171,10 @@ public class NoticeServiceImpl implements NoticeService {
 			 			.title(form.getTitle())
 			 			.text(form.getText())
 			 			.member(member)
-			 			
+			 			.temp(form.getTemp())
+			 			.sky(form.getSky())
+			 			.pty(form.getPty())
+			 			.rain(form.getRain())
 			 			.build();
 	 log.info(form.getFiles().toString());
 	 if(form.getFiles() != null) {
@@ -307,7 +314,8 @@ public class NoticeServiceImpl implements NoticeService {
 		
 		NoticeDto dto =Entity.toDto(Entity.getId(),Entity.getUsername(),
 				  Entity.getNickname(),Entity.getTitle(),Entity.getText(),Entity.getRed()
-				,Entity.getLikeuser().size()  
+				,Entity.getLikeuser().size(),
+				Entity.getTemp(),Entity.getSky(),Entity.getPty(),Entity.getRain()
 				);;
 				  
 				  return dto;
@@ -330,7 +338,9 @@ public class NoticeServiceImpl implements NoticeService {
 						Entity.getRed(),
 						Entity.getComments(),
 						Entity.getFiles(), 
-						Entity.getLikeuser().size());
+						Entity.getLikeuser().size(),
+						Entity.getTemp(),Entity.getSky(),Entity.getPty(),Entity.getRain()
+								);
 		
 		
 		

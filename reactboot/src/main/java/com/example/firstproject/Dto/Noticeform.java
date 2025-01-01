@@ -37,5 +37,9 @@ public class Noticeform {
 	@NotBlank (message="비었어") //빈문자 스페이스있는거안되
 	private String text;
 	
+	private String temp;
+	private String sky;
+	private String pty;
+	private String rain;
 	private List<datachfiledto> files;
 }

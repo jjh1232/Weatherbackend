@@ -55,7 +55,12 @@ public class mailsandservice {
 			if(type.equals("deletemail")) {
 				mimemessagehelper.setText(setContext(emailmessage.getTo(), authkey, type),true);
 			}
+			
+			
 			javamailsender.send(mimeMessage);
+		
+			
+			
 			return authkey;
 		} catch (MessagingException e) {
 			// TODO Auto-generated catch block

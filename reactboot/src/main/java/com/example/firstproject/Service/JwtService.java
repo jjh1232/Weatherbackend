@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +26,8 @@ public class JwtService {
 	@Autowired
 	private MemberRepository memberrepository;
 	
-	private String secretkey="skdjfkjsdklfjdsklfjklsdjfkljskemtklemwrklwmekrjkjrio3i3jirjk3kr";
+	//@value()는 빈주입전이라안된다함
+	private String secretkey= "${sercret.jwtkey}";
 	
 	
 	//토큰생성 이건 com0 라이브러리를 사용했음 
@@ -48,7 +50,7 @@ public class JwtService {
 		
 		return JWT.create()
 			.withSubject("refreshtoken")
-			.withExpiresAt(new Date(System.currentTimeMillis()+(1000*60*60*12)))
+			.withExpiresAt(new Date(System.currentTimeMillis()+(1000*60*60*24)))
 			.sign(Algorithm.HMAC512(secretkey));
 
 	}

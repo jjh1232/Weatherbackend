@@ -56,7 +56,15 @@ public class NoticeEntity {
 	private String title;
 	@Column(nullable= false)
 	private String text;
-	
+	//날씨
+	@Column(nullable= false)
+	private String temp;
+	@Column(nullable= false)
+	private String sky;
+	@Column(nullable= false)
+	private String pty;
+	@Column(nullable= false)
+	private String rain;
 	
 	
 	@OneToMany(mappedBy = "notice",fetch = FetchType.LAZY,cascade=CascadeType.ALL)
@@ -101,7 +109,7 @@ public class NoticeEntity {
 			,String title, String text,LocalDateTime red,
 			List<CommentEntity> comments,
 			List<detachfile> detachfiles
-			,int likes) {
+			,int likes,String temp,String sky,String pty,String rain) {
 		return NoticeDto.builder()
 				.num(num)
 				.username(username)
@@ -112,12 +120,16 @@ public class NoticeEntity {
 				.comments(comments)
 				.detachfiles(detachfiles)
 				.likes(likes)
+				.temp(temp)
+				.sky(sky)
+				.pty(pty)
+				.rain(rain)
 				.build();
 	}
 	
 	public NoticeDto toDto(Long num,String username,String nickname
 			,String title, String text,LocalDateTime red
-			,int likes) {
+			,int likes,String temp,String sky,String pty,String rain) {
 		return NoticeDto.builder()
 				.num(num)
 				.username(username)
@@ -126,6 +138,10 @@ public class NoticeEntity {
 				.text(text)
 				.red(red)
 				.likes(likes)
+				.temp(temp)
+				.sky(sky)
+				.pty(pty)
+				.rain(rain)
 				.build();
 	}
 }

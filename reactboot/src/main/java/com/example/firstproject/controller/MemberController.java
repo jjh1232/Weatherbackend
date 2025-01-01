@@ -18,6 +18,7 @@ import javax.validation.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -204,16 +205,12 @@ public class MemberController {
 	
 	//비밀번호 찾기 임시비번발급 
 	@GetMapping("/open/passwordfind")
-	public String passfind(@RequestParam String email) {
-		Long check=memberservice.findbyemail(email);
-		if(check==0) {
-			return "x";
-		}
-		else {
-			String authokey=memberservice.passfind(email);
-			memberservice.memberpasswordupdate(email,authokey);
-			return "o";
-		}
+	public ResponseEntity passfind(@RequestParam String email) {
+		
+			String msg=memberservice.passfind(email);
+			//memberservice.memberpasswordupdate(email,authokey);
+			
+			return ResponseEntity.ok(msg);		
 	
 		
 		

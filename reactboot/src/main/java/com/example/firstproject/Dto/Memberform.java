@@ -46,4 +46,6 @@ public class Memberform {
 	private String region;
 	private String gridx;
 	private String gridy;
+	
+	
 }

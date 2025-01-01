@@ -69,7 +69,7 @@ public class MemberServiceImpl implements MemberService{
 		
 	
 		
-		String newpass=passen.encode(form.getPassword());
+		String newpass=passen.encode(form.getPassword());//시큐리티로그인도 인코딩해줌
 		Address regions=Address.builder().juso(form.getRegion()).gridx(form.getGridx()).gridy(form.getGridy())
 		.build();
 		
@@ -171,16 +171,27 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public String passfind(String username) {
 		// TODO Auto-generated method stub
-		Optional<MemberEntity> op=handler.findemail(username);
-		MemberEntity entity=op.get();
-		//메일서비스 일단보류 
+		MemberEntity entity=handler.findemail(username).orElseThrow(()->{
+			return new IllegalArgumentException("이메일이존재하지않아수정실패");
+		});
+		
+		if(!entity.getProvider().equals("mypage")) {
+			
+			String msg ="타사이트로그인서비아이디입니다!"
+					+ " 타사이트로그인으로 접속해주세요!";
+			return msg;
+		}
+		
+		
+		//메일서비스 
 		EmailMessage mail=EmailMessage.builder()
 				.to(entity.getUsername())
 				.subject("임시비밀번호발급")
 				.build();
 		String authkey=mailservice.sendmail(mail, "passfind");
-		
-		return authkey;
+		handler.passwordupdate(username, authkey);
+		String msg="이메일로 비밀번호를 보냈습니다!";
+		return msg;
 	}
 
 	@Override
@@ -202,9 +213,14 @@ public class MemberServiceImpl implements MemberService{
 	public String deletecodesend(String username) {
 		// TODO Auto-generated method stub
 		log.info(username+"님 delete이메일발송!");
+		
 		EmailMessage deletemail=EmailMessage.builder().to(username).subject("삭제코드발급").build();
+		
+		
 		String authkey=mailservice.sendmail(deletemail, "deletemail");
+		
 		log.info("인증키:"+authkey);
+		
 		deleterepo.memberdeletecodesave(username, authkey);
 		return authkey;
 	}

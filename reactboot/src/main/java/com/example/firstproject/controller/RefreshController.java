@@ -46,6 +46,7 @@ public class RefreshController {
 					log.info("12시간이내에만료임 재발급");
 					//새리프레쉬토큰생성후 유저데이터에 셋한다
 					String newrefreshtoken=jwtservice.createrefreshtoken();
+					System.out.println("재발급한리프레쉬토큰"+newrefreshtoken);
 					jwtservice.Setrefreshtoken(principal.getUsername(), newrefreshtoken);
 					response.addHeader("Authorization", newjwttoken);
 					response.addHeader("Refreshtoken",newrefreshtoken);

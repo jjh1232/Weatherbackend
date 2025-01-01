@@ -1,0 +1,1334 @@
+2024-12-31 12:07:17.377 INFO  [background-preinit] [o.h.validator.internal.util.Version] - HV000001: Hibernate Validator 6.2.3.Final
+2024-12-31 12:07:17.387 INFO  [main] [c.e.firstproject.ReactbootApplication] - Starting ReactbootApplication using Java 17.0.4.1 on DESKTOP-DBMRCI3 with PID 8636 (C:\Users\dlwjd\git\Weatherbackend\reactboot\target\classes started by leejung in C:\Users\dlwjd\git\Weatherbackend\reactboot)
+2024-12-31 12:07:17.391 INFO  [main] [c.e.firstproject.ReactbootApplication] - No active profile set, falling back to 1 default profile: "default"
+2024-12-31 12:07:18.660 INFO  [main] [o.s.d.r.c.RepositoryConfigurationDelegate] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-31 12:07:18.836 INFO  [main] [o.s.d.r.c.RepositoryConfigurationDelegate] - Finished Spring Data repository scanning in 166 ms. Found 11 JPA repository interfaces.
+2024-12-31 12:07:19.769 INFO  [main] [o.s.b.w.embedded.tomcat.TomcatWebServer] - Tomcat initialized with port(s): 8081 (http)
+2024-12-31 12:07:19.782 INFO  [main] [o.apache.coyote.http11.Http11NioProtocol] - Initializing ProtocolHandler ["http-nio-8081"]
+2024-12-31 12:07:19.783 INFO  [main] [org.apache.catalina.core.StandardService] - Starting service [Tomcat]
+2024-12-31 12:07:19.783 INFO  [main] [org.apache.catalina.core.StandardEngine] - Starting Servlet engine: [Apache Tomcat/9.0.63]
+2024-12-31 12:07:19.979 INFO  [main] [o.a.c.c.C.[Tomcat].[localhost].[/]] - Initializing Spring embedded WebApplicationContext
+2024-12-31 12:07:19.979 INFO  [main] [o.s.b.w.s.c.ServletWebServerApplicationContext] - Root WebApplicationContext: initialization completed in 2462 ms
+2024-12-31 12:07:20.236 INFO  [main] [o.hibernate.jpa.internal.util.LogHelper] - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-31 12:07:20.301 INFO  [main] [org.hibernate.Version] - HHH000412: Hibernate ORM core version 5.6.9.Final
+2024-12-31 12:07:20.497 INFO  [main] [org.hibernate.annotations.common.Version] - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2024-12-31 12:07:20.628 INFO  [main] [com.zaxxer.hikari.HikariDataSource] - HikariPool-1 - Starting...
+2024-12-31 12:07:21.021 INFO  [main] [com.zaxxer.hikari.HikariDataSource] - HikariPool-1 - Start completed.
+2024-12-31 12:07:21.062 INFO  [main] [org.hibernate.dialect.Dialect] - HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2024-12-31 12:07:22.271 INFO  [main] [o.h.e.t.j.p.i.JtaPlatformInitiator] - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2024-12-31 12:07:22.282 INFO  [main] [o.s.o.j.LocalContainerEntityManagerFactoryBean] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-31 12:07:23.815 INFO  [main] [c.e.firstproject.configure.CashConfig] - 캐쉬콘피그시작
+2024-12-31 12:07:24.432 INFO  [main] [o.s.s.web.DefaultSecurityFilterChain] - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@6517bc6b, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@53d3d604, org.springframework.security.web.context.SecurityContextPersistenceFilter@64e6cdad, org.springframework.security.web.header.HeaderWriterFilter@5232cec1, org.springframework.web.filter.CorsFilter@44eda25b, org.springframework.security.web.authentication.logout.LogoutFilter@7701b695, org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter@5ae5a507, org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter@1a370c7c, com.example.firstproject.configure.auth.authenticationfilter@5e3a577a, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@1ff35ee7, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@6965c32, com.example.firstproject.configure.auth.Authorizationdfilter@4b38d912, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@362109d0, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4075c0d8, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@626e5554, org.springframework.security.web.session.SessionManagementFilter@283240b0, org.springframework.security.web.access.ExceptionTranslationFilter@6461c673, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@7442be61]
+2024-12-31 12:07:24.450 WARN  [main] [o.s.s.c.a.web.builders.WebSecurity] - You are asking Spring Security to ignore Ant [pattern='/open/**']. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2024-12-31 12:07:24.450 INFO  [main] [o.s.s.web.DefaultSecurityFilterChain] - Will not secure Ant [pattern='/open/**']
+2024-12-31 12:07:24.598 WARN  [main] [o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration] - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-31 12:07:25.192 INFO  [main] [o.apache.coyote.http11.Http11NioProtocol] - Starting ProtocolHandler ["http-nio-8081"]
+2024-12-31 12:07:25.221 INFO  [main] [o.s.b.w.embedded.tomcat.TomcatWebServer] - Tomcat started on port(s): 8081 (http) with context path ''
+2024-12-31 12:07:25.223 INFO  [main] [o.s.m.s.b.SimpleBrokerMessageHandler] - Starting...
+2024-12-31 12:07:25.223 INFO  [main] [o.s.m.s.b.SimpleBrokerMessageHandler] - BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@5b71ccf2]]
+2024-12-31 12:07:25.224 INFO  [main] [o.s.m.s.b.SimpleBrokerMessageHandler] - Started.
+2024-12-31 12:07:25.230 INFO  [main] [o.s.s.a.ScheduledAnnotationBeanPostProcessor] - More than one TaskScheduler bean exists within the context, and none is named 'taskScheduler'. Mark one of them as primary or name it 'taskScheduler' (possibly as an alias); or implement the SchedulingConfigurer interface and call ScheduledTaskRegistrar#setScheduler explicitly within the configureTasks() callback: [messageBrokerTaskScheduler, defaultSockJsTaskScheduler]
+2024-12-31 12:07:25.236 INFO  [main] [c.e.firstproject.ReactbootApplication] - Started ReactbootApplication in 8.476 seconds (JVM running for 9.507)
+2024-12-31 12:07:25.248 INFO  [pool-2-thread-1] [c.e.f.Service.NoticeServiceImpl] - 경로의 파일 가져오기
+2024-12-31 12:07:25.249 INFO  [pool-2-thread-1] [c.e.f.Service.NoticeServiceImpl] - 현재시간-/noticeimages/2024/12/30
+2024-12-31 12:07:25.250 INFO  [pool-2-thread-1] [c.e.f.Service.NoticeServiceImpl] - 패스:D:\study프로그램\react\bootproject\public\noticeimages\2024\12\30
+2024-12-31 12:07:25.255 ERROR [pool-2-thread-1] [o.s.s.s.TaskUtils$LoggingErrorHandler] - Unexpected error occurred in scheduled task
+java.lang.NullPointerException: Cannot read the array length because "filenames" is null
+	at com.example.firstproject.Service.NoticeServiceImpl.garbagefiles(NoticeServiceImpl.java:539)
+	at com.example.firstproject.Service.NoticeServiceImpl$$FastClassBySpringCGLIB$$e9c1e310.invoke(<generated>)
+	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:793)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:388)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:708)
+	at com.example.firstproject.Service.NoticeServiceImpl$$EnhancerBySpringCGLIB$$d1d39b1e.garbagefiles(<generated>)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRunnable.java:84)
+	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.runAndReset(FutureTask.java:305)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:305)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+2024-12-31 12:08:24.576 INFO  [MessageBroker-1] [o.s.w.s.c.WebSocketMessageBrokerStats] - WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 1, active threads = 1, queued tasks = 0, completed tasks = 0]
+2024-12-31 12:35:31.560 INFO  [RMI TCP Connection(2)-127.0.0.1] [o.s.b.a.SpringApplicationAdminMXBeanRegistrar$SpringApplicationAdmin] - Application shutdown requested.
+2024-12-31 12:35:31.562 INFO  [RMI TCP Connection(2)-127.0.0.1] [o.s.m.s.b.SimpleBrokerMessageHandler] - Stopping...
+2024-12-31 12:35:31.562 INFO  [RMI TCP Connection(2)-127.0.0.1] [o.s.m.s.b.SimpleBrokerMessageHandler] - BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@5b71ccf2]]
+2024-12-31 12:35:31.562 INFO  [RMI TCP Connection(2)-127.0.0.1] [o.s.m.s.b.SimpleBrokerMessageHandler] - Stopped.
+2024-12-31 12:35:31.593 INFO  [RMI TCP Connection(2)-127.0.0.1] [o.s.o.j.LocalContainerEntityManagerFactoryBean] - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-31 12:35:31.595 INFO  [RMI TCP Connection(2)-127.0.0.1] [com.zaxxer.hikari.HikariDataSource] - HikariPool-1 - Shutdown initiated...
+2024-12-31 12:35:31.604 INFO  [RMI TCP Connection(2)-127.0.0.1] [com.zaxxer.hikari.HikariDataSource] - HikariPool-1 - Shutdown completed.
+2024-12-31 12:35:35.924 INFO  [background-preinit] [o.h.validator.internal.util.Version] - HV000001: Hibernate Validator 6.2.3.Final
+2024-12-31 12:35:35.944 INFO  [main] [c.e.firstproject.ReactbootApplication] - Starting ReactbootApplication using Java 17.0.4.1 on DESKTOP-DBMRCI3 with PID 17808 (C:\Users\dlwjd\git\Weatherbackend\reactboot\target\classes started by leejung in C:\Users\dlwjd\git\Weatherbackend\reactboot)
+2024-12-31 12:35:35.945 INFO  [main] [c.e.firstproject.ReactbootApplication] - No active profile set, falling back to 1 default profile: "default"
+2024-12-31 12:35:37.146 INFO  [main] [o.s.d.r.c.RepositoryConfigurationDelegate] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-31 12:35:37.354 INFO  [main] [o.s.d.r.c.RepositoryConfigurationDelegate] - Finished Spring Data repository scanning in 197 ms. Found 11 JPA repository interfaces.
+2024-12-31 12:35:38.405 INFO  [main] [o.s.b.w.embedded.tomcat.TomcatWebServer] - Tomcat initialized with port(s): 8081 (http)
+2024-12-31 12:35:38.416 INFO  [main] [o.apache.coyote.http11.Http11NioProtocol] - Initializing ProtocolHandler ["http-nio-8081"]
+2024-12-31 12:35:38.417 INFO  [main] [org.apache.catalina.core.StandardService] - Starting service [Tomcat]
+2024-12-31 12:35:38.417 INFO  [main] [org.apache.catalina.core.StandardEngine] - Starting Servlet engine: [Apache Tomcat/9.0.63]
+2024-12-31 12:35:38.610 INFO  [main] [o.a.c.c.C.[Tomcat].[localhost].[/]] - Initializing Spring embedded WebApplicationContext
+2024-12-31 12:35:38.610 INFO  [main] [o.s.b.w.s.c.ServletWebServerApplicationContext] - Root WebApplicationContext: initialization completed in 2601 ms
+2024-12-31 12:35:38.885 INFO  [main] [o.hibernate.jpa.internal.util.LogHelper] - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-31 12:35:38.969 INFO  [main] [org.hibernate.Version] - HHH000412: Hibernate ORM core version 5.6.9.Final
+2024-12-31 12:35:39.193 INFO  [main] [org.hibernate.annotations.common.Version] - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2024-12-31 12:35:39.329 INFO  [main] [com.zaxxer.hikari.HikariDataSource] - HikariPool-1 - Starting...
+2024-12-31 12:35:39.718 INFO  [main] [com.zaxxer.hikari.HikariDataSource] - HikariPool-1 - Start completed.
+2024-12-31 12:35:39.758 INFO  [main] [org.hibernate.dialect.Dialect] - HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2024-12-31 12:35:41.129 INFO  [main] [o.h.e.t.j.p.i.JtaPlatformInitiator] - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2024-12-31 12:35:41.140 INFO  [main] [o.s.o.j.LocalContainerEntityManagerFactoryBean] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-31 12:35:42.761 INFO  [main] [c.e.firstproject.configure.CashConfig] - 캐쉬콘피그시작
+2024-12-31 12:35:43.383 INFO  [main] [o.s.s.web.DefaultSecurityFilterChain] - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@537e52de, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@59eff566, org.springframework.security.web.context.SecurityContextPersistenceFilter@3d9dc84d, org.springframework.security.web.header.HeaderWriterFilter@200cbb63, org.springframework.web.filter.CorsFilter@1277a6a1, org.springframework.security.web.authentication.logout.LogoutFilter@2acbbee4, org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter@1b914e36, org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter@8850865, com.example.firstproject.configure.auth.authenticationfilter@4fe87cb9, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@45c73e09, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@6e212f38, com.example.firstproject.configure.auth.Authorizationdfilter@4843b35f, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@52e2e426, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@d65ba64, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@672e4658, org.springframework.security.web.session.SessionManagementFilter@7a7698f4, org.springframework.security.web.access.ExceptionTranslationFilter@378456cb, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@e8ef60b]
+2024-12-31 12:35:43.392 WARN  [main] [o.s.s.c.a.web.builders.WebSecurity] - You are asking Spring Security to ignore Ant [pattern='/open/**']. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2024-12-31 12:35:43.392 INFO  [main] [o.s.s.web.DefaultSecurityFilterChain] - Will not secure Ant [pattern='/open/**']
+2024-12-31 12:35:43.538 WARN  [main] [o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration] - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-31 12:35:44.227 INFO  [main] [o.apache.coyote.http11.Http11NioProtocol] - Starting ProtocolHandler ["http-nio-8081"]
+2024-12-31 12:35:44.265 INFO  [main] [o.s.b.w.embedded.tomcat.TomcatWebServer] - Tomcat started on port(s): 8081 (http) with context path ''
+2024-12-31 12:35:44.267 INFO  [main] [o.s.m.s.b.SimpleBrokerMessageHandler] - Starting...
+2024-12-31 12:35:44.268 INFO  [main] [o.s.m.s.b.SimpleBrokerMessageHandler] - BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@d2161b6]]
+2024-12-31 12:35:44.269 INFO  [main] [o.s.m.s.b.SimpleBrokerMessageHandler] - Started.
+2024-12-31 12:35:44.278 INFO  [main] [o.s.s.a.ScheduledAnnotationBeanPostProcessor] - More than one TaskScheduler bean exists within the context, and none is named 'taskScheduler'. Mark one of them as primary or name it 'taskScheduler' (possibly as an alias); or implement the SchedulingConfigurer interface and call ScheduledTaskRegistrar#setScheduler explicitly within the configureTasks() callback: [messageBrokerTaskScheduler, defaultSockJsTaskScheduler]
+2024-12-31 12:35:44.292 INFO  [main] [c.e.firstproject.ReactbootApplication] - Started ReactbootApplication in 8.977 seconds (JVM running for 10.251)
+2024-12-31 12:35:44.309 INFO  [pool-2-thread-1] [c.e.f.Service.NoticeServiceImpl] - 경로의 파일 가져오기
+2024-12-31 12:35:44.311 INFO  [pool-2-thread-1] [c.e.f.Service.NoticeServiceImpl] - 현재시간-/noticeimages/2024/12/30
+2024-12-31 12:35:44.311 INFO  [pool-2-thread-1] [c.e.f.Service.NoticeServiceImpl] - 패스:D:\study프로그램\react\bootproject\public\noticeimages\2024\12\30
+2024-12-31 12:35:44.318 ERROR [pool-2-thread-1] [o.s.s.s.TaskUtils$LoggingErrorHandler] - Unexpected error occurred in scheduled task
+java.lang.NullPointerException: Cannot read the array length because "filenames" is null
+	at com.example.firstproject.Service.NoticeServiceImpl.garbagefiles(NoticeServiceImpl.java:539)
+	at com.example.firstproject.Service.NoticeServiceImpl$$FastClassBySpringCGLIB$$e9c1e310.invoke(<generated>)
+	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:793)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:388)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:708)
+	at com.example.firstproject.Service.NoticeServiceImpl$$EnhancerBySpringCGLIB$$d1d39b1e.garbagefiles(<generated>)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRunnable.java:84)
+	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.runAndReset(FutureTask.java:305)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:305)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+2024-12-31 12:36:43.520 INFO  [MessageBroker-1] [o.s.w.s.c.WebSocketMessageBrokerStats] - WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 1, active threads = 1, queued tasks = 0, completed tasks = 0]
+2024-12-31 12:40:01.390 INFO  [http-nio-8081-exec-1] [o.a.c.c.C.[Tomcat].[localhost].[/]] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-31 12:40:01.391 INFO  [http-nio-8081-exec-1] [o.s.web.servlet.DispatcherServlet] - Initializing Servlet 'dispatcherServlet'
+2024-12-31 12:40:01.397 INFO  [http-nio-8081-exec-1] [o.s.web.servlet.DispatcherServlet] - Completed initialization in 6 ms
+2024-12-31 12:40:01.485 INFO  [http-nio-8081-exec-2] [c.e.f.controller.Weathercontroller] - 서울특별시  종로구  청운효자동
+2024-12-31 12:40:01.486 INFO  [http-nio-8081-exec-2] [c.e.f.controller.Weathercontroller] - 서울특별시
+2024-12-31 12:40:01.487 INFO  [http-nio-8081-exec-2] [c.e.f.controller.Weathercontroller] - 종로구
+2024-12-31 12:40:01.487 INFO  [http-nio-8081-exec-2] [c.e.f.controller.Weathercontroller] - 청운효자동
+2024-12-31 12:40:01.487 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(Page com.example.firstproject.controller.MainController.search(String,String,int))
+2024-12-31 12:40:01.487 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/open/noticesearch
+2024-12-31 12:40:01.488 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 12:40:01.488 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 127.0.0.1
+2024-12-31 12:40:01.488 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:127.0.0.1
+2024-12-31 12:40:01.498 INFO  [http-nio-8081-exec-1] [c.e.f.controller.MainController] - 키워드널 검색어가아님
+2024-12-31 12:40:01.616 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:Page com.example.firstproject.controller.MainController.search(String,String,int) 걸린시간:136ms
+2024-12-31 12:40:02.267 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:List com.example.firstproject.controller.Weathercontroller.weatherdata(String,String,String) 걸린시간:787ms
+2024-12-31 13:03:07.983 INFO  [http-nio-8081-exec-4] [c.e.f.controller.Weathercontroller] - 서울특별시  종로구  청운효자동
+2024-12-31 13:03:07.985 INFO  [http-nio-8081-exec-4] [c.e.f.controller.Weathercontroller] - 서울특별시
+2024-12-31 13:03:07.985 INFO  [http-nio-8081-exec-4] [c.e.f.controller.Weathercontroller] - 종로구
+2024-12-31 13:03:07.986 INFO  [http-nio-8081-exec-4] [c.e.f.controller.Weathercontroller] - 청운효자동
+2024-12-31 13:03:07.989 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:List com.example.firstproject.controller.Weathercontroller.weatherdata(String,String,String) 걸린시간:6ms
+2024-12-31 13:03:08.001 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(Page com.example.firstproject.controller.MainController.search(String,String,int))
+2024-12-31 13:03:08.001 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/open/noticesearch
+2024-12-31 13:03:08.002 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:03:08.003 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 127.0.0.1
+2024-12-31 13:03:08.004 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:127.0.0.1
+2024-12-31 13:03:08.006 INFO  [http-nio-8081-exec-5] [c.e.f.controller.MainController] - 키워드널 검색어가아님
+2024-12-31 13:03:08.015 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:Page com.example.firstproject.controller.MainController.search(String,String,int) 걸린시간:14ms
+2024-12-31 13:03:14.670 INFO  [http-nio-8081-exec-7] [c.e.f.configure.oauth2loginservice] - 유저정보{id=PQvw5IohHQHAr7NPOdwCPK4X_dhBUR-9c2Tfr_DBxKI, nickname=dlwjdwn****, email=dlwjdwns424@naver.com, name=이정준}
+2024-12-31 13:03:14.708 INFO  [http-nio-8081-exec-7] [c.e.f.configure.oauth2loginservice] - 타사로그인서비스
+2024-12-31 13:03:14.823 INFO  [http-nio-8081-exec-7] [c.e.f.S.Memberservice.HistoryService] - X-FORWARDED-FOR : null
+2024-12-31 13:03:14.823 INFO  [http-nio-8081-exec-7] [c.e.f.S.Memberservice.HistoryService] - Proxy-Client-IP : null
+2024-12-31 13:03:14.823 INFO  [http-nio-8081-exec-7] [c.e.f.S.Memberservice.HistoryService] - WL-Proxy-Client-IP : null
+2024-12-31 13:03:14.823 INFO  [http-nio-8081-exec-7] [c.e.f.S.Memberservice.HistoryService] - HTTP_CLIENT_IP : null
+2024-12-31 13:03:14.823 INFO  [http-nio-8081-exec-7] [c.e.f.S.Memberservice.HistoryService] - HTTP_X_FORWARDED_FOR : null
+2024-12-31 13:03:14.823 INFO  [http-nio-8081-exec-7] [c.e.f.S.Memberservice.HistoryService] - getRemoteAddr : 0:0:0:0:0:0:0:1
+2024-12-31 13:03:14.824 INFO  [http-nio-8081-exec-7] [c.e.f.S.Memberservice.HistoryService] - Result : IP Address : 0:0:0:0:0:0:0:1
+2024-12-31 13:03:14.860 INFO  [http-nio-8081-exec-7] [c.e.f.S.Memberservice.HistoryService] - 로그인히스토리저장성공
+2024-12-31 13:03:15.770 INFO  [http-nio-8081-exec-8] [c.e.f.controller.Weathercontroller] - 부산광역시  남구  대연제5동
+2024-12-31 13:03:15.771 INFO  [http-nio-8081-exec-8] [c.e.f.controller.Weathercontroller] - 부산광역시
+2024-12-31 13:03:15.771 INFO  [http-nio-8081-exec-8] [c.e.f.controller.Weathercontroller] - 남구
+2024-12-31 13:03:15.771 INFO  [http-nio-8081-exec-8] [c.e.f.controller.Weathercontroller] - 대연제5동
+2024-12-31 13:03:15.789 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(Page com.example.firstproject.controller.MainController.search(String,String,int))
+2024-12-31 13:03:15.791 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/open/noticesearch
+2024-12-31 13:03:15.792 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:03:15.792 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 127.0.0.1
+2024-12-31 13:03:15.792 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:127.0.0.1
+2024-12-31 13:03:15.793 INFO  [http-nio-8081-exec-2] [c.e.f.controller.MainController] - 키워드널 검색어가아님
+2024-12-31 13:03:15.800 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:Page com.example.firstproject.controller.MainController.search(String,String,int) 걸린시간:13ms
+2024-12-31 13:03:15.853 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(SseEmitter com.example.firstproject.controller.SSEController.sse(Authentication))
+2024-12-31 13:03:15.854 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/ssesub
+2024-12-31 13:03:15.855 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:03:15.855 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 0:0:0:0:0:0:0:1
+2024-12-31 13:03:15.855 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:0:0:0:0:0:0:0:1
+2024-12-31 13:03:15.859 INFO  [http-nio-8081-exec-3] [c.e.f.controller.FollowController] - 팔로우리스트
+2024-12-31 13:03:15.872 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:SseEmitter com.example.firstproject.controller.SSEController.sse(Authentication) 걸린시간:20ms
+2024-12-31 13:03:15.883 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followlist(Authentication) 걸린시간:31ms
+2024-12-31 13:03:15.947 INFO  [http-nio-8081-exec-8] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:List com.example.firstproject.controller.Weathercontroller.weatherdata(String,String,String) 걸린시간:177ms
+2024-12-31 13:03:18.620 INFO  [http-nio-8081-exec-5] [c.e.f.controller.FollowController] - 팔로워리스트
+2024-12-31 13:03:18.625 INFO  [http-nio-8081-exec-5] [c.e.firstproject.Handler.FollowHandler] - 팔로워찾기
+2024-12-31 13:03:18.631 INFO  [http-nio-8081-exec-5] [c.e.f.S.Followservice.FollowService] - 팔로워없음!
+2024-12-31 13:03:18.631 INFO  [http-nio-8081-exec-5] [c.e.firstproject.Handler.FollowHandler] - 팔로워찾기
+2024-12-31 13:03:18.634 INFO  [http-nio-8081-exec-5] [c.e.f.S.Followservice.FollowService] - 내가팔로우한애없음
+2024-12-31 13:03:18.635 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followerlist(Authentication) 걸린시간:15ms
+2024-12-31 13:03:19.889 INFO  [http-nio-8081-exec-7] [c.e.f.S.Followservice.FollowService] - 리스트가없습니다!
+2024-12-31 13:03:19.891 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.favoritelist(Authentication) 걸린시간:11ms
+2024-12-31 13:03:21.667 INFO  [http-nio-8081-exec-9] [c.e.f.controller.ChatMemberController] - 유저데이터:dlwjdwns424@naver.com
+2024-12-31 13:03:21.667 INFO  [http-nio-8081-exec-9] [c.e.f.controller.ChatMemberController] - 유저디테일com.example.firstproject.configure.PrincipalDetails@67c05ba0
+2024-12-31 13:03:21.685 INFO  [http-nio-8081-exec-9] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:List com.example.firstproject.controller.ChatMemberController.findchatroom(Authentication) 걸린시간:21ms
+2024-12-31 13:03:22.492 INFO  [http-nio-8081-exec-3] [c.e.f.controller.FollowController] - 팔로우리스트
+2024-12-31 13:03:22.498 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followlist(Authentication) 걸린시간:6ms
+2024-12-31 13:03:24.425 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - ㄹ
+2024-12-31 13:03:24.426 INFO  [http-nio-8081-exec-1] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:03:24.439 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:03:24.439 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:14ms
+2024-12-31 13:03:25.077 INFO  [http-nio-8081-exec-8] [c.e.f.controller.FollowController] - 입력값업슴!
+2024-12-31 13:03:25.078 INFO  [http-nio-8081-exec-8] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:1ms
+2024-12-31 13:03:25.742 INFO  [http-nio-8081-exec-4] [c.e.f.controller.FollowController] - g
+2024-12-31 13:03:25.743 INFO  [http-nio-8081-exec-4] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:03:25.746 INFO  [http-nio-8081-exec-4] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:03:25.746 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:03:26.470 INFO  [http-nio-8081-exec-5] [c.e.f.controller.FollowController] - gm
+2024-12-31 13:03:26.471 INFO  [http-nio-8081-exec-5] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:03:26.473 INFO  [http-nio-8081-exec-5] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:03:26.474 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:03:26.736 INFO  [http-nio-8081-exec-6] [c.e.f.controller.FollowController] - gma
+2024-12-31 13:03:26.736 INFO  [http-nio-8081-exec-7] [c.e.f.controller.FollowController] - gmai
+2024-12-31 13:03:26.737 INFO  [http-nio-8081-exec-6] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:03:26.737 INFO  [http-nio-8081-exec-7] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:03:26.740 INFO  [http-nio-8081-exec-6] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:03:26.740 INFO  [http-nio-8081-exec-7] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:03:26.741 INFO  [http-nio-8081-exec-6] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:5ms
+2024-12-31 13:03:26.741 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:5ms
+2024-12-31 13:03:26.933 INFO  [http-nio-8081-exec-10] [c.e.f.controller.FollowController] - gmail
+2024-12-31 13:03:26.934 INFO  [http-nio-8081-exec-10] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:03:26.936 INFO  [http-nio-8081-exec-10] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:03:26.937 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:03:28.584 INFO  [http-nio-8081-exec-9] [c.e.f.controller.FollowController] - gmai
+2024-12-31 13:03:28.585 INFO  [http-nio-8081-exec-9] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:03:28.588 INFO  [http-nio-8081-exec-9] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:03:28.588 INFO  [http-nio-8081-exec-9] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:03:28.842 INFO  [http-nio-8081-exec-2] [c.e.f.controller.FollowController] - gma
+2024-12-31 13:03:28.843 INFO  [http-nio-8081-exec-2] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:03:28.846 INFO  [http-nio-8081-exec-2] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:03:28.846 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:03:28.859 INFO  [http-nio-8081-exec-3] [c.e.f.controller.FollowController] - gm
+2024-12-31 13:03:28.859 INFO  [http-nio-8081-exec-3] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:03:28.862 INFO  [http-nio-8081-exec-3] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:03:28.862 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:3ms
+2024-12-31 13:03:28.888 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - g
+2024-12-31 13:03:28.889 INFO  [http-nio-8081-exec-1] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:03:28.892 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:03:28.892 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:03:28.920 INFO  [http-nio-8081-exec-8] [c.e.f.controller.FollowController] - 입력값업슴!
+2024-12-31 13:03:28.920 INFO  [http-nio-8081-exec-8] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:0ms
+2024-12-31 13:03:30.263 INFO  [http-nio-8081-exec-4] [c.e.f.controller.FollowController] - ㅇ
+2024-12-31 13:03:30.264 INFO  [http-nio-8081-exec-4] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:03:30.267 INFO  [http-nio-8081-exec-4] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:03:30.267 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:03:30.872 INFO  [http-nio-8081-exec-5] [c.e.f.controller.FollowController] - 입력값업슴!
+2024-12-31 13:03:30.873 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:1ms
+2024-12-31 13:03:31.135 INFO  [http-nio-8081-exec-7] [c.e.f.controller.FollowController] - d
+2024-12-31 13:03:31.137 INFO  [http-nio-8081-exec-7] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:03:31.140 INFO  [http-nio-8081-exec-7] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:03:31.140 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:5ms
+2024-12-31 13:03:31.282 INFO  [http-nio-8081-exec-6] [c.e.f.controller.FollowController] - dl
+2024-12-31 13:03:31.283 INFO  [http-nio-8081-exec-6] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:03:31.287 INFO  [http-nio-8081-exec-6] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:03:31.287 INFO  [http-nio-8081-exec-6] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:5ms
+2024-12-31 13:03:31.323 INFO  [http-nio-8081-exec-10] [c.e.f.controller.FollowController] - dlw
+2024-12-31 13:03:31.324 INFO  [http-nio-8081-exec-10] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:03:31.327 INFO  [http-nio-8081-exec-10] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:03:31.327 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:03:31.431 INFO  [http-nio-8081-exec-9] [c.e.f.controller.FollowController] - dlwj
+2024-12-31 13:03:31.432 INFO  [http-nio-8081-exec-9] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:03:31.434 INFO  [http-nio-8081-exec-9] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:03:31.434 INFO  [http-nio-8081-exec-9] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:3ms
+2024-12-31 13:03:31.493 INFO  [http-nio-8081-exec-2] [c.e.f.controller.FollowController] - dlwjd
+2024-12-31 13:03:31.493 INFO  [http-nio-8081-exec-2] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:03:31.495 INFO  [http-nio-8081-exec-2] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:03:31.496 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:3ms
+2024-12-31 13:03:31.585 INFO  [http-nio-8081-exec-3] [c.e.f.controller.FollowController] - dlwjdw
+2024-12-31 13:03:31.586 INFO  [http-nio-8081-exec-3] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:03:31.588 INFO  [http-nio-8081-exec-3] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:03:31.589 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:03:32.070 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - dlwjdwn
+2024-12-31 13:03:32.071 INFO  [http-nio-8081-exec-1] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:03:32.073 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:03:32.074 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:03:32.500 INFO  [http-nio-8081-exec-8] [c.e.f.controller.FollowController] - dlwjdwns
+2024-12-31 13:03:32.501 INFO  [http-nio-8081-exec-8] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:03:32.504 INFO  [http-nio-8081-exec-8] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:03:32.504 INFO  [http-nio-8081-exec-8] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:03:49.728 INFO  [http-nio-8081-exec-4] [c.e.f.controller.FollowController] - 입력값업슴!
+2024-12-31 13:03:49.728 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:0ms
+2024-12-31 13:03:50.851 INFO  [http-nio-8081-exec-5] [c.e.f.controller.FollowController] - ㅓ
+2024-12-31 13:03:50.852 INFO  [http-nio-8081-exec-5] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:03:50.856 INFO  [http-nio-8081-exec-5] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:03:50.856 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:5ms
+2024-12-31 13:03:51.115 INFO  [http-nio-8081-exec-7] [c.e.f.controller.FollowController] - ㅓㅐ
+2024-12-31 13:03:51.116 INFO  [http-nio-8081-exec-7] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:03:51.119 INFO  [http-nio-8081-exec-7] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:03:51.119 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:03:51.214 INFO  [http-nio-8081-exec-6] [c.e.f.controller.FollowController] - ㅓ
+2024-12-31 13:03:51.214 INFO  [http-nio-8081-exec-6] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:03:51.217 INFO  [http-nio-8081-exec-6] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:03:51.217 INFO  [http-nio-8081-exec-6] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:3ms
+2024-12-31 13:03:51.654 INFO  [http-nio-8081-exec-10] [c.e.f.controller.FollowController] - 입력값업슴!
+2024-12-31 13:03:51.654 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:0ms
+2024-12-31 13:03:51.906 INFO  [http-nio-8081-exec-9] [c.e.f.controller.FollowController] - j
+2024-12-31 13:03:51.907 INFO  [http-nio-8081-exec-9] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:03:51.910 INFO  [http-nio-8081-exec-9] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:03:51.910 INFO  [http-nio-8081-exec-9] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:03:51.920 INFO  [http-nio-8081-exec-2] [c.e.f.controller.FollowController] - jo
+2024-12-31 13:03:51.923 INFO  [http-nio-8081-exec-2] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:03:51.929 INFO  [http-nio-8081-exec-2] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:03:51.930 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:10ms
+2024-12-31 13:03:51.967 INFO  [http-nio-8081-exec-3] [c.e.f.controller.FollowController] - joh
+2024-12-31 13:03:51.968 INFO  [http-nio-8081-exec-3] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:03:51.970 INFO  [http-nio-8081-exec-3] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:03:51.971 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:03:53.775 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - jo
+2024-12-31 13:03:53.776 INFO  [http-nio-8081-exec-1] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:03:53.779 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:03:53.779 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:03:54.231 INFO  [http-nio-8081-exec-8] [c.e.f.controller.FollowController] - j
+2024-12-31 13:03:54.232 INFO  [http-nio-8081-exec-8] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:03:54.235 INFO  [http-nio-8081-exec-8] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:03:54.235 INFO  [http-nio-8081-exec-8] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:03:54.369 INFO  [http-nio-8081-exec-4] [c.e.f.controller.FollowController] - 입력값업슴!
+2024-12-31 13:03:54.369 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:0ms
+2024-12-31 13:04:25.837 INFO  [http-nio-8081-exec-9] [c.e.f.controller.FollowController] - d
+2024-12-31 13:04:25.839 INFO  [http-nio-8081-exec-9] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:25.841 INFO  [http-nio-8081-exec-9] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:25.841 INFO  [http-nio-8081-exec-9] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:04:26.564 INFO  [http-nio-8081-exec-2] [c.e.f.controller.FollowController] - 입력값업슴!
+2024-12-31 13:04:26.564 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:0ms
+2024-12-31 13:04:26.813 INFO  [http-nio-8081-exec-3] [c.e.f.controller.FollowController] - ㅇ
+2024-12-31 13:04:26.814 INFO  [http-nio-8081-exec-3] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:26.816 INFO  [http-nio-8081-exec-3] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:26.817 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:04:26.826 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - 이
+2024-12-31 13:04:26.828 INFO  [http-nio-8081-exec-1] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:26.837 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:26.837 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:11ms
+2024-12-31 13:04:26.891 INFO  [http-nio-8081-exec-8] [c.e.f.controller.FollowController] - 잊
+2024-12-31 13:04:26.891 INFO  [http-nio-8081-exec-8] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:26.894 INFO  [http-nio-8081-exec-8] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:26.894 INFO  [http-nio-8081-exec-8] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:3ms
+2024-12-31 13:04:26.983 INFO  [http-nio-8081-exec-4] [c.e.f.controller.FollowController] - 이저
+2024-12-31 13:04:26.984 INFO  [http-nio-8081-exec-4] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:26.986 INFO  [http-nio-8081-exec-4] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:26.986 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:3ms
+2024-12-31 13:04:27.061 INFO  [http-nio-8081-exec-5] [c.e.f.controller.FollowController] - 이
+2024-12-31 13:04:27.061 INFO  [http-nio-8081-exec-5] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:27.066 INFO  [http-nio-8081-exec-5] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:27.066 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:5ms
+2024-12-31 13:04:27.154 INFO  [http-nio-8081-exec-7] [c.e.f.controller.FollowController] - 이정
+2024-12-31 13:04:27.155 INFO  [http-nio-8081-exec-7] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:27.159 INFO  [http-nio-8081-exec-7] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:27.159 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:5ms
+2024-12-31 13:04:28.150 INFO  [http-nio-8081-exec-6] [c.e.f.controller.FollowController] - 이저
+2024-12-31 13:04:28.151 INFO  [http-nio-8081-exec-6] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:28.153 INFO  [http-nio-8081-exec-6] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:28.154 INFO  [http-nio-8081-exec-6] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:04:28.981 INFO  [http-nio-8081-exec-10] [c.e.f.controller.FollowController] - 이ㅈ
+2024-12-31 13:04:28.982 INFO  [http-nio-8081-exec-10] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:28.985 INFO  [http-nio-8081-exec-10] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:28.985 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:04:29.013 INFO  [http-nio-8081-exec-9] [c.e.f.controller.FollowController] - 이
+2024-12-31 13:04:29.014 INFO  [http-nio-8081-exec-9] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:29.018 INFO  [http-nio-8081-exec-9] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:29.018 INFO  [http-nio-8081-exec-9] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:5ms
+2024-12-31 13:04:29.045 INFO  [http-nio-8081-exec-2] [c.e.f.controller.FollowController] - 입력값업슴!
+2024-12-31 13:04:29.045 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:0ms
+2024-12-31 13:04:29.231 INFO  [http-nio-8081-exec-3] [c.e.f.controller.FollowController] - d
+2024-12-31 13:04:29.232 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - dl
+2024-12-31 13:04:29.232 INFO  [http-nio-8081-exec-3] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:29.233 INFO  [http-nio-8081-exec-1] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:29.235 INFO  [http-nio-8081-exec-3] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:29.235 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:29.235 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:04:29.235 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:3ms
+2024-12-31 13:04:29.296 INFO  [http-nio-8081-exec-8] [c.e.f.controller.FollowController] - dlw
+2024-12-31 13:04:29.297 INFO  [http-nio-8081-exec-8] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:29.300 INFO  [http-nio-8081-exec-8] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:29.300 INFO  [http-nio-8081-exec-8] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:04:29.385 INFO  [http-nio-8081-exec-4] [c.e.f.controller.FollowController] - dlwj
+2024-12-31 13:04:29.386 INFO  [http-nio-8081-exec-4] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:29.389 INFO  [http-nio-8081-exec-4] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:29.389 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:04:29.462 INFO  [http-nio-8081-exec-5] [c.e.f.controller.FollowController] - dlwjd
+2024-12-31 13:04:29.463 INFO  [http-nio-8081-exec-5] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:29.465 INFO  [http-nio-8081-exec-5] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:29.465 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:3ms
+2024-12-31 13:04:30.126 INFO  [http-nio-8081-exec-7] [c.e.f.controller.FollowController] - dlwjdw
+2024-12-31 13:04:30.127 INFO  [http-nio-8081-exec-7] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:30.130 INFO  [http-nio-8081-exec-7] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:30.130 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:04:30.501 INFO  [http-nio-8081-exec-6] [c.e.f.controller.FollowController] - dlwjdwn
+2024-12-31 13:04:30.502 INFO  [http-nio-8081-exec-6] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:30.504 INFO  [http-nio-8081-exec-6] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:30.505 INFO  [http-nio-8081-exec-6] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:04:30.641 INFO  [http-nio-8081-exec-10] [c.e.f.controller.FollowController] - dlwjdwns
+2024-12-31 13:04:30.642 INFO  [http-nio-8081-exec-10] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:30.645 INFO  [http-nio-8081-exec-10] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:30.645 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:04:31.068 INFO  [http-nio-8081-exec-9] [c.e.f.controller.FollowController] - dlwjdwn
+2024-12-31 13:04:31.069 INFO  [http-nio-8081-exec-9] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:31.072 INFO  [http-nio-8081-exec-9] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:31.072 INFO  [http-nio-8081-exec-9] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:04:31.881 INFO  [http-nio-8081-exec-2] [c.e.f.controller.FollowController] - dlwjdw
+2024-12-31 13:04:31.882 INFO  [http-nio-8081-exec-2] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:31.885 INFO  [http-nio-8081-exec-2] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:31.886 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:5ms
+2024-12-31 13:04:31.934 INFO  [http-nio-8081-exec-3] [c.e.f.controller.FollowController] - dlwjd
+2024-12-31 13:04:31.935 INFO  [http-nio-8081-exec-3] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:31.938 INFO  [http-nio-8081-exec-3] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:31.938 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:04:31.957 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - dlwj
+2024-12-31 13:04:31.958 INFO  [http-nio-8081-exec-1] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:31.962 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:31.962 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:5ms
+2024-12-31 13:04:31.981 INFO  [http-nio-8081-exec-8] [c.e.f.controller.FollowController] - dlw
+2024-12-31 13:04:31.982 INFO  [http-nio-8081-exec-8] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:31.985 INFO  [http-nio-8081-exec-8] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:31.986 INFO  [http-nio-8081-exec-8] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:5ms
+2024-12-31 13:04:32.021 INFO  [http-nio-8081-exec-4] [c.e.f.controller.FollowController] - dl
+2024-12-31 13:04:32.021 INFO  [http-nio-8081-exec-4] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:32.024 INFO  [http-nio-8081-exec-4] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:32.024 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:3ms
+2024-12-31 13:04:32.052 INFO  [http-nio-8081-exec-5] [c.e.f.controller.FollowController] - d
+2024-12-31 13:04:32.053 INFO  [http-nio-8081-exec-5] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:32.056 INFO  [http-nio-8081-exec-5] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:32.056 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:04:32.208 INFO  [http-nio-8081-exec-7] [c.e.f.controller.FollowController] - 입력값업슴!
+2024-12-31 13:04:32.208 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:0ms
+2024-12-31 13:04:32.362 INFO  [http-nio-8081-exec-6] [c.e.f.controller.FollowController] - ㅇ
+2024-12-31 13:04:32.363 INFO  [http-nio-8081-exec-6] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:32.365 INFO  [http-nio-8081-exec-6] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:32.365 INFO  [http-nio-8081-exec-6] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:3ms
+2024-12-31 13:04:32.408 INFO  [http-nio-8081-exec-9] [c.e.f.controller.FollowController] - 잊
+2024-12-31 13:04:32.408 INFO  [http-nio-8081-exec-10] [c.e.f.controller.FollowController] - 이
+2024-12-31 13:04:32.408 INFO  [http-nio-8081-exec-9] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:32.408 INFO  [http-nio-8081-exec-10] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:32.411 INFO  [http-nio-8081-exec-9] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:32.411 INFO  [http-nio-8081-exec-9] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:3ms
+2024-12-31 13:04:32.414 INFO  [http-nio-8081-exec-10] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:32.414 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:6ms
+2024-12-31 13:04:32.532 INFO  [http-nio-8081-exec-2] [c.e.f.controller.FollowController] - 이저
+2024-12-31 13:04:32.532 INFO  [http-nio-8081-exec-2] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:32.535 INFO  [http-nio-8081-exec-2] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:32.535 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:3ms
+2024-12-31 13:04:32.578 INFO  [http-nio-8081-exec-3] [c.e.f.controller.FollowController] - 이정
+2024-12-31 13:04:32.579 INFO  [http-nio-8081-exec-3] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:32.583 INFO  [http-nio-8081-exec-3] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:32.583 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:5ms
+2024-12-31 13:04:32.702 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - 이
+2024-12-31 13:04:32.703 INFO  [http-nio-8081-exec-1] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:32.708 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:32.708 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:6ms
+2024-12-31 13:04:32.735 INFO  [http-nio-8081-exec-8] [c.e.f.controller.FollowController] - 이정ㅈ
+2024-12-31 13:04:32.736 INFO  [http-nio-8081-exec-8] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:32.737 INFO  [http-nio-8081-exec-4] [c.e.f.controller.FollowController] - 이정주
+2024-12-31 13:04:32.737 INFO  [http-nio-8081-exec-4] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:32.739 INFO  [http-nio-8081-exec-8] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:32.739 INFO  [http-nio-8081-exec-8] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:04:32.740 INFO  [http-nio-8081-exec-4] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:32.740 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:3ms
+2024-12-31 13:04:32.795 INFO  [http-nio-8081-exec-5] [c.e.f.controller.FollowController] - 이정준
+2024-12-31 13:04:32.796 INFO  [http-nio-8081-exec-5] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:32.799 INFO  [http-nio-8081-exec-5] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:32.799 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:04:36.064 INFO  [http-nio-8081-exec-9] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(void com.example.firstproject.controller.RefreshController.refreshtokenvalid(HttpServletRequest,HttpServletResponse))
+2024-12-31 13:04:36.064 INFO  [http-nio-8081-exec-9] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/refresh
+2024-12-31 13:04:36.064 INFO  [http-nio-8081-exec-9] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:04:36.064 INFO  [http-nio-8081-exec-9] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 127.0.0.1
+2024-12-31 13:04:36.064 INFO  [http-nio-8081-exec-9] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:127.0.0.1
+2024-12-31 13:04:36.067 INFO  [http-nio-8081-exec-9] [c.e.f.controller.RefreshController] - 리프레쉬토큰실행
+2024-12-31 13:04:36.068 INFO  [http-nio-8081-exec-9] [c.e.f.controller.RefreshController] - 리프레쉬토큰문제없음:Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyZWZyZXNodG9rZW4iLCJleHAiOjE3MzU2NjA5OTR9.X556A-bWv24GRQSfubHCFUD5l7sST0XP2INGmHN1Z5Y7etm_eJWhzgsrGoMYuKNjMHpZvmrGlEWFovIXW9JFqA
+2024-12-31 13:04:36.068 INFO  [http-nio-8081-exec-9] [c.e.f.controller.RefreshController] - 리프레쉬토큰기간유효!
+2024-12-31 13:04:36.076 INFO  [http-nio-8081-exec-9] [c.e.f.controller.RefreshController] - 프린시펄등록완료
+2024-12-31 13:04:36.076 INFO  [http-nio-8081-exec-9] [c.e.f.controller.RefreshController] - 새엑세스토큰생성완료
+2024-12-31 13:04:36.077 INFO  [http-nio-8081-exec-9] [c.e.f.controller.RefreshController] - 12시간이내에만료임 재발급
+2024-12-31 13:04:36.089 INFO  [http-nio-8081-exec-9] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:void com.example.firstproject.controller.RefreshController.refreshtokenvalid(HttpServletRequest,HttpServletResponse) 걸린시간:25ms
+2024-12-31 13:04:36.126 INFO  [http-nio-8081-exec-2] [c.e.firstproject.Handler.FollowHandler] - 팔로우핸들러!
+2024-12-31 13:04:36.130 INFO  [http-nio-8081-exec-2] [c.e.f.S.Followservice.FollowService] - 팔로우안되있는게쩡
+2024-12-31 13:04:36.131 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followcheck(Authentication,String) 걸린시간:13ms
+2024-12-31 13:04:37.466 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(ResponseEntity com.example.firstproject.controller.FollowController.follow(Authentication,String))
+2024-12-31 13:04:37.466 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/follow
+2024-12-31 13:04:37.467 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:04:37.467 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 0:0:0:0:0:0:0:1
+2024-12-31 13:04:37.467 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:0:0:0:0:0:0:0:1
+2024-12-31 13:04:37.467 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - 인증유저겟네임:dlwjdwns424@naver.com
+2024-12-31 13:04:37.475 INFO  [http-nio-8081-exec-1] [c.e.firstproject.Handler.FollowHandler] - 팔로우핸들러!
+2024-12-31 13:04:37.479 INFO  [http-nio-8081-exec-1] [c.e.firstproject.Handler.FollowHandler] - 세이브핸들러
+2024-12-31 13:04:37.497 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.follow(Authentication,String) 걸린시간:31ms
+2024-12-31 13:04:41.201 INFO  [http-nio-8081-exec-4] [c.e.firstproject.Handler.FollowHandler] - 팔로우핸들러!
+2024-12-31 13:04:41.205 INFO  [http-nio-8081-exec-4] [c.e.f.S.Followservice.FollowService] - 이미 팔로우한 계정입니다!
+2024-12-31 13:04:41.206 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followcheck(Authentication,String) 걸린시간:11ms
+2024-12-31 13:04:48.016 INFO  [http-nio-8081-exec-5] [c.e.f.controller.FollowController] - 입력값업슴!
+2024-12-31 13:04:48.016 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:0ms
+2024-12-31 13:04:48.204 INFO  [http-nio-8081-exec-7] [c.e.f.controller.FollowController] - ㄱ
+2024-12-31 13:04:48.205 INFO  [http-nio-8081-exec-7] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:48.207 INFO  [http-nio-8081-exec-7] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:48.207 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:3ms
+2024-12-31 13:04:48.276 INFO  [http-nio-8081-exec-6] [c.e.f.controller.FollowController] - 구
+2024-12-31 13:04:48.277 INFO  [http-nio-8081-exec-6] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:48.279 INFO  [http-nio-8081-exec-6] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:48.279 INFO  [http-nio-8081-exec-6] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:3ms
+2024-12-31 13:04:48.310 INFO  [http-nio-8081-exec-9] [c.e.f.controller.FollowController] - 국
+2024-12-31 13:04:48.311 INFO  [http-nio-8081-exec-9] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:48.313 INFO  [http-nio-8081-exec-9] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:48.313 INFO  [http-nio-8081-exec-9] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:3ms
+2024-12-31 13:04:48.404 INFO  [http-nio-8081-exec-10] [c.e.f.controller.FollowController] - 구그
+2024-12-31 13:04:48.404 INFO  [http-nio-8081-exec-10] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:48.408 INFO  [http-nio-8081-exec-10] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:48.408 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:04:48.513 INFO  [http-nio-8081-exec-2] [c.e.f.controller.FollowController] - 구글
+2024-12-31 13:04:48.513 INFO  [http-nio-8081-exec-2] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:48.516 INFO  [http-nio-8081-exec-2] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:48.516 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:3ms
+2024-12-31 13:04:48.591 INFO  [http-nio-8081-exec-3] [c.e.f.controller.FollowController] - 구
+2024-12-31 13:04:48.591 INFO  [http-nio-8081-exec-3] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:48.594 INFO  [http-nio-8081-exec-3] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:48.594 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:3ms
+2024-12-31 13:04:49.933 INFO  [http-nio-8081-exec-8] [c.e.firstproject.Handler.FollowHandler] - 팔로우핸들러!
+2024-12-31 13:04:49.936 INFO  [http-nio-8081-exec-8] [c.e.f.S.Followservice.FollowService] - 팔로우안되있는게쩡
+2024-12-31 13:04:49.937 INFO  [http-nio-8081-exec-8] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followcheck(Authentication,String) 걸린시간:11ms
+2024-12-31 13:04:50.894 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(ResponseEntity com.example.firstproject.controller.FollowController.follow(Authentication,String))
+2024-12-31 13:04:50.894 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/follow
+2024-12-31 13:04:50.894 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:04:50.894 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 0:0:0:0:0:0:0:1
+2024-12-31 13:04:50.894 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:0:0:0:0:0:0:0:1
+2024-12-31 13:04:50.894 INFO  [http-nio-8081-exec-5] [c.e.f.controller.FollowController] - 인증유저겟네임:dlwjdwns424@naver.com
+2024-12-31 13:04:50.901 INFO  [http-nio-8081-exec-5] [c.e.firstproject.Handler.FollowHandler] - 팔로우핸들러!
+2024-12-31 13:04:50.902 INFO  [http-nio-8081-exec-5] [c.e.firstproject.Handler.FollowHandler] - 세이브핸들러
+2024-12-31 13:04:50.907 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.follow(Authentication,String) 걸린시간:13ms
+2024-12-31 13:04:54.253 INFO  [http-nio-8081-exec-7] [c.e.f.controller.FollowController] - 구
+2024-12-31 13:04:54.254 INFO  [http-nio-8081-exec-7] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:04:54.256 INFO  [http-nio-8081-exec-7] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:04:54.256 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:3ms
+2024-12-31 13:04:54.728 INFO  [http-nio-8081-exec-6] [c.e.f.controller.FollowController] - 입력값업슴!
+2024-12-31 13:04:54.728 INFO  [http-nio-8081-exec-6] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:0ms
+2024-12-31 13:05:02.520 INFO  [http-nio-8081-exec-10] [c.e.f.controller.FollowController] - 팔로워리스트
+2024-12-31 13:05:02.520 INFO  [http-nio-8081-exec-10] [c.e.firstproject.Handler.FollowHandler] - 팔로워찾기
+2024-12-31 13:05:02.522 INFO  [http-nio-8081-exec-10] [c.e.f.S.Followservice.FollowService] - 팔로워없음!
+2024-12-31 13:05:02.522 INFO  [http-nio-8081-exec-10] [c.e.firstproject.Handler.FollowHandler] - 팔로워찾기
+2024-12-31 13:05:02.530 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followerlist(Authentication) 걸린시간:10ms
+2024-12-31 13:05:03.086 INFO  [http-nio-8081-exec-3] [c.e.f.controller.FollowController] - 팔로우리스트
+2024-12-31 13:05:03.094 INFO  [http-nio-8081-exec-3] [c.e.f.controller.FollowController] - 즐겨찾기여부:false
+2024-12-31 13:05:03.094 INFO  [http-nio-8081-exec-3] [c.e.f.controller.FollowController] - 즐겨찾기여부:false
+2024-12-31 13:05:03.094 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followlist(Authentication) 걸린시간:8ms
+2024-12-31 13:05:06.493 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - 팔로워리스트
+2024-12-31 13:05:06.494 INFO  [http-nio-8081-exec-1] [c.e.firstproject.Handler.FollowHandler] - 팔로워찾기
+2024-12-31 13:05:06.496 INFO  [http-nio-8081-exec-1] [c.e.f.S.Followservice.FollowService] - 팔로워없음!
+2024-12-31 13:05:06.496 INFO  [http-nio-8081-exec-1] [c.e.firstproject.Handler.FollowHandler] - 팔로워찾기
+2024-12-31 13:05:06.502 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followerlist(Authentication) 걸린시간:9ms
+2024-12-31 13:05:09.956 INFO  [http-nio-8081-exec-4] [c.e.f.controller.FollowController] - 팔로우리스트
+2024-12-31 13:05:09.961 INFO  [http-nio-8081-exec-4] [c.e.f.controller.FollowController] - 즐겨찾기여부:false
+2024-12-31 13:05:09.962 INFO  [http-nio-8081-exec-4] [c.e.f.controller.FollowController] - 즐겨찾기여부:false
+2024-12-31 13:05:09.962 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followlist(Authentication) 걸린시간:6ms
+2024-12-31 13:05:13.841 INFO  [http-nio-8081-exec-7] [c.e.f.controller.Weathercontroller] - 서울특별시  종로구  청운효자동
+2024-12-31 13:05:13.842 INFO  [http-nio-8081-exec-7] [c.e.f.controller.Weathercontroller] - 서울특별시
+2024-12-31 13:05:13.842 INFO  [http-nio-8081-exec-7] [c.e.f.controller.Weathercontroller] - 종로구
+2024-12-31 13:05:13.842 INFO  [http-nio-8081-exec-7] [c.e.f.controller.Weathercontroller] - 청운효자동
+2024-12-31 13:05:13.842 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:List com.example.firstproject.controller.Weathercontroller.weatherdata(String,String,String) 걸린시간:1ms
+2024-12-31 13:05:13.856 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(Page com.example.firstproject.controller.MainController.search(String,String,int))
+2024-12-31 13:05:13.856 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/open/noticesearch
+2024-12-31 13:05:13.856 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:05:13.856 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 127.0.0.1
+2024-12-31 13:05:13.856 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:127.0.0.1
+2024-12-31 13:05:13.856 INFO  [http-nio-8081-exec-7] [c.e.f.controller.MainController] - 키워드널 검색어가아님
+2024-12-31 13:05:13.862 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:Page com.example.firstproject.controller.MainController.search(String,String,int) 걸린시간:7ms
+2024-12-31 13:05:18.128 INFO  [http-nio-8081-exec-10] [c.e.f.configure.oauth2loginservice] - 사이트로그인아이디입니다!
+2024-12-31 13:05:18.817 INFO  [http-nio-8081-exec-2] [c.e.f.controller.Weathercontroller] - 서울특별시  종로구  청운효자동
+2024-12-31 13:05:18.817 INFO  [http-nio-8081-exec-2] [c.e.f.controller.Weathercontroller] - 서울특별시
+2024-12-31 13:05:18.817 INFO  [http-nio-8081-exec-2] [c.e.f.controller.Weathercontroller] - 종로구
+2024-12-31 13:05:18.817 INFO  [http-nio-8081-exec-2] [c.e.f.controller.Weathercontroller] - 청운효자동
+2024-12-31 13:05:18.818 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:List com.example.firstproject.controller.Weathercontroller.weatherdata(String,String,String) 걸린시간:1ms
+2024-12-31 13:06:43.533 INFO  [MessageBroker-1] [o.s.w.s.c.WebSocketMessageBrokerStats] - WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 2, active threads = 1, queued tasks = 0, completed tasks = 1]
+2024-12-31 13:12:11.857 INFO  [RMI TCP Connection(2)-127.0.0.1] [o.s.b.a.SpringApplicationAdminMXBeanRegistrar$SpringApplicationAdmin] - Application shutdown requested.
+2024-12-31 13:12:11.861 INFO  [RMI TCP Connection(2)-127.0.0.1] [o.s.m.s.b.SimpleBrokerMessageHandler] - Stopping...
+2024-12-31 13:12:11.862 INFO  [RMI TCP Connection(2)-127.0.0.1] [o.s.m.s.b.SimpleBrokerMessageHandler] - BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@d2161b6]]
+2024-12-31 13:12:11.862 INFO  [RMI TCP Connection(2)-127.0.0.1] [o.s.m.s.b.SimpleBrokerMessageHandler] - Stopped.
+2024-12-31 13:12:14.128 INFO  [RMI TCP Connection(2)-127.0.0.1] [o.s.o.j.LocalContainerEntityManagerFactoryBean] - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-31 13:12:14.130 INFO  [RMI TCP Connection(2)-127.0.0.1] [com.zaxxer.hikari.HikariDataSource] - HikariPool-1 - Shutdown initiated...
+2024-12-31 13:12:14.137 INFO  [RMI TCP Connection(2)-127.0.0.1] [com.zaxxer.hikari.HikariDataSource] - HikariPool-1 - Shutdown completed.
+2024-12-31 13:12:19.143 INFO  [background-preinit] [o.h.validator.internal.util.Version] - HV000001: Hibernate Validator 6.2.3.Final
+2024-12-31 13:12:19.151 INFO  [main] [c.e.firstproject.ReactbootApplication] - Starting ReactbootApplication using Java 17.0.4.1 on DESKTOP-DBMRCI3 with PID 7224 (C:\Users\dlwjd\git\Weatherbackend\reactboot\target\classes started by leejung in C:\Users\dlwjd\git\Weatherbackend\reactboot)
+2024-12-31 13:12:19.153 INFO  [main] [c.e.firstproject.ReactbootApplication] - No active profile set, falling back to 1 default profile: "default"
+2024-12-31 13:12:20.448 INFO  [main] [o.s.d.r.c.RepositoryConfigurationDelegate] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-31 13:12:20.676 INFO  [main] [o.s.d.r.c.RepositoryConfigurationDelegate] - Finished Spring Data repository scanning in 214 ms. Found 11 JPA repository interfaces.
+2024-12-31 13:12:21.807 INFO  [main] [o.s.b.w.embedded.tomcat.TomcatWebServer] - Tomcat initialized with port(s): 8081 (http)
+2024-12-31 13:12:21.821 INFO  [main] [o.apache.coyote.http11.Http11NioProtocol] - Initializing ProtocolHandler ["http-nio-8081"]
+2024-12-31 13:12:21.822 INFO  [main] [org.apache.catalina.core.StandardService] - Starting service [Tomcat]
+2024-12-31 13:12:21.822 INFO  [main] [org.apache.catalina.core.StandardEngine] - Starting Servlet engine: [Apache Tomcat/9.0.63]
+2024-12-31 13:12:22.018 INFO  [main] [o.a.c.c.C.[Tomcat].[localhost].[/]] - Initializing Spring embedded WebApplicationContext
+2024-12-31 13:12:22.019 INFO  [main] [o.s.b.w.s.c.ServletWebServerApplicationContext] - Root WebApplicationContext: initialization completed in 2793 ms
+2024-12-31 13:12:22.267 INFO  [main] [o.hibernate.jpa.internal.util.LogHelper] - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-31 13:12:22.329 INFO  [main] [org.hibernate.Version] - HHH000412: Hibernate ORM core version 5.6.9.Final
+2024-12-31 13:12:22.545 INFO  [main] [org.hibernate.annotations.common.Version] - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2024-12-31 13:12:22.691 INFO  [main] [com.zaxxer.hikari.HikariDataSource] - HikariPool-1 - Starting...
+2024-12-31 13:12:23.142 INFO  [main] [com.zaxxer.hikari.HikariDataSource] - HikariPool-1 - Start completed.
+2024-12-31 13:12:23.185 INFO  [main] [org.hibernate.dialect.Dialect] - HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2024-12-31 13:12:25.022 INFO  [main] [o.h.e.t.j.p.i.JtaPlatformInitiator] - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2024-12-31 13:12:25.033 INFO  [main] [o.s.o.j.LocalContainerEntityManagerFactoryBean] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-31 13:12:26.643 INFO  [main] [c.e.firstproject.configure.CashConfig] - 캐쉬콘피그시작
+2024-12-31 13:12:27.405 INFO  [main] [o.s.s.web.DefaultSecurityFilterChain] - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@58a06477, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@1c4335c8, org.springframework.security.web.context.SecurityContextPersistenceFilter@27311c99, org.springframework.security.web.header.HeaderWriterFilter@3dc70aa0, org.springframework.web.filter.CorsFilter@5e2abb58, org.springframework.security.web.authentication.logout.LogoutFilter@1fcb01f8, org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter@233bfc46, org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter@77c4aeb6, com.example.firstproject.configure.auth.authenticationfilter@943d0c2, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@53a3ccc, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@529b8e41, com.example.firstproject.configure.auth.Authorizationdfilter@57f31caf, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@149e457, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@72557e0d, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@5c088d72, org.springframework.security.web.session.SessionManagementFilter@26fee641, org.springframework.security.web.access.ExceptionTranslationFilter@81198ed, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@5e8633da]
+2024-12-31 13:12:27.411 WARN  [main] [o.s.s.c.a.web.builders.WebSecurity] - You are asking Spring Security to ignore Ant [pattern='/open/**']. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2024-12-31 13:12:27.411 INFO  [main] [o.s.s.web.DefaultSecurityFilterChain] - Will not secure Ant [pattern='/open/**']
+2024-12-31 13:12:27.564 WARN  [main] [o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration] - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-31 13:12:28.386 INFO  [main] [o.apache.coyote.http11.Http11NioProtocol] - Starting ProtocolHandler ["http-nio-8081"]
+2024-12-31 13:12:28.420 INFO  [main] [o.s.b.w.embedded.tomcat.TomcatWebServer] - Tomcat started on port(s): 8081 (http) with context path ''
+2024-12-31 13:12:28.422 INFO  [main] [o.s.m.s.b.SimpleBrokerMessageHandler] - Starting...
+2024-12-31 13:12:28.423 INFO  [main] [o.s.m.s.b.SimpleBrokerMessageHandler] - BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@53b10e9a]]
+2024-12-31 13:12:28.423 INFO  [main] [o.s.m.s.b.SimpleBrokerMessageHandler] - Started.
+2024-12-31 13:12:28.433 INFO  [main] [o.s.s.a.ScheduledAnnotationBeanPostProcessor] - More than one TaskScheduler bean exists within the context, and none is named 'taskScheduler'. Mark one of them as primary or name it 'taskScheduler' (possibly as an alias); or implement the SchedulingConfigurer interface and call ScheduledTaskRegistrar#setScheduler explicitly within the configureTasks() callback: [messageBrokerTaskScheduler, defaultSockJsTaskScheduler]
+2024-12-31 13:12:28.441 INFO  [main] [c.e.firstproject.ReactbootApplication] - Started ReactbootApplication in 9.942 seconds (JVM running for 11.162)
+2024-12-31 13:12:28.458 INFO  [pool-2-thread-1] [c.e.f.Service.NoticeServiceImpl] - 경로의 파일 가져오기
+2024-12-31 13:12:28.459 INFO  [pool-2-thread-1] [c.e.f.Service.NoticeServiceImpl] - 현재시간-/noticeimages/2024/12/30
+2024-12-31 13:12:28.459 INFO  [pool-2-thread-1] [c.e.f.Service.NoticeServiceImpl] - 패스:D:\study프로그램\react\bootproject\public\noticeimages\2024\12\30
+2024-12-31 13:12:28.466 ERROR [pool-2-thread-1] [o.s.s.s.TaskUtils$LoggingErrorHandler] - Unexpected error occurred in scheduled task
+java.lang.NullPointerException: Cannot read the array length because "filenames" is null
+	at com.example.firstproject.Service.NoticeServiceImpl.garbagefiles(NoticeServiceImpl.java:539)
+	at com.example.firstproject.Service.NoticeServiceImpl$$FastClassBySpringCGLIB$$e9c1e310.invoke(<generated>)
+	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:793)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:388)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:708)
+	at com.example.firstproject.Service.NoticeServiceImpl$$EnhancerBySpringCGLIB$$d1d39b1e.garbagefiles(<generated>)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRunnable.java:84)
+	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.runAndReset(FutureTask.java:305)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:305)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+2024-12-31 13:13:27.541 INFO  [MessageBroker-1] [o.s.w.s.c.WebSocketMessageBrokerStats] - WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 1, active threads = 1, queued tasks = 0, completed tasks = 0]
+2024-12-31 13:14:34.773 INFO  [http-nio-8081-exec-1] [o.a.c.c.C.[Tomcat].[localhost].[/]] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-31 13:14:34.774 INFO  [http-nio-8081-exec-1] [o.s.web.servlet.DispatcherServlet] - Initializing Servlet 'dispatcherServlet'
+2024-12-31 13:14:34.776 INFO  [http-nio-8081-exec-1] [o.s.web.servlet.DispatcherServlet] - Completed initialization in 2 ms
+2024-12-31 13:14:35.884 INFO  [http-nio-8081-exec-2] [c.e.f.controller.Weathercontroller] - 서울특별시  종로구  청운효자동
+2024-12-31 13:14:35.885 INFO  [http-nio-8081-exec-2] [c.e.f.controller.Weathercontroller] - 서울특별시
+2024-12-31 13:14:35.885 INFO  [http-nio-8081-exec-2] [c.e.f.controller.Weathercontroller] - 종로구
+2024-12-31 13:14:35.885 INFO  [http-nio-8081-exec-2] [c.e.f.controller.Weathercontroller] - 청운효자동
+2024-12-31 13:14:36.241 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:List com.example.firstproject.controller.Weathercontroller.weatherdata(String,String,String) 걸린시간:365ms
+2024-12-31 13:14:39.021 INFO  [http-nio-8081-exec-3] [c.e.f.controller.Weathercontroller] - 서울특별시  종로구  청운효자동
+2024-12-31 13:14:39.022 INFO  [http-nio-8081-exec-3] [c.e.f.controller.Weathercontroller] - 서울특별시
+2024-12-31 13:14:39.022 INFO  [http-nio-8081-exec-3] [c.e.f.controller.Weathercontroller] - 종로구
+2024-12-31 13:14:39.022 INFO  [http-nio-8081-exec-3] [c.e.f.controller.Weathercontroller] - 청운효자동
+2024-12-31 13:14:39.024 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:List com.example.firstproject.controller.Weathercontroller.weatherdata(String,String,String) 걸린시간:3ms
+2024-12-31 13:14:39.050 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(Page com.example.firstproject.controller.MainController.search(String,String,int))
+2024-12-31 13:14:39.051 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/open/noticesearch
+2024-12-31 13:14:39.052 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:14:39.053 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 127.0.0.1
+2024-12-31 13:14:39.053 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:127.0.0.1
+2024-12-31 13:14:39.062 INFO  [http-nio-8081-exec-4] [c.e.f.controller.MainController] - 키워드널 검색어가아님
+2024-12-31 13:14:39.163 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:Page com.example.firstproject.controller.MainController.search(String,String,int) 걸린시간:126ms
+2024-12-31 13:14:47.107 INFO  [http-nio-8081-exec-5] [c.e.f.S.Memberservice.HistoryService] - X-FORWARDED-FOR : 127.0.0.1
+2024-12-31 13:14:47.108 INFO  [http-nio-8081-exec-5] [c.e.f.S.Memberservice.HistoryService] - Result : IP Address : 127.0.0.1
+2024-12-31 13:14:47.141 INFO  [http-nio-8081-exec-5] [c.e.f.S.Memberservice.HistoryService] - 로그인히스토리저장성공
+2024-12-31 13:14:48.118 INFO  [http-nio-8081-exec-6] [c.e.f.controller.Weathercontroller] - 서울특별시 종로구 청운효자동
+2024-12-31 13:14:48.119 INFO  [http-nio-8081-exec-6] [c.e.f.controller.Weathercontroller] - 서울특별시 종로구 청운효자동
+2024-12-31 13:14:48.127 INFO  [http-nio-8081-exec-6] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:List com.example.firstproject.controller.Weathercontroller.weatherdata(String,String,String) 걸린시간:10ms
+2024-12-31 13:14:48.130 ERROR [http-nio-8081-exec-6] [o.a.c.c.C.[.[.[/].[dispatcherServlet]] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is java.lang.ClassCastException: class java.lang.Long cannot be cast to class java.util.List (java.lang.Long and java.util.List are in module java.base of loader 'bootstrap')] with root cause
+java.lang.ClassCastException: class java.lang.Long cannot be cast to class java.util.List (java.lang.Long and java.util.List are in module java.base of loader 'bootstrap')
+	at com.example.firstproject.controller.Weathercontroller$$EnhancerBySpringCGLIB$$339fcc2f.weatherdata(<generated>)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:895)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:808)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1067)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:898)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:655)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:764)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:227)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:204)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:183)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:354)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:267)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:197)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:541)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:135)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:360)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:399)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:890)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1743)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+2024-12-31 13:14:48.132 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(Page com.example.firstproject.controller.MainController.search(String,String,int))
+2024-12-31 13:14:48.133 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/open/noticesearch
+2024-12-31 13:14:48.135 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:14:48.137 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 127.0.0.1
+2024-12-31 13:14:48.140 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:127.0.0.1
+2024-12-31 13:14:48.140 INFO  [http-nio-8081-exec-10] [c.e.f.controller.MainController] - 키워드널 검색어가아님
+2024-12-31 13:14:48.151 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:Page com.example.firstproject.controller.MainController.search(String,String,int) 걸린시간:19ms
+2024-12-31 13:14:48.186 INFO  [http-nio-8081-exec-9] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(SseEmitter com.example.firstproject.controller.SSEController.sse(Authentication))
+2024-12-31 13:14:48.186 INFO  [http-nio-8081-exec-9] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/ssesub
+2024-12-31 13:14:48.186 INFO  [http-nio-8081-exec-9] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:14:48.186 INFO  [http-nio-8081-exec-9] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 0:0:0:0:0:0:0:1
+2024-12-31 13:14:48.186 INFO  [http-nio-8081-exec-9] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:0:0:0:0:0:0:0:1
+2024-12-31 13:14:48.190 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - 팔로우리스트
+2024-12-31 13:14:48.200 INFO  [http-nio-8081-exec-9] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:SseEmitter com.example.firstproject.controller.SSEController.sse(Authentication) 걸린시간:14ms
+2024-12-31 13:14:48.216 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - 즐겨찾기여부:false
+2024-12-31 13:14:48.217 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followlist(Authentication) 걸린시간:31ms
+2024-12-31 13:15:08.406 INFO  [http-nio-8081-exec-4] [c.e.f.controller.FollowController] - 팔로워리스트
+2024-12-31 13:15:08.411 INFO  [http-nio-8081-exec-4] [c.e.firstproject.Handler.FollowHandler] - 팔로워찾기
+2024-12-31 13:15:08.423 INFO  [http-nio-8081-exec-4] [c.e.firstproject.Handler.FollowHandler] - 팔로워찾기
+2024-12-31 13:15:08.427 INFO  [http-nio-8081-exec-4] [c.e.f.S.Followservice.FollowService] - 날구독한리스트시작18
+2024-12-31 13:15:08.430 INFO  [http-nio-8081-exec-4] [c.e.f.S.Followservice.FollowService] - 내리스트시작
+2024-12-31 13:15:08.430 INFO  [http-nio-8081-exec-4] [c.e.f.S.Followservice.FollowService] - 나도팔로우한애
+2024-12-31 13:15:08.430 INFO  [http-nio-8081-exec-4] [c.e.f.S.Followservice.FollowService] - 네이버인데자기님탈출하나?
+2024-12-31 13:15:08.430 INFO  [http-nio-8081-exec-4] [c.e.f.S.Followservice.FollowService] - 날구독한리스트시작48
+2024-12-31 13:15:08.430 INFO  [http-nio-8081-exec-4] [c.e.f.S.Followservice.FollowService] - 내리스트시작
+2024-12-31 13:15:08.433 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followerlist(Authentication) 걸린시간:27ms
+2024-12-31 13:15:21.580 INFO  [http-nio-8081-exec-8] [c.e.f.S.Followservice.FollowService] - 리스트가없습니다!
+2024-12-31 13:15:21.581 INFO  [http-nio-8081-exec-8] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.favoritelist(Authentication) 걸린시간:10ms
+2024-12-31 13:15:22.035 INFO  [http-nio-8081-exec-10] [c.e.f.controller.FollowController] - 팔로워리스트
+2024-12-31 13:15:22.036 INFO  [http-nio-8081-exec-10] [c.e.firstproject.Handler.FollowHandler] - 팔로워찾기
+2024-12-31 13:15:22.044 INFO  [http-nio-8081-exec-10] [c.e.firstproject.Handler.FollowHandler] - 팔로워찾기
+2024-12-31 13:15:22.048 INFO  [http-nio-8081-exec-10] [c.e.f.S.Followservice.FollowService] - 날구독한리스트시작18
+2024-12-31 13:15:22.048 INFO  [http-nio-8081-exec-10] [c.e.f.S.Followservice.FollowService] - 내리스트시작
+2024-12-31 13:15:22.048 INFO  [http-nio-8081-exec-10] [c.e.f.S.Followservice.FollowService] - 나도팔로우한애
+2024-12-31 13:15:22.049 INFO  [http-nio-8081-exec-10] [c.e.f.S.Followservice.FollowService] - 네이버인데자기님탈출하나?
+2024-12-31 13:15:22.049 INFO  [http-nio-8081-exec-10] [c.e.f.S.Followservice.FollowService] - 날구독한리스트시작48
+2024-12-31 13:15:22.049 INFO  [http-nio-8081-exec-10] [c.e.f.S.Followservice.FollowService] - 내리스트시작
+2024-12-31 13:15:22.051 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followerlist(Authentication) 걸린시간:16ms
+2024-12-31 13:16:22.233 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(String com.example.firstproject.controller.MemberController.memberdeleteemail(HashMap))
+2024-12-31 13:16:22.233 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/memberdeletemail
+2024-12-31 13:16:22.233 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:16:22.233 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 0:0:0:0:0:0:0:1
+2024-12-31 13:16:22.233 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:0:0:0:0:0:0:0:1
+2024-12-31 13:16:22.270 INFO  [http-nio-8081-exec-1] [c.e.f.controller.MemberController] - 멤버삭제이메일보내기!
+2024-12-31 13:16:22.272 INFO  [http-nio-8081-exec-1] [c.e.f.S.Memberservice.MemberServiceImpl] - dlwjdwns1945@gmail.com님 delete이메일발송!
+2024-12-31 13:16:26.271 INFO  [http-nio-8081-exec-1] [c.e.f.S.Memberservice.MemberServiceImpl] - 인증키:$2a$10$6Arcf4DqoMLI/S6GsMoMjeaV9R5yWAozz2n4tntgolHWeS9B0Sl4C
+2024-12-31 13:16:26.275 INFO  [http-nio-8081-exec-1] [c.e.f.Repository.Memberdeleterepository] - 멤버딜리트코드저장!
+2024-12-31 13:16:26.276 INFO  [http-nio-8081-exec-1] [c.e.f.controller.MemberController] - 성공적
+2024-12-31 13:16:26.277 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:String com.example.firstproject.controller.MemberController.memberdeleteemail(HashMap) 걸린시간:4044ms
+2024-12-31 13:16:48.047 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(void com.example.firstproject.controller.MemberController.memberdelete(Map))
+2024-12-31 13:16:48.047 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/memberdelete
+2024-12-31 13:16:48.047 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:16:48.047 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 0:0:0:0:0:0:0:1
+2024-12-31 13:16:48.047 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:0:0:0:0:0:0:0:1
+2024-12-31 13:16:48.048 INFO  [http-nio-8081-exec-3] [c.e.f.controller.MemberController] - 멤버딜리트시도!dlwjdwns1945@gmail.com
+2024-12-31 13:16:48.048 INFO  [http-nio-8081-exec-3] [c.e.f.controller.MemberController] - authkey:$2a$10$6Arcf4DqoMLI/S6GsMoMjeaV9R5yWAozz2n4tntgolHWeS9B0Sl4C
+2024-12-31 13:16:48.052 INFO  [http-nio-8081-exec-3] [c.e.f.S.Memberservice.MemberServiceImpl] - 유저네임:dlwjdwns1945@gmail.com
+2024-12-31 13:16:48.052 INFO  [http-nio-8081-exec-3] [c.e.f.S.Memberservice.MemberServiceImpl] - 인증키:$2a$10$6Arcf4DqoMLI/S6GsMoMjeaV9R5yWAozz2n4tntgolHWeS9B0Sl4C
+2024-12-31 13:16:48.052 INFO  [http-nio-8081-exec-3] [c.e.f.Repository.Memberdeleterepository] - 딜리트코드겟
+2024-12-31 13:16:48.052 INFO  [http-nio-8081-exec-3] [c.e.f.S.Memberservice.MemberServiceImpl] - 저장소확인:$2a$10$6Arcf4DqoMLI/S6GsMoMjeaV9R5yWAozz2n4tntgolHWeS9B0Sl4C
+2024-12-31 13:16:48.062 INFO  [http-nio-8081-exec-3] [c.e.f.S.Memberservice.MemberServiceImpl] - 인증키가같습니다!
+2024-12-31 13:16:48.109 WARN  [http-nio-8081-exec-3] [o.h.engine.jdbc.spi.SqlExceptionHelper] - SQL Error: 1451, SQLState: 23000
+2024-12-31 13:16:48.109 ERROR [http-nio-8081-exec-3] [o.h.engine.jdbc.spi.SqlExceptionHelper] - Cannot delete or update a parent row: a foreign key constraint fails (`spring5fs`.`member_room`, CONSTRAINT `FK2vflmhtgl7j9k7wivlkxbopoa` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`))
+2024-12-31 13:16:48.110 INFO  [http-nio-8081-exec-3] [o.h.e.j.batch.internal.AbstractBatchImpl] - HHH000010: On release of batch it still contained JDBC statements
+2024-12-31 13:16:48.117 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:void com.example.firstproject.controller.MemberController.memberdelete(Map) 걸린시간:70ms
+2024-12-31 13:16:52.739 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(Page com.example.firstproject.controller.MainController.search(String,String,int))
+2024-12-31 13:16:52.740 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/open/noticesearch
+2024-12-31 13:16:52.740 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:16:52.741 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 127.0.0.1
+2024-12-31 13:16:52.741 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:127.0.0.1
+2024-12-31 13:16:52.741 INFO  [http-nio-8081-exec-5] [c.e.f.controller.MainController] - 키워드널 검색어가아님
+2024-12-31 13:16:52.746 INFO  [http-nio-8081-exec-4] [c.e.f.controller.Weathercontroller] - 서울특별시  종로구  청운효자동
+2024-12-31 13:16:52.747 INFO  [http-nio-8081-exec-4] [c.e.f.controller.Weathercontroller] - 서울특별시
+2024-12-31 13:16:52.748 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:Page com.example.firstproject.controller.MainController.search(String,String,int) 걸린시간:9ms
+2024-12-31 13:16:52.749 INFO  [http-nio-8081-exec-4] [c.e.f.controller.Weathercontroller] - 종로구
+2024-12-31 13:16:52.749 INFO  [http-nio-8081-exec-4] [c.e.f.controller.Weathercontroller] - 청운효자동
+2024-12-31 13:16:52.749 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:List com.example.firstproject.controller.Weathercontroller.weatherdata(String,String,String) 걸린시간:3ms
+2024-12-31 13:18:04.147 INFO  [RMI TCP Connection(2)-127.0.0.1] [o.s.b.a.SpringApplicationAdminMXBeanRegistrar$SpringApplicationAdmin] - Application shutdown requested.
+2024-12-31 13:18:04.149 INFO  [RMI TCP Connection(2)-127.0.0.1] [o.s.m.s.b.SimpleBrokerMessageHandler] - Stopping...
+2024-12-31 13:18:04.150 INFO  [RMI TCP Connection(2)-127.0.0.1] [o.s.m.s.b.SimpleBrokerMessageHandler] - BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@53b10e9a]]
+2024-12-31 13:18:04.150 INFO  [RMI TCP Connection(2)-127.0.0.1] [o.s.m.s.b.SimpleBrokerMessageHandler] - Stopped.
+2024-12-31 13:18:06.254 INFO  [RMI TCP Connection(2)-127.0.0.1] [o.s.o.j.LocalContainerEntityManagerFactoryBean] - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-31 13:18:06.256 INFO  [RMI TCP Connection(2)-127.0.0.1] [com.zaxxer.hikari.HikariDataSource] - HikariPool-1 - Shutdown initiated...
+2024-12-31 13:18:06.265 INFO  [RMI TCP Connection(2)-127.0.0.1] [com.zaxxer.hikari.HikariDataSource] - HikariPool-1 - Shutdown completed.
+2024-12-31 13:18:12.526 INFO  [background-preinit] [o.h.validator.internal.util.Version] - HV000001: Hibernate Validator 6.2.3.Final
+2024-12-31 13:18:12.532 INFO  [main] [c.e.firstproject.ReactbootApplication] - Starting ReactbootApplication using Java 17.0.4.1 on DESKTOP-DBMRCI3 with PID 1484 (C:\Users\dlwjd\git\Weatherbackend\reactboot\target\classes started by leejung in C:\Users\dlwjd\git\Weatherbackend\reactboot)
+2024-12-31 13:18:12.533 INFO  [main] [c.e.firstproject.ReactbootApplication] - No active profile set, falling back to 1 default profile: "default"
+2024-12-31 13:18:13.683 INFO  [main] [o.s.d.r.c.RepositoryConfigurationDelegate] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-31 13:18:13.890 INFO  [main] [o.s.d.r.c.RepositoryConfigurationDelegate] - Finished Spring Data repository scanning in 196 ms. Found 11 JPA repository interfaces.
+2024-12-31 13:18:15.045 INFO  [main] [o.s.b.w.embedded.tomcat.TomcatWebServer] - Tomcat initialized with port(s): 8081 (http)
+2024-12-31 13:18:15.066 INFO  [main] [o.apache.coyote.http11.Http11NioProtocol] - Initializing ProtocolHandler ["http-nio-8081"]
+2024-12-31 13:18:15.066 INFO  [main] [org.apache.catalina.core.StandardService] - Starting service [Tomcat]
+2024-12-31 13:18:15.067 INFO  [main] [org.apache.catalina.core.StandardEngine] - Starting Servlet engine: [Apache Tomcat/9.0.63]
+2024-12-31 13:18:15.308 INFO  [main] [o.a.c.c.C.[Tomcat].[localhost].[/]] - Initializing Spring embedded WebApplicationContext
+2024-12-31 13:18:15.308 INFO  [main] [o.s.b.w.s.c.ServletWebServerApplicationContext] - Root WebApplicationContext: initialization completed in 2709 ms
+2024-12-31 13:18:15.629 INFO  [main] [o.hibernate.jpa.internal.util.LogHelper] - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-31 13:18:15.713 INFO  [main] [org.hibernate.Version] - HHH000412: Hibernate ORM core version 5.6.9.Final
+2024-12-31 13:18:15.934 INFO  [main] [org.hibernate.annotations.common.Version] - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2024-12-31 13:18:16.085 INFO  [main] [com.zaxxer.hikari.HikariDataSource] - HikariPool-1 - Starting...
+2024-12-31 13:18:16.511 INFO  [main] [com.zaxxer.hikari.HikariDataSource] - HikariPool-1 - Start completed.
+2024-12-31 13:18:16.556 INFO  [main] [org.hibernate.dialect.Dialect] - HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2024-12-31 13:18:18.432 INFO  [main] [o.h.e.t.j.p.i.JtaPlatformInitiator] - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2024-12-31 13:18:18.448 INFO  [main] [o.s.o.j.LocalContainerEntityManagerFactoryBean] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-31 13:18:20.361 INFO  [main] [c.e.firstproject.configure.CashConfig] - 캐쉬콘피그시작
+2024-12-31 13:18:21.106 INFO  [main] [o.s.s.web.DefaultSecurityFilterChain] - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@80347b2, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@eb65fc8, org.springframework.security.web.context.SecurityContextPersistenceFilter@4c1c134, org.springframework.security.web.header.HeaderWriterFilter@4414ee28, org.springframework.web.filter.CorsFilter@5cd5e1b6, org.springframework.security.web.authentication.logout.LogoutFilter@521e34d4, org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter@12b962b1, org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter@9be2897, com.example.firstproject.configure.auth.authenticationfilter@220a7f95, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@1f5aac08, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@302692b1, com.example.firstproject.configure.auth.Authorizationdfilter@c52c362, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@11fb4f69, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@618d2191, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@7f794b0f, org.springframework.security.web.session.SessionManagementFilter@1caa1866, org.springframework.security.web.access.ExceptionTranslationFilter@4f67d628, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@16575bfe]
+2024-12-31 13:18:21.124 WARN  [main] [o.s.s.c.a.web.builders.WebSecurity] - You are asking Spring Security to ignore Ant [pattern='/open/**']. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2024-12-31 13:18:21.124 INFO  [main] [o.s.s.web.DefaultSecurityFilterChain] - Will not secure Ant [pattern='/open/**']
+2024-12-31 13:18:21.282 WARN  [main] [o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration] - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-31 13:18:22.043 INFO  [main] [o.apache.coyote.http11.Http11NioProtocol] - Starting ProtocolHandler ["http-nio-8081"]
+2024-12-31 13:18:22.076 INFO  [main] [o.s.b.w.embedded.tomcat.TomcatWebServer] - Tomcat started on port(s): 8081 (http) with context path ''
+2024-12-31 13:18:22.078 INFO  [main] [o.s.m.s.b.SimpleBrokerMessageHandler] - Starting...
+2024-12-31 13:18:22.078 INFO  [main] [o.s.m.s.b.SimpleBrokerMessageHandler] - BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@62a5e4c7]]
+2024-12-31 13:18:22.079 INFO  [main] [o.s.m.s.b.SimpleBrokerMessageHandler] - Started.
+2024-12-31 13:18:22.091 INFO  [main] [o.s.s.a.ScheduledAnnotationBeanPostProcessor] - More than one TaskScheduler bean exists within the context, and none is named 'taskScheduler'. Mark one of them as primary or name it 'taskScheduler' (possibly as an alias); or implement the SchedulingConfigurer interface and call ScheduledTaskRegistrar#setScheduler explicitly within the configureTasks() callback: [messageBrokerTaskScheduler, defaultSockJsTaskScheduler]
+2024-12-31 13:18:22.101 INFO  [main] [c.e.firstproject.ReactbootApplication] - Started ReactbootApplication in 10.279 seconds (JVM running for 12.009)
+2024-12-31 13:18:22.121 INFO  [pool-2-thread-1] [c.e.f.Service.NoticeServiceImpl] - 경로의 파일 가져오기
+2024-12-31 13:18:22.122 INFO  [pool-2-thread-1] [c.e.f.Service.NoticeServiceImpl] - 현재시간-/noticeimages/2024/12/30
+2024-12-31 13:18:22.122 INFO  [pool-2-thread-1] [c.e.f.Service.NoticeServiceImpl] - 패스:D:\study프로그램\react\bootproject\public\noticeimages\2024\12\30
+2024-12-31 13:18:22.130 ERROR [pool-2-thread-1] [o.s.s.s.TaskUtils$LoggingErrorHandler] - Unexpected error occurred in scheduled task
+java.lang.NullPointerException: Cannot read the array length because "filenames" is null
+	at com.example.firstproject.Service.NoticeServiceImpl.garbagefiles(NoticeServiceImpl.java:539)
+	at com.example.firstproject.Service.NoticeServiceImpl$$FastClassBySpringCGLIB$$e9c1e310.invoke(<generated>)
+	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:793)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:388)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:708)
+	at com.example.firstproject.Service.NoticeServiceImpl$$EnhancerBySpringCGLIB$$d1d39b1e.garbagefiles(<generated>)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRunnable.java:84)
+	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.runAndReset(FutureTask.java:305)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:305)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+2024-12-31 13:18:24.593 INFO  [http-nio-8081-exec-1] [o.a.c.c.C.[Tomcat].[localhost].[/]] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-31 13:18:24.593 INFO  [http-nio-8081-exec-1] [o.s.web.servlet.DispatcherServlet] - Initializing Servlet 'dispatcherServlet'
+2024-12-31 13:18:24.595 INFO  [http-nio-8081-exec-1] [o.s.web.servlet.DispatcherServlet] - Completed initialization in 2 ms
+2024-12-31 13:18:25.191 INFO  [http-nio-8081-exec-1] [c.e.f.S.Memberservice.HistoryService] - X-FORWARDED-FOR : 127.0.0.1
+2024-12-31 13:18:25.192 INFO  [http-nio-8081-exec-1] [c.e.f.S.Memberservice.HistoryService] - Result : IP Address : 127.0.0.1
+2024-12-31 13:18:25.228 INFO  [http-nio-8081-exec-1] [c.e.f.S.Memberservice.HistoryService] - 로그인히스토리저장성공
+2024-12-31 13:18:26.558 INFO  [http-nio-8081-exec-2] [c.e.f.controller.Weathercontroller] - 서울특별시 종로구 청운효자동
+2024-12-31 13:18:26.558 INFO  [http-nio-8081-exec-2] [c.e.f.controller.Weathercontroller] - 서울특별시 종로구 청운효자동
+2024-12-31 13:18:26.560 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(Page com.example.firstproject.controller.MainController.search(String,String,int))
+2024-12-31 13:18:26.561 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:List com.example.firstproject.controller.Weathercontroller.weatherdata(String,String,String) 걸린시간:9ms
+2024-12-31 13:18:26.562 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/open/noticesearch
+2024-12-31 13:18:26.562 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:18:26.562 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 127.0.0.1
+2024-12-31 13:18:26.562 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:127.0.0.1
+2024-12-31 13:18:26.567 ERROR [http-nio-8081-exec-2] [o.a.c.c.C.[.[.[/].[dispatcherServlet]] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is java.lang.ClassCastException: class java.lang.Long cannot be cast to class java.util.List (java.lang.Long and java.util.List are in module java.base of loader 'bootstrap')] with root cause
+java.lang.ClassCastException: class java.lang.Long cannot be cast to class java.util.List (java.lang.Long and java.util.List are in module java.base of loader 'bootstrap')
+	at com.example.firstproject.controller.Weathercontroller$$EnhancerBySpringCGLIB$$9cb30a85.weatherdata(<generated>)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:895)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:808)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1067)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:898)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:655)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:764)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:227)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:204)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:183)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:354)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:267)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:197)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:541)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:135)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:360)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:399)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:890)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1743)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+2024-12-31 13:18:26.572 INFO  [http-nio-8081-exec-5] [c.e.f.controller.MainController] - 키워드널 검색어가아님
+2024-12-31 13:18:26.574 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(SseEmitter com.example.firstproject.controller.SSEController.sse(Authentication))
+2024-12-31 13:18:26.574 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/ssesub
+2024-12-31 13:18:26.574 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:18:26.575 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 0:0:0:0:0:0:0:1
+2024-12-31 13:18:26.575 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:0:0:0:0:0:0:0:1
+2024-12-31 13:18:26.581 INFO  [http-nio-8081-exec-6] [c.e.f.controller.FollowController] - 팔로우리스트
+2024-12-31 13:18:26.590 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:SseEmitter com.example.firstproject.controller.SSEController.sse(Authentication) 걸린시간:16ms
+2024-12-31 13:18:26.610 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:Page com.example.firstproject.controller.MainController.search(String,String,int) 걸린시간:58ms
+2024-12-31 13:18:26.612 INFO  [http-nio-8081-exec-6] [c.e.f.controller.FollowController] - 즐겨찾기여부:false
+2024-12-31 13:18:26.613 INFO  [http-nio-8081-exec-6] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followlist(Authentication) 걸린시간:39ms
+2024-12-31 13:18:33.230 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(String com.example.firstproject.controller.MemberController.memberdeleteemail(HashMap))
+2024-12-31 13:18:33.230 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/memberdeletemail
+2024-12-31 13:18:33.230 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:18:33.231 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 0:0:0:0:0:0:0:1
+2024-12-31 13:18:33.231 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:0:0:0:0:0:0:0:1
+2024-12-31 13:18:33.266 INFO  [http-nio-8081-exec-10] [c.e.f.controller.MemberController] - 멤버삭제이메일보내기!
+2024-12-31 13:18:33.267 INFO  [http-nio-8081-exec-10] [c.e.f.S.Memberservice.MemberServiceImpl] - dlwjdwns1945@gmail.com님 delete이메일발송!
+2024-12-31 13:18:37.613 INFO  [http-nio-8081-exec-10] [c.e.f.S.Memberservice.MemberServiceImpl] - 인증키:$2a$10$WISYNfhqoQknvNqp0lceeuH69/4eozl/vkW9mmFt49AKEyBcjd80a
+2024-12-31 13:18:37.616 INFO  [http-nio-8081-exec-10] [c.e.f.Repository.Memberdeleterepository] - 멤버딜리트코드저장!
+2024-12-31 13:18:37.617 INFO  [http-nio-8081-exec-10] [c.e.f.controller.MemberController] - 성공적
+2024-12-31 13:18:37.619 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:String com.example.firstproject.controller.MemberController.memberdeleteemail(HashMap) 걸린시간:4389ms
+2024-12-31 13:18:56.133 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(void com.example.firstproject.controller.MemberController.memberdelete(Map))
+2024-12-31 13:18:56.134 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/memberdelete
+2024-12-31 13:18:56.134 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:18:56.134 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 0:0:0:0:0:0:0:1
+2024-12-31 13:18:56.134 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:0:0:0:0:0:0:0:1
+2024-12-31 13:18:56.135 INFO  [http-nio-8081-exec-4] [c.e.f.controller.MemberController] - 멤버딜리트시도!dlwjdwns1945@gmail.com
+2024-12-31 13:18:56.135 INFO  [http-nio-8081-exec-4] [c.e.f.controller.MemberController] - authkey:$2a$10$WISYNfhqoQknvNqp0lceeuH69/4eozl/vkW9mmFt49AKEyBcjd80a
+2024-12-31 13:18:56.139 INFO  [http-nio-8081-exec-4] [c.e.f.S.Memberservice.MemberServiceImpl] - 유저네임:dlwjdwns1945@gmail.com
+2024-12-31 13:18:56.140 INFO  [http-nio-8081-exec-4] [c.e.f.S.Memberservice.MemberServiceImpl] - 인증키:$2a$10$WISYNfhqoQknvNqp0lceeuH69/4eozl/vkW9mmFt49AKEyBcjd80a
+2024-12-31 13:18:56.140 INFO  [http-nio-8081-exec-4] [c.e.f.Repository.Memberdeleterepository] - 딜리트코드겟
+2024-12-31 13:18:56.140 INFO  [http-nio-8081-exec-4] [c.e.f.S.Memberservice.MemberServiceImpl] - 저장소확인:$2a$10$WISYNfhqoQknvNqp0lceeuH69/4eozl/vkW9mmFt49AKEyBcjd80a
+2024-12-31 13:18:56.152 INFO  [http-nio-8081-exec-4] [c.e.f.S.Memberservice.MemberServiceImpl] - 인증키가같습니다!
+2024-12-31 13:18:56.218 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:void com.example.firstproject.controller.MemberController.memberdelete(Map) 걸린시간:85ms
+2024-12-31 13:19:08.548 INFO  [http-nio-8081-exec-3] [c.e.f.controller.Weathercontroller] - 서울특별시  종로구  청운효자동
+2024-12-31 13:19:08.550 INFO  [http-nio-8081-exec-3] [c.e.f.controller.Weathercontroller] - 서울특별시
+2024-12-31 13:19:08.550 INFO  [http-nio-8081-exec-3] [c.e.f.controller.Weathercontroller] - 종로구
+2024-12-31 13:19:08.551 INFO  [http-nio-8081-exec-3] [c.e.f.controller.Weathercontroller] - 청운효자동
+2024-12-31 13:19:08.556 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(Page com.example.firstproject.controller.MainController.search(String,String,int))
+2024-12-31 13:19:08.557 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/open/noticesearch
+2024-12-31 13:19:08.557 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:19:08.558 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 127.0.0.1
+2024-12-31 13:19:08.558 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:127.0.0.1
+2024-12-31 13:19:08.558 INFO  [http-nio-8081-exec-7] [c.e.f.controller.MainController] - 키워드널 검색어가아님
+2024-12-31 13:19:08.571 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:Page com.example.firstproject.controller.MainController.search(String,String,int) 걸린시간:15ms
+2024-12-31 13:19:08.773 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:List com.example.firstproject.controller.Weathercontroller.weatherdata(String,String,String) 걸린시간:225ms
+2024-12-31 13:19:21.250 INFO  [MessageBroker-1] [o.s.w.s.c.WebSocketMessageBrokerStats] - WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 1, active threads = 1, queued tasks = 0, completed tasks = 0]
+2024-12-31 13:21:28.829 INFO  [http-nio-8081-exec-9] [c.e.f.S.Memberservice.HistoryService] - X-FORWARDED-FOR : null
+2024-12-31 13:21:28.829 INFO  [http-nio-8081-exec-9] [c.e.f.S.Memberservice.HistoryService] - Proxy-Client-IP : null
+2024-12-31 13:21:28.829 INFO  [http-nio-8081-exec-9] [c.e.f.S.Memberservice.HistoryService] - WL-Proxy-Client-IP : null
+2024-12-31 13:21:28.829 INFO  [http-nio-8081-exec-9] [c.e.f.S.Memberservice.HistoryService] - HTTP_CLIENT_IP : null
+2024-12-31 13:21:28.829 INFO  [http-nio-8081-exec-9] [c.e.f.S.Memberservice.HistoryService] - HTTP_X_FORWARDED_FOR : null
+2024-12-31 13:21:28.829 INFO  [http-nio-8081-exec-9] [c.e.f.S.Memberservice.HistoryService] - getRemoteAddr : 0:0:0:0:0:0:0:1
+2024-12-31 13:21:28.829 INFO  [http-nio-8081-exec-9] [c.e.f.S.Memberservice.HistoryService] - Result : IP Address : 0:0:0:0:0:0:0:1
+2024-12-31 13:21:28.841 INFO  [http-nio-8081-exec-9] [c.e.f.S.Memberservice.HistoryService] - 로그인히스토리저장성공
+2024-12-31 13:21:29.498 INFO  [http-nio-8081-exec-10] [c.e.f.controller.Weathercontroller] - 서울특별시  종로구  청운효자동
+2024-12-31 13:21:29.498 INFO  [http-nio-8081-exec-10] [c.e.f.controller.Weathercontroller] - 서울특별시
+2024-12-31 13:21:29.499 INFO  [http-nio-8081-exec-10] [c.e.f.controller.Weathercontroller] - 종로구
+2024-12-31 13:21:29.499 INFO  [http-nio-8081-exec-10] [c.e.f.controller.Weathercontroller] - 청운효자동
+2024-12-31 13:21:29.500 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(Page com.example.firstproject.controller.MainController.search(String,String,int))
+2024-12-31 13:21:29.501 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/open/noticesearch
+2024-12-31 13:21:29.502 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:21:29.502 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 127.0.0.1
+2024-12-31 13:21:29.502 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:127.0.0.1
+2024-12-31 13:21:29.503 INFO  [http-nio-8081-exec-7] [c.e.f.controller.MainController] - 키워드널 검색어가아님
+2024-12-31 13:21:29.509 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:List com.example.firstproject.controller.Weathercontroller.weatherdata(String,String,String) 걸린시간:11ms
+2024-12-31 13:21:29.511 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(SseEmitter com.example.firstproject.controller.SSEController.sse(Authentication))
+2024-12-31 13:21:29.511 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/ssesub
+2024-12-31 13:21:29.511 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:21:29.511 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 0:0:0:0:0:0:0:1
+2024-12-31 13:21:29.511 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:0:0:0:0:0:0:0:1
+2024-12-31 13:21:29.511 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:SseEmitter com.example.firstproject.controller.SSEController.sse(Authentication) 걸린시간:0ms
+2024-12-31 13:21:29.513 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:Page com.example.firstproject.controller.MainController.search(String,String,int) 걸린시간:13ms
+2024-12-31 13:21:29.525 INFO  [http-nio-8081-exec-2] [c.e.f.controller.FollowController] - 팔로우리스트
+2024-12-31 13:21:29.533 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followlist(Authentication) 걸린시간:8ms
+2024-12-31 13:21:31.233 INFO  [http-nio-8081-exec-8] [c.e.f.controller.FollowController] - 팔로워리스트
+2024-12-31 13:21:31.239 INFO  [http-nio-8081-exec-8] [c.e.firstproject.Handler.FollowHandler] - 팔로워찾기
+2024-12-31 13:21:31.241 INFO  [http-nio-8081-exec-8] [c.e.f.S.Followservice.FollowService] - 팔로워없음!
+2024-12-31 13:21:31.242 INFO  [http-nio-8081-exec-8] [c.e.firstproject.Handler.FollowHandler] - 팔로워찾기
+2024-12-31 13:21:31.244 INFO  [http-nio-8081-exec-8] [c.e.f.S.Followservice.FollowService] - 내가팔로우한애없음
+2024-12-31 13:21:31.245 INFO  [http-nio-8081-exec-8] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followerlist(Authentication) 걸린시간:11ms
+2024-12-31 13:21:31.894 INFO  [http-nio-8081-exec-9] [c.e.f.controller.FollowController] - 팔로우리스트
+2024-12-31 13:21:31.899 INFO  [http-nio-8081-exec-9] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followlist(Authentication) 걸린시간:5ms
+2024-12-31 13:21:33.212 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - d
+2024-12-31 13:21:33.213 INFO  [http-nio-8081-exec-1] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:21:33.227 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:21:33.227 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:15ms
+2024-12-31 13:21:33.730 INFO  [http-nio-8081-exec-3] [c.e.f.controller.FollowController] - 입력값업슴!
+2024-12-31 13:21:33.732 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:2ms
+2024-12-31 13:21:33.973 INFO  [http-nio-8081-exec-6] [c.e.f.controller.FollowController] - ㅇ
+2024-12-31 13:21:33.974 INFO  [http-nio-8081-exec-6] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:21:33.977 INFO  [http-nio-8081-exec-6] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:21:33.977 INFO  [http-nio-8081-exec-6] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:21:34.049 INFO  [http-nio-8081-exec-4] [c.e.f.controller.FollowController] - 이
+2024-12-31 13:21:34.050 INFO  [http-nio-8081-exec-4] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:21:34.058 INFO  [http-nio-8081-exec-4] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:21:34.059 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:10ms
+2024-12-31 13:21:34.096 INFO  [http-nio-8081-exec-7] [c.e.f.controller.FollowController] - 잊
+2024-12-31 13:21:34.097 INFO  [http-nio-8081-exec-7] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:21:34.099 INFO  [http-nio-8081-exec-7] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:21:34.100 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:21:34.190 INFO  [http-nio-8081-exec-10] [c.e.f.controller.FollowController] - 이저
+2024-12-31 13:21:34.190 INFO  [http-nio-8081-exec-10] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:21:34.193 INFO  [http-nio-8081-exec-10] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:21:34.193 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:3ms
+2024-12-31 13:21:34.250 INFO  [http-nio-8081-exec-2] [c.e.f.controller.FollowController] - 이정
+2024-12-31 13:21:34.251 INFO  [http-nio-8081-exec-2] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:21:34.256 INFO  [http-nio-8081-exec-2] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:21:34.256 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:6ms
+2024-12-31 13:21:34.362 INFO  [http-nio-8081-exec-5] [c.e.f.controller.FollowController] - 이
+2024-12-31 13:21:34.362 INFO  [http-nio-8081-exec-5] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:21:34.366 INFO  [http-nio-8081-exec-5] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:21:34.366 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:21:40.330 INFO  [http-nio-8081-exec-9] [c.e.firstproject.Handler.FollowHandler] - 팔로우핸들러!
+2024-12-31 13:21:40.333 INFO  [http-nio-8081-exec-9] [c.e.f.S.Followservice.FollowService] - 팔로우안되있는게쩡
+2024-12-31 13:21:40.334 INFO  [http-nio-8081-exec-9] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followcheck(Authentication,String) 걸린시간:11ms
+2024-12-31 13:21:41.155 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(ResponseEntity com.example.firstproject.controller.FollowController.follow(Authentication,String))
+2024-12-31 13:21:41.155 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/follow
+2024-12-31 13:21:41.155 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:21:41.155 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 0:0:0:0:0:0:0:1
+2024-12-31 13:21:41.155 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:0:0:0:0:0:0:0:1
+2024-12-31 13:21:41.155 INFO  [http-nio-8081-exec-3] [c.e.f.controller.FollowController] - 인증유저겟네임:dlwjdwns1945@gmail.com
+2024-12-31 13:21:41.163 INFO  [http-nio-8081-exec-3] [c.e.firstproject.Handler.FollowHandler] - 팔로우핸들러!
+2024-12-31 13:21:41.165 INFO  [http-nio-8081-exec-3] [c.e.firstproject.Handler.FollowHandler] - 세이브핸들러
+2024-12-31 13:21:41.176 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.follow(Authentication,String) 걸린시간:22ms
+2024-12-31 13:21:43.114 INFO  [http-nio-8081-exec-4] [c.e.firstproject.Handler.FollowHandler] - 팔로우핸들러!
+2024-12-31 13:21:43.117 INFO  [http-nio-8081-exec-4] [c.e.f.S.Followservice.FollowService] - 팔로우안되있는게쩡
+2024-12-31 13:21:43.119 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followcheck(Authentication,String) 걸린시간:13ms
+2024-12-31 13:21:43.603 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(ResponseEntity com.example.firstproject.controller.FollowController.follow(Authentication,String))
+2024-12-31 13:21:43.603 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/follow
+2024-12-31 13:21:43.603 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:21:43.603 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 0:0:0:0:0:0:0:1
+2024-12-31 13:21:43.603 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:0:0:0:0:0:0:0:1
+2024-12-31 13:21:43.604 INFO  [http-nio-8081-exec-10] [c.e.f.controller.FollowController] - 인증유저겟네임:dlwjdwns1945@gmail.com
+2024-12-31 13:21:43.612 INFO  [http-nio-8081-exec-10] [c.e.firstproject.Handler.FollowHandler] - 팔로우핸들러!
+2024-12-31 13:21:43.614 INFO  [http-nio-8081-exec-10] [c.e.firstproject.Handler.FollowHandler] - 세이브핸들러
+2024-12-31 13:21:43.621 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.follow(Authentication,String) 걸린시간:18ms
+2024-12-31 13:21:47.072 INFO  [http-nio-8081-exec-8] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(Page com.example.firstproject.controller.MainController.search(String,String,int))
+2024-12-31 13:21:47.072 INFO  [http-nio-8081-exec-2] [c.e.f.controller.Weathercontroller] - 서울특별시  종로구  청운효자동
+2024-12-31 13:21:47.073 INFO  [http-nio-8081-exec-8] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/open/noticesearch
+2024-12-31 13:21:47.073 INFO  [http-nio-8081-exec-8] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:21:47.074 INFO  [http-nio-8081-exec-8] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 127.0.0.1
+2024-12-31 13:21:47.074 INFO  [http-nio-8081-exec-8] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:127.0.0.1
+2024-12-31 13:21:47.074 INFO  [http-nio-8081-exec-8] [c.e.f.controller.MainController] - 키워드널 검색어가아님
+2024-12-31 13:21:47.073 INFO  [http-nio-8081-exec-2] [c.e.f.controller.Weathercontroller] - 서울특별시
+2024-12-31 13:21:47.076 INFO  [http-nio-8081-exec-2] [c.e.f.controller.Weathercontroller] - 종로구
+2024-12-31 13:21:47.078 INFO  [http-nio-8081-exec-2] [c.e.f.controller.Weathercontroller] - 청운효자동
+2024-12-31 13:21:47.079 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:List com.example.firstproject.controller.Weathercontroller.weatherdata(String,String,String) 걸린시간:7ms
+2024-12-31 13:21:47.079 INFO  [http-nio-8081-exec-8] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:Page com.example.firstproject.controller.MainController.search(String,String,int) 걸린시간:7ms
+2024-12-31 13:21:47.090 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(SseEmitter com.example.firstproject.controller.SSEController.sse(Authentication))
+2024-12-31 13:21:47.091 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/ssesub
+2024-12-31 13:21:47.091 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:21:47.091 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 0:0:0:0:0:0:0:1
+2024-12-31 13:21:47.091 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:0:0:0:0:0:0:0:1
+2024-12-31 13:21:47.091 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:SseEmitter com.example.firstproject.controller.SSEController.sse(Authentication) 걸린시간:1ms
+2024-12-31 13:21:47.105 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - 팔로우리스트
+2024-12-31 13:21:47.113 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - 즐겨찾기여부:false
+2024-12-31 13:21:47.114 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - 즐겨찾기여부:false
+2024-12-31 13:21:47.114 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followlist(Authentication) 걸린시간:9ms
+2024-12-31 13:21:50.452 INFO  [http-nio-8081-exec-7] [c.e.f.controller.FollowController] - 팔로워리스트
+2024-12-31 13:21:50.453 INFO  [http-nio-8081-exec-7] [c.e.firstproject.Handler.FollowHandler] - 팔로워찾기
+2024-12-31 13:21:50.455 INFO  [http-nio-8081-exec-7] [c.e.f.S.Followservice.FollowService] - 팔로워없음!
+2024-12-31 13:21:50.455 INFO  [http-nio-8081-exec-7] [c.e.firstproject.Handler.FollowHandler] - 팔로워찾기
+2024-12-31 13:21:50.463 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followerlist(Authentication) 걸린시간:11ms
+2024-12-31 13:21:51.577 INFO  [http-nio-8081-exec-10] [c.e.f.controller.FollowController] - 팔로우리스트
+2024-12-31 13:21:51.583 INFO  [http-nio-8081-exec-10] [c.e.f.controller.FollowController] - 즐겨찾기여부:false
+2024-12-31 13:21:51.583 INFO  [http-nio-8081-exec-10] [c.e.f.controller.FollowController] - 즐겨찾기여부:false
+2024-12-31 13:21:51.583 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followlist(Authentication) 걸린시간:6ms
+2024-12-31 13:21:54.508 INFO  [http-nio-8081-exec-9] [c.e.f.controller.Weathercontroller] - 서울특별시  종로구  청운효자동
+2024-12-31 13:21:54.509 INFO  [http-nio-8081-exec-9] [c.e.f.controller.Weathercontroller] - 서울특별시
+2024-12-31 13:21:54.509 INFO  [http-nio-8081-exec-9] [c.e.f.controller.Weathercontroller] - 종로구
+2024-12-31 13:21:54.509 INFO  [http-nio-8081-exec-9] [c.e.f.controller.Weathercontroller] - 청운효자동
+2024-12-31 13:21:54.509 INFO  [http-nio-8081-exec-9] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:List com.example.firstproject.controller.Weathercontroller.weatherdata(String,String,String) 걸린시간:1ms
+2024-12-31 13:21:54.513 INFO  [http-nio-8081-exec-8] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(Page com.example.firstproject.controller.MainController.search(String,String,int))
+2024-12-31 13:21:54.514 INFO  [http-nio-8081-exec-8] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/open/noticesearch
+2024-12-31 13:21:54.514 INFO  [http-nio-8081-exec-8] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:21:54.514 INFO  [http-nio-8081-exec-8] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 127.0.0.1
+2024-12-31 13:21:54.514 INFO  [http-nio-8081-exec-8] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:127.0.0.1
+2024-12-31 13:21:54.515 INFO  [http-nio-8081-exec-8] [c.e.f.controller.MainController] - 키워드널 검색어가아님
+2024-12-31 13:21:54.522 INFO  [http-nio-8081-exec-8] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:Page com.example.firstproject.controller.MainController.search(String,String,int) 걸린시간:10ms
+2024-12-31 13:21:55.630 INFO  [http-nio-8081-exec-2] [c.e.f.configure.oauth2loginservice] - 유저정보{id=PQvw5IohHQHAr7NPOdwCPK4X_dhBUR-9c2Tfr_DBxKI, nickname=dlwjdwn****, email=dlwjdwns424@naver.com, name=이정준}
+2024-12-31 13:21:55.633 INFO  [http-nio-8081-exec-2] [c.e.f.configure.oauth2loginservice] - 타사로그인서비스
+2024-12-31 13:21:55.643 INFO  [http-nio-8081-exec-2] [c.e.f.S.Memberservice.HistoryService] - X-FORWARDED-FOR : null
+2024-12-31 13:21:55.643 INFO  [http-nio-8081-exec-2] [c.e.f.S.Memberservice.HistoryService] - Proxy-Client-IP : null
+2024-12-31 13:21:55.643 INFO  [http-nio-8081-exec-2] [c.e.f.S.Memberservice.HistoryService] - WL-Proxy-Client-IP : null
+2024-12-31 13:21:55.643 INFO  [http-nio-8081-exec-2] [c.e.f.S.Memberservice.HistoryService] - HTTP_CLIENT_IP : null
+2024-12-31 13:21:55.643 INFO  [http-nio-8081-exec-2] [c.e.f.S.Memberservice.HistoryService] - HTTP_X_FORWARDED_FOR : null
+2024-12-31 13:21:55.643 INFO  [http-nio-8081-exec-2] [c.e.f.S.Memberservice.HistoryService] - getRemoteAddr : 0:0:0:0:0:0:0:1
+2024-12-31 13:21:55.643 INFO  [http-nio-8081-exec-2] [c.e.f.S.Memberservice.HistoryService] - Result : IP Address : 0:0:0:0:0:0:0:1
+2024-12-31 13:21:55.653 INFO  [http-nio-8081-exec-2] [c.e.f.S.Memberservice.HistoryService] - 로그인히스토리저장성공
+2024-12-31 13:21:56.285 INFO  [http-nio-8081-exec-6] [c.e.f.controller.Weathercontroller] - 부산광역시  남구  대연제5동
+2024-12-31 13:21:56.285 INFO  [http-nio-8081-exec-6] [c.e.f.controller.Weathercontroller] - 부산광역시
+2024-12-31 13:21:56.285 INFO  [http-nio-8081-exec-6] [c.e.f.controller.Weathercontroller] - 남구
+2024-12-31 13:21:56.286 INFO  [http-nio-8081-exec-6] [c.e.f.controller.Weathercontroller] - 대연제5동
+2024-12-31 13:21:56.298 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(Page com.example.firstproject.controller.MainController.search(String,String,int))
+2024-12-31 13:21:56.298 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/open/noticesearch
+2024-12-31 13:21:56.298 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:21:56.299 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 127.0.0.1
+2024-12-31 13:21:56.299 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:127.0.0.1
+2024-12-31 13:21:56.299 INFO  [http-nio-8081-exec-5] [c.e.f.controller.MainController] - 키워드널 검색어가아님
+2024-12-31 13:21:56.302 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(SseEmitter com.example.firstproject.controller.SSEController.sse(Authentication))
+2024-12-31 13:21:56.302 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/ssesub
+2024-12-31 13:21:56.302 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:21:56.302 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 0:0:0:0:0:0:0:1
+2024-12-31 13:21:56.302 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:0:0:0:0:0:0:0:1
+2024-12-31 13:21:56.302 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:SseEmitter com.example.firstproject.controller.SSEController.sse(Authentication) 걸린시간:0ms
+2024-12-31 13:21:56.305 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:Page com.example.firstproject.controller.MainController.search(String,String,int) 걸린시간:7ms
+2024-12-31 13:21:56.310 INFO  [http-nio-8081-exec-10] [c.e.f.controller.FollowController] - 팔로우리스트
+2024-12-31 13:21:56.335 INFO  [http-nio-8081-exec-10] [c.e.f.controller.FollowController] - 즐겨찾기여부:false
+2024-12-31 13:21:56.336 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followlist(Authentication) 걸린시간:26ms
+2024-12-31 13:21:56.463 INFO  [http-nio-8081-exec-6] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:List com.example.firstproject.controller.Weathercontroller.weatherdata(String,String,String) 걸린시간:178ms
+2024-12-31 13:21:57.396 INFO  [http-nio-8081-exec-8] [c.e.f.controller.FollowController] - 팔로워리스트
+2024-12-31 13:21:57.397 INFO  [http-nio-8081-exec-8] [c.e.firstproject.Handler.FollowHandler] - 팔로워찾기
+2024-12-31 13:21:57.399 INFO  [http-nio-8081-exec-8] [c.e.f.S.Followservice.FollowService] - 팔로워없음!
+2024-12-31 13:21:57.399 INFO  [http-nio-8081-exec-8] [c.e.firstproject.Handler.FollowHandler] - 팔로워찾기
+2024-12-31 13:21:57.406 INFO  [http-nio-8081-exec-8] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followerlist(Authentication) 걸린시간:10ms
+2024-12-31 13:21:59.525 INFO  [http-nio-8081-exec-3] [c.e.f.controller.FollowController] - 팔로우리스트
+2024-12-31 13:21:59.530 INFO  [http-nio-8081-exec-3] [c.e.f.controller.FollowController] - 즐겨찾기여부:false
+2024-12-31 13:21:59.530 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followlist(Authentication) 걸린시간:5ms
+2024-12-31 13:22:01.463 INFO  [http-nio-8081-exec-2] [c.e.f.controller.FollowController] - 팔로워리스트
+2024-12-31 13:22:01.463 INFO  [http-nio-8081-exec-2] [c.e.firstproject.Handler.FollowHandler] - 팔로워찾기
+2024-12-31 13:22:01.465 INFO  [http-nio-8081-exec-2] [c.e.f.S.Followservice.FollowService] - 팔로워없음!
+2024-12-31 13:22:01.465 INFO  [http-nio-8081-exec-2] [c.e.firstproject.Handler.FollowHandler] - 팔로워찾기
+2024-12-31 13:22:01.471 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followerlist(Authentication) 걸린시간:8ms
+2024-12-31 13:22:05.955 INFO  [http-nio-8081-exec-4] [c.e.f.S.Followservice.FollowService] - 리스트가없습니다!
+2024-12-31 13:22:05.957 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.favoritelist(Authentication) 걸린시간:8ms
+2024-12-31 13:22:06.533 INFO  [http-nio-8081-exec-5] [c.e.f.controller.FollowController] - 팔로우리스트
+2024-12-31 13:22:06.540 INFO  [http-nio-8081-exec-5] [c.e.f.controller.FollowController] - 즐겨찾기여부:false
+2024-12-31 13:22:06.540 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followlist(Authentication) 걸린시간:7ms
+2024-12-31 13:22:11.457 INFO  [http-nio-8081-exec-6] [c.e.f.controller.FollowController] - 팔로워리스트
+2024-12-31 13:22:11.458 INFO  [http-nio-8081-exec-6] [c.e.firstproject.Handler.FollowHandler] - 팔로워찾기
+2024-12-31 13:22:11.459 INFO  [http-nio-8081-exec-6] [c.e.f.S.Followservice.FollowService] - 팔로워없음!
+2024-12-31 13:22:11.459 INFO  [http-nio-8081-exec-6] [c.e.firstproject.Handler.FollowHandler] - 팔로워찾기
+2024-12-31 13:22:11.465 INFO  [http-nio-8081-exec-6] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followerlist(Authentication) 걸린시간:8ms
+2024-12-31 13:22:22.515 INFO  [http-nio-8081-exec-8] [c.e.f.controller.Weathercontroller] - 서울특별시  종로구  청운효자동
+2024-12-31 13:22:22.515 INFO  [http-nio-8081-exec-8] [c.e.f.controller.Weathercontroller] - 서울특별시
+2024-12-31 13:22:22.515 INFO  [http-nio-8081-exec-8] [c.e.f.controller.Weathercontroller] - 종로구
+2024-12-31 13:22:22.515 INFO  [http-nio-8081-exec-8] [c.e.f.controller.Weathercontroller] - 청운효자동
+2024-12-31 13:22:22.516 INFO  [http-nio-8081-exec-8] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:List com.example.firstproject.controller.Weathercontroller.weatherdata(String,String,String) 걸린시간:1ms
+2024-12-31 13:22:22.523 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(Page com.example.firstproject.controller.MainController.search(String,String,int))
+2024-12-31 13:22:22.523 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/open/noticesearch
+2024-12-31 13:22:22.523 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:22:22.523 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 127.0.0.1
+2024-12-31 13:22:22.523 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:127.0.0.1
+2024-12-31 13:22:22.523 INFO  [http-nio-8081-exec-3] [c.e.f.controller.MainController] - 키워드널 검색어가아님
+2024-12-31 13:22:22.529 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:Page com.example.firstproject.controller.MainController.search(String,String,int) 걸린시간:7ms
+2024-12-31 13:22:23.829 INFO  [http-nio-8081-exec-1] [c.e.f.configure.oauth2loginservice] - 타사로그인서비스
+2024-12-31 13:22:23.841 INFO  [http-nio-8081-exec-1] [c.e.f.S.Memberservice.HistoryService] - X-FORWARDED-FOR : null
+2024-12-31 13:22:23.841 INFO  [http-nio-8081-exec-1] [c.e.f.S.Memberservice.HistoryService] - Proxy-Client-IP : null
+2024-12-31 13:22:23.841 INFO  [http-nio-8081-exec-1] [c.e.f.S.Memberservice.HistoryService] - WL-Proxy-Client-IP : null
+2024-12-31 13:22:23.841 INFO  [http-nio-8081-exec-1] [c.e.f.S.Memberservice.HistoryService] - HTTP_CLIENT_IP : null
+2024-12-31 13:22:23.841 INFO  [http-nio-8081-exec-1] [c.e.f.S.Memberservice.HistoryService] - HTTP_X_FORWARDED_FOR : null
+2024-12-31 13:22:23.841 INFO  [http-nio-8081-exec-1] [c.e.f.S.Memberservice.HistoryService] - getRemoteAddr : 0:0:0:0:0:0:0:1
+2024-12-31 13:22:23.841 INFO  [http-nio-8081-exec-1] [c.e.f.S.Memberservice.HistoryService] - Result : IP Address : 0:0:0:0:0:0:0:1
+2024-12-31 13:22:23.851 INFO  [http-nio-8081-exec-1] [c.e.f.S.Memberservice.HistoryService] - 로그인히스토리저장성공
+2024-12-31 13:22:24.174 INFO  [http-nio-8081-exec-4] [c.e.f.controller.Weathercontroller] - 서울특별시  종로구  청운효자동
+2024-12-31 13:22:24.175 INFO  [http-nio-8081-exec-4] [c.e.f.controller.Weathercontroller] - 서울특별시
+2024-12-31 13:22:24.175 INFO  [http-nio-8081-exec-4] [c.e.f.controller.Weathercontroller] - 종로구
+2024-12-31 13:22:24.175 INFO  [http-nio-8081-exec-4] [c.e.f.controller.Weathercontroller] - 청운효자동
+2024-12-31 13:22:24.175 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:List com.example.firstproject.controller.Weathercontroller.weatherdata(String,String,String) 걸린시간:1ms
+2024-12-31 13:22:24.185 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(Page com.example.firstproject.controller.MainController.search(String,String,int))
+2024-12-31 13:22:24.185 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/open/noticesearch
+2024-12-31 13:22:24.185 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:22:24.185 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 127.0.0.1
+2024-12-31 13:22:24.185 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:127.0.0.1
+2024-12-31 13:22:24.186 INFO  [http-nio-8081-exec-10] [c.e.f.controller.MainController] - 키워드널 검색어가아님
+2024-12-31 13:22:24.187 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(SseEmitter com.example.firstproject.controller.SSEController.sse(Authentication))
+2024-12-31 13:22:24.187 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/ssesub
+2024-12-31 13:22:24.187 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:22:24.188 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 0:0:0:0:0:0:0:1
+2024-12-31 13:22:24.188 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:0:0:0:0:0:0:0:1
+2024-12-31 13:22:24.188 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:SseEmitter com.example.firstproject.controller.SSEController.sse(Authentication) 걸린시간:1ms
+2024-12-31 13:22:24.199 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:Page com.example.firstproject.controller.MainController.search(String,String,int) 걸린시간:15ms
+2024-12-31 13:22:24.206 INFO  [http-nio-8081-exec-9] [c.e.f.controller.FollowController] - 팔로우리스트
+2024-12-31 13:22:24.215 INFO  [http-nio-8081-exec-9] [c.e.f.controller.FollowController] - 즐겨찾기여부:false
+2024-12-31 13:22:24.215 INFO  [http-nio-8081-exec-9] [c.e.f.controller.FollowController] - 즐겨찾기여부:false
+2024-12-31 13:22:24.215 INFO  [http-nio-8081-exec-9] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followlist(Authentication) 걸린시간:9ms
+2024-12-31 13:22:28.849 INFO  [http-nio-8081-exec-3] [c.e.f.controller.FollowController] - ㅇ
+2024-12-31 13:22:28.849 INFO  [http-nio-8081-exec-3] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:22:28.851 INFO  [http-nio-8081-exec-3] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:22:28.852 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:3ms
+2024-12-31 13:22:29.425 INFO  [http-nio-8081-exec-2] [c.e.f.controller.FollowController] - 입력값업슴!
+2024-12-31 13:22:29.425 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:0ms
+2024-12-31 13:22:29.644 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - ㅇ
+2024-12-31 13:22:29.645 INFO  [http-nio-8081-exec-1] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:22:29.647 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:22:29.647 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:3ms
+2024-12-31 13:22:29.675 INFO  [http-nio-8081-exec-7] [c.e.f.controller.FollowController] - 이
+2024-12-31 13:22:29.676 INFO  [http-nio-8081-exec-7] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:22:29.679 INFO  [http-nio-8081-exec-7] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:22:29.680 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:5ms
+2024-12-31 13:22:29.689 INFO  [http-nio-8081-exec-5] [c.e.f.controller.FollowController] - 잊
+2024-12-31 13:22:29.690 INFO  [http-nio-8081-exec-5] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:22:29.693 INFO  [http-nio-8081-exec-5] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:22:29.693 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:22:29.781 INFO  [http-nio-8081-exec-4] [c.e.f.controller.FollowController] - 이저
+2024-12-31 13:22:29.782 INFO  [http-nio-8081-exec-4] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:22:29.784 INFO  [http-nio-8081-exec-4] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:22:29.784 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:3ms
+2024-12-31 13:22:29.849 INFO  [http-nio-8081-exec-6] [c.e.f.controller.FollowController] - 이정
+2024-12-31 13:22:29.850 INFO  [http-nio-8081-exec-6] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:22:29.853 INFO  [http-nio-8081-exec-6] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:22:29.854 INFO  [http-nio-8081-exec-6] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:5ms
+2024-12-31 13:22:29.952 INFO  [http-nio-8081-exec-10] [c.e.f.controller.FollowController] - 이
+2024-12-31 13:22:29.952 INFO  [http-nio-8081-exec-10] [c.e.f.S.Memberservice.MemberServiceImpl] - 닉네임으로 멤버찾기
+2024-12-31 13:22:29.956 INFO  [http-nio-8081-exec-10] [c.e.f.controller.FollowController] - 여기
+2024-12-31 13:22:29.956 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:4ms
+2024-12-31 13:22:31.226 INFO  [http-nio-8081-exec-8] [c.e.firstproject.Handler.FollowHandler] - 팔로우핸들러!
+2024-12-31 13:22:31.229 INFO  [http-nio-8081-exec-8] [c.e.f.S.Followservice.FollowService] - 팔로우안되있는게쩡
+2024-12-31 13:22:31.230 INFO  [http-nio-8081-exec-8] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followcheck(Authentication,String) 걸린시간:11ms
+2024-12-31 13:22:32.218 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(ResponseEntity com.example.firstproject.controller.FollowController.follow(Authentication,String))
+2024-12-31 13:22:32.218 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/follow
+2024-12-31 13:22:32.218 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:22:32.218 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 0:0:0:0:0:0:0:1
+2024-12-31 13:22:32.218 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:0:0:0:0:0:0:0:1
+2024-12-31 13:22:32.218 INFO  [http-nio-8081-exec-2] [c.e.f.controller.FollowController] - 인증유저겟네임:dlwjdwns1945@gmail.com
+2024-12-31 13:22:32.224 INFO  [http-nio-8081-exec-2] [c.e.firstproject.Handler.FollowHandler] - 팔로우핸들러!
+2024-12-31 13:22:32.226 INFO  [http-nio-8081-exec-2] [c.e.firstproject.Handler.FollowHandler] - 세이브핸들러
+2024-12-31 13:22:32.232 INFO  [http-nio-8081-exec-2] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.follow(Authentication,String) 걸린시간:14ms
+2024-12-31 13:22:36.599 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - 입력값업슴!
+2024-12-31 13:22:36.600 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.usersearch(String) 걸린시간:1ms
+2024-12-31 13:22:39.964 INFO  [http-nio-8081-exec-5] [c.e.f.controller.Weathercontroller] - 서울특별시  종로구  청운효자동
+2024-12-31 13:22:39.964 INFO  [http-nio-8081-exec-5] [c.e.f.controller.Weathercontroller] - 서울특별시
+2024-12-31 13:22:39.964 INFO  [http-nio-8081-exec-5] [c.e.f.controller.Weathercontroller] - 종로구
+2024-12-31 13:22:39.964 INFO  [http-nio-8081-exec-5] [c.e.f.controller.Weathercontroller] - 청운효자동
+2024-12-31 13:22:39.965 INFO  [http-nio-8081-exec-5] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:List com.example.firstproject.controller.Weathercontroller.weatherdata(String,String,String) 걸린시간:1ms
+2024-12-31 13:22:39.972 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(Page com.example.firstproject.controller.MainController.search(String,String,int))
+2024-12-31 13:22:39.972 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/open/noticesearch
+2024-12-31 13:22:39.972 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:22:39.972 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 127.0.0.1
+2024-12-31 13:22:39.973 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:127.0.0.1
+2024-12-31 13:22:39.973 INFO  [http-nio-8081-exec-4] [c.e.f.controller.MainController] - 키워드널 검색어가아님
+2024-12-31 13:22:39.978 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:Page com.example.firstproject.controller.MainController.search(String,String,int) 걸린시간:7ms
+2024-12-31 13:22:41.394 INFO  [http-nio-8081-exec-10] [c.e.f.configure.oauth2loginservice] - 유저정보{id=PQvw5IohHQHAr7NPOdwCPK4X_dhBUR-9c2Tfr_DBxKI, nickname=dlwjdwn****, email=dlwjdwns424@naver.com, name=이정준}
+2024-12-31 13:22:41.397 INFO  [http-nio-8081-exec-10] [c.e.f.configure.oauth2loginservice] - 타사로그인서비스
+2024-12-31 13:22:41.406 INFO  [http-nio-8081-exec-10] [c.e.f.S.Memberservice.HistoryService] - X-FORWARDED-FOR : null
+2024-12-31 13:22:41.406 INFO  [http-nio-8081-exec-10] [c.e.f.S.Memberservice.HistoryService] - Proxy-Client-IP : null
+2024-12-31 13:22:41.406 INFO  [http-nio-8081-exec-10] [c.e.f.S.Memberservice.HistoryService] - WL-Proxy-Client-IP : null
+2024-12-31 13:22:41.406 INFO  [http-nio-8081-exec-10] [c.e.f.S.Memberservice.HistoryService] - HTTP_CLIENT_IP : null
+2024-12-31 13:22:41.406 INFO  [http-nio-8081-exec-10] [c.e.f.S.Memberservice.HistoryService] - HTTP_X_FORWARDED_FOR : null
+2024-12-31 13:22:41.406 INFO  [http-nio-8081-exec-10] [c.e.f.S.Memberservice.HistoryService] - getRemoteAddr : 0:0:0:0:0:0:0:1
+2024-12-31 13:22:41.406 INFO  [http-nio-8081-exec-10] [c.e.f.S.Memberservice.HistoryService] - Result : IP Address : 0:0:0:0:0:0:0:1
+2024-12-31 13:22:41.416 INFO  [http-nio-8081-exec-10] [c.e.f.S.Memberservice.HistoryService] - 로그인히스토리저장성공
+2024-12-31 13:22:41.960 INFO  [http-nio-8081-exec-9] [c.e.f.controller.Weathercontroller] - 부산광역시  남구  대연제5동
+2024-12-31 13:22:41.960 INFO  [http-nio-8081-exec-9] [c.e.f.controller.Weathercontroller] - 부산광역시
+2024-12-31 13:22:41.960 INFO  [http-nio-8081-exec-9] [c.e.f.controller.Weathercontroller] - 남구
+2024-12-31 13:22:41.960 INFO  [http-nio-8081-exec-9] [c.e.f.controller.Weathercontroller] - 대연제5동
+2024-12-31 13:22:41.961 INFO  [http-nio-8081-exec-9] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:List com.example.firstproject.controller.Weathercontroller.weatherdata(String,String,String) 걸린시간:1ms
+2024-12-31 13:22:41.974 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(Page com.example.firstproject.controller.MainController.search(String,String,int))
+2024-12-31 13:22:41.974 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/open/noticesearch
+2024-12-31 13:22:41.974 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:22:41.974 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 127.0.0.1
+2024-12-31 13:22:41.974 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:127.0.0.1
+2024-12-31 13:22:41.974 INFO  [http-nio-8081-exec-7] [c.e.f.controller.MainController] - 키워드널 검색어가아님
+2024-12-31 13:22:41.976 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - aop로그시작execution(SseEmitter com.example.firstproject.controller.SSEController.sse(Authentication))
+2024-12-31 13:22:41.976 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - before에서 요청uri:/ssesub
+2024-12-31 13:22:41.976 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - before에서 요청로케일정보:ko_KR
+2024-12-31 13:22:41.976 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - Result : IP Address : 0:0:0:0:0:0:0:1
+2024-12-31 13:22:41.976 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - before에서 요청ip주소:0:0:0:0:0:0:0:1
+2024-12-31 13:22:41.977 INFO  [http-nio-8081-exec-3] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:SseEmitter com.example.firstproject.controller.SSEController.sse(Authentication) 걸린시간:1ms
+2024-12-31 13:22:41.981 INFO  [http-nio-8081-exec-7] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:Page com.example.firstproject.controller.MainController.search(String,String,int) 걸린시간:8ms
+2024-12-31 13:22:41.985 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - 팔로우리스트
+2024-12-31 13:22:41.993 INFO  [http-nio-8081-exec-1] [c.e.f.controller.FollowController] - 즐겨찾기여부:false
+2024-12-31 13:22:41.993 INFO  [http-nio-8081-exec-1] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followlist(Authentication) 걸린시간:8ms
+2024-12-31 13:22:43.274 INFO  [http-nio-8081-exec-4] [c.e.f.controller.FollowController] - 팔로워리스트
+2024-12-31 13:22:43.275 INFO  [http-nio-8081-exec-4] [c.e.firstproject.Handler.FollowHandler] - 팔로워찾기
+2024-12-31 13:22:43.281 INFO  [http-nio-8081-exec-4] [c.e.firstproject.Handler.FollowHandler] - 팔로워찾기
+2024-12-31 13:22:43.285 INFO  [http-nio-8081-exec-4] [c.e.f.S.Followservice.FollowService] - 날구독한리스트시작51
+2024-12-31 13:22:43.287 INFO  [http-nio-8081-exec-4] [c.e.f.S.Followservice.FollowService] - 내리스트시작
+2024-12-31 13:22:43.288 INFO  [http-nio-8081-exec-4] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followerlist(Authentication) 걸린시간:14ms
+2024-12-31 13:22:46.519 INFO  [http-nio-8081-exec-6] [c.e.f.controller.FollowController] - 팔로우리스트
+2024-12-31 13:22:46.525 INFO  [http-nio-8081-exec-6] [c.e.f.controller.FollowController] - 즐겨찾기여부:false
+2024-12-31 13:22:46.525 INFO  [http-nio-8081-exec-6] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followlist(Authentication) 걸린시간:6ms
+2024-12-31 13:22:47.141 INFO  [http-nio-8081-exec-10] [c.e.f.controller.FollowController] - 팔로워리스트
+2024-12-31 13:22:47.142 INFO  [http-nio-8081-exec-10] [c.e.firstproject.Handler.FollowHandler] - 팔로워찾기
+2024-12-31 13:22:47.146 INFO  [http-nio-8081-exec-10] [c.e.firstproject.Handler.FollowHandler] - 팔로워찾기
+2024-12-31 13:22:47.150 INFO  [http-nio-8081-exec-10] [c.e.f.S.Followservice.FollowService] - 날구독한리스트시작51
+2024-12-31 13:22:47.150 INFO  [http-nio-8081-exec-10] [c.e.f.S.Followservice.FollowService] - 내리스트시작
+2024-12-31 13:22:47.151 INFO  [http-nio-8081-exec-10] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followerlist(Authentication) 걸린시간:10ms
+2024-12-31 13:22:48.112 INFO  [http-nio-8081-exec-9] [c.e.f.controller.FollowController] - 팔로우리스트
+2024-12-31 13:22:48.118 INFO  [http-nio-8081-exec-9] [c.e.f.controller.FollowController] - 즐겨찾기여부:false
+2024-12-31 13:22:48.118 INFO  [http-nio-8081-exec-9] [c.example.firstproject.aop.LoggingAspect] - 조인포인트시그네이처:ResponseEntity com.example.firstproject.controller.FollowController.followlist(Authentication) 걸린시간:6ms
+2024-12-31 13:24:18.837 INFO  [RMI TCP Connection(2)-127.0.0.1] [o.s.b.a.SpringApplicationAdminMXBeanRegistrar$SpringApplicationAdmin] - Application shutdown requested.
+2024-12-31 13:24:18.840 INFO  [RMI TCP Connection(2)-127.0.0.1] [o.s.m.s.b.SimpleBrokerMessageHandler] - Stopping...
+2024-12-31 13:24:18.840 INFO  [RMI TCP Connection(2)-127.0.0.1] [o.s.m.s.b.SimpleBrokerMessageHandler] - BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@62a5e4c7]]
+2024-12-31 13:24:18.840 INFO  [RMI TCP Connection(2)-127.0.0.1] [o.s.m.s.b.SimpleBrokerMessageHandler] - Stopped.
+2024-12-31 13:24:20.688 INFO  [RMI TCP Connection(3)-127.0.0.1] [o.s.b.a.SpringApplicationAdminMXBeanRegistrar$SpringApplicationAdmin] - Application shutdown requested.
+2024-12-31 13:24:20.915 INFO  [RMI TCP Connection(2)-127.0.0.1] [o.s.o.j.LocalContainerEntityManagerFactoryBean] - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-31 13:24:20.917 INFO  [RMI TCP Connection(2)-127.0.0.1] [com.zaxxer.hikari.HikariDataSource] - HikariPool-1 - Shutdown initiated...
+2024-12-31 13:24:20.923 INFO  [RMI TCP Connection(2)-127.0.0.1] [com.zaxxer.hikari.HikariDataSource] - HikariPool-1 - Shutdown completed.
