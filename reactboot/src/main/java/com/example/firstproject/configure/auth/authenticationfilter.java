@@ -163,7 +163,7 @@ public class authenticationfilter extends UsernamePasswordAuthenticationFilter{
 		jwtservice.Setrefreshtoken(principal.getUsername(), refreshtoken);
 		response.addCookie(idCookie);
 	
-		response.addHeader("Authorization", jwttoken);
+		response.addHeader("Authorization", jwttoken); //
 		response.addHeader("Refreshtoken", refreshtoken);
 		
 		System.out.println("jwttoken:"+jwttoken);

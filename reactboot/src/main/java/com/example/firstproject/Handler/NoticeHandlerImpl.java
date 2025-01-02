@@ -215,6 +215,15 @@ public class NoticeHandlerImpl implements NoticeHandler{
 		log.info("좋아요해제핸들러");
 		likerepository.delete(favorite);
 	}
+
+
+
+	@Override
+	public Page<FavoriteEntity> favoritenoticefind(MemberEntity member,Pageable pageable) {
+		// TODO Auto-generated method stub
+		Page<FavoriteEntity> followentity=likerepository.findByMember(member, pageable);
+		return followentity;
+	}
 	 
 
 }

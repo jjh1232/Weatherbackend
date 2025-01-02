@@ -21,7 +21,7 @@ public class roomlistresponseDto {
 	
 	private Set<MemberRoom> namelist;
 	
-	private LocalDateTime time;
+	private String time;
 	
 	private String latelychat;
 }

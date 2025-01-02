@@ -84,6 +84,7 @@ public class securityconfig {
         config.setAllowedHeaders(List.of("*")); //얼로우헤더는 preflightrequest의 응답에사용되는헤더 
         //-> 실제요청에 사용할수있는 http헤더의목록나열 ->클라이언트가 사용할수있는 헤더목록 
         config.setExposedHeaders(List.of("Authorization","Refreshtoken","userinfo")); //클라이언트가 응답에 접근할수 있는권하을주는 헤더
+       
         //*로모두포함이안되서일일히포함해야함..
         //->응답 받은후 읽기 접근이 허용되는 헤더
         //config.setMaxAge(6000L); -> preflight요청을 클라이언트가 캐싱할수있는시간지정 

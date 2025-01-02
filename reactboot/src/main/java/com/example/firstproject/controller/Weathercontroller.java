@@ -79,10 +79,10 @@ public class Weathercontroller {
 		log.info(reg3);
 		
 		
-		System.out.println(reg1+"  "+reg2+"  "+reg3);
+		System.out.println(reg1+"  "+reg2+"  "+reg3 );
 		
 		List<frontweather> info=weatherservice.getweatherdata(reg1,reg2,reg3,gridx,gridy);
-	
+		System.out.println("날씨api컨트롤러가보냄");
 		return info;
 	
 	}

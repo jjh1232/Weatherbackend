@@ -1,6 +1,7 @@
 package com.example.firstproject.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.firstproject.Dto.MemberDto;
 import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.NoticeUpdate;
 import com.example.firstproject.Dto.Noticeform;
@@ -55,4 +57,6 @@ public interface NoticeService {
 	public ResponseEntity noticelikes(MemberEntity member,Long noticeid);
 	
 	public boolean noticelikecheck(MemberEntity member,Long noticeid);
+	
+	public  Map<String,Object> favoritenotice(MemberEntity member,Pageable pageable);
 }

@@ -91,8 +91,11 @@ public class MainController {
 		return notice;
 	}
 	
+	
+	//이게지금 메인트윗으로쓰고있음
 	@GetMapping("/open/noticesearch")
-	public Page<NoticeDto> search(@RequestParam(required = false,defaultValue="title") String option,@RequestParam(required = false,defaultValue="") String keyword,
+	public Page<NoticeDto> search(@RequestParam(required = false,defaultValue="title") String option,
+			@RequestParam(required = false,defaultValue="") String keyword,
 			@RequestParam(defaultValue="1") int page) {
 		//noticeservice.search(option,keyword);
 		if(keyword.equals("")) {
@@ -113,21 +116,21 @@ public class MainController {
 		
 	}
 	
+	//=====================================일단 좋아요 목록가져오는컨트롤러 ============================================
+	@GetMapping("/onlikenotice")
+	public ResponseEntity search(Authentication authentication,@RequestParam(defaultValue="1") int page){
+		PrincipalDetails principal=(PrincipalDetails) authentication.getPrincipal();
+		Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"createat"));
+		System.out.println("들어온페이지:"+page);
+		Map<String,Object> dto=noticeservice.favoritenotice(principal.getMember(),pageable);
+		
+		
+		
+		return ResponseEntity.ok(dto);
+	}
 
 	
-	@GetMapping("/open/hello")
-	public List<Object> main() {//vo같은거도 responsebody가json형식으로바꿔줌
-		Map<String,Object> map = new HashMap<>();
-		Map<String,Object> map2 = new HashMap<>();
-		List<Object> as=new ArrayList<Object>();
-		
-		map.put("title","제목");
-		map.put("content","내용임");
-		
-		as.add(map);
-		
-		return as;
-	}
+	
 	
 	@PostMapping(value="/noticecreate")
 	public void create(@Validated @RequestBody Noticeform form) {//리퀘스트바디와 겟터셋터필수임;
@@ -144,7 +147,7 @@ public class MainController {
 		System.out.println(Dto);
 		return Dto;
 	}
-	//=====================수정검사
+	//=====================수정검사==========================================
 	@GetMapping("/noticeupdate/{num}")
 	public NoticeDto noticeupdatedetail(@PathVariable Long num,Authentication authentication) throws Exception {
 		PrincipalDetails principal=(PrincipalDetails) authentication.getPrincipal();
@@ -162,7 +165,7 @@ public class MainController {
 		
 	}
 	
-	//=======================삭제
+	//=======================삭제===============================
 	@DeleteMapping("/noticedelete/{num}")
 	public void delete(@PathVariable Long num,Authentication authentication) throws Exception {
 		PrincipalDetails principal=(PrincipalDetails) authentication.getPrincipal();
@@ -184,7 +187,7 @@ public class MainController {
 		NoticeDto dto=noticeservice.noticeupdate(num,update);
 		return dto;
 	}
-	//==================코멘트생성
+	//==================코멘트생성========================================
 	@PostMapping("/commentcreate")
 	public void comment(@RequestBody Commentform form ) {
 		System.out.println("댓글작성");
@@ -330,6 +333,5 @@ public class MainController {
 		
 		return ResponseEntity.ok(like);
 	}
-	
 	
 }

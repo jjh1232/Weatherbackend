@@ -12,8 +12,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,6 +24,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -34,6 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriUtils;
 
 import com.example.firstproject.Dto.Detachupdateform;
+import com.example.firstproject.Dto.MemberDto;
 import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.NoticeUpdate;
 import com.example.firstproject.Dto.Noticeform;
@@ -47,6 +51,7 @@ import com.example.firstproject.Entity.FavoriteEntity;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
 import com.example.firstproject.Entity.detachfile;
+import com.example.firstproject.Entity.follow.FollowEntity;
 import com.example.firstproject.Handler.MemberHandler;
 import com.example.firstproject.Handler.NoticeHandler;
 import com.example.firstproject.Repository.DetachfileRepository;
@@ -98,7 +103,7 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public Page<NoticeDto> search(String option, String content,int page) {
 		// TODO Auto-generated method stub
-		log.info("서비스입갤"+option);
+		log.info("서비스시작"+option);
 		PageRequest pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
 		//페이지객체옵션
 		
@@ -664,6 +669,38 @@ public class NoticeServiceImpl implements NoticeService {
 		boolean like=!noticehandler.findbynoticeanduser(member, notice).isEmpty();
 		return like;
 		
+	}
+
+	//========================좋아요한 글만가져오기=================================
+	@Override
+	public  Map<String,Object> favoritenotice(MemberEntity member, Pageable pageable) {
+		// TODO Auto-generated method stub
+		 	Page<FavoriteEntity> followlist=noticehandler.favoritenoticefind(member, pageable);
+		 	System.out.println("좋아요글서비스단어떻게적용되나보자");
+		 	
+		 	//페이지객체생성법
+		 	List<NoticeDto> pagedto=new ArrayList<>();
+		 	//이거페이징어차피안되서안씀..생각해보니총페이지도필요없음
+		 	//Page<NoticeDto> dtolist=new PageImpl<>(pagedto);
+		 	
+		 	
+		 	for(FavoriteEntity favoriteentity:followlist) {
+		 		//아이거내가거꾸로좋아요했음
+		 		NoticeEntity notice=favoriteentity.getNotice();
+		 		NoticeDto dto=NoticeDto.builder().comments(notice.getComments()).detachfiles(notice.getFiles())
+		 				.likes(notice.getLikeuser().size()).nickname(notice.getNickname()).num(notice.getId())
+		 				.pty(notice.getPty()).temp(notice.getTemp()).sky(notice.getSky()).rain(notice.getRain())
+		 				.text(notice.getText()).title(notice.getTitle()).username(notice.getUsername()).likeusercheck(true)
+		 				.red(notice.getRed()).build();
+		 		
+		 		pagedto.add(dto);
+		 	}
+		 	
+		 	
+		 	Map<String,Object> data=new HashMap<>();
+		 	data.put("totalpage", followlist.getTotalPages());
+		 	data.put("notice", pagedto);
+		return data;
 	}
 	}
 	 

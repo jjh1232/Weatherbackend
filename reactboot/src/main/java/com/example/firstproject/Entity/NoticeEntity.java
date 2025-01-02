@@ -1,6 +1,7 @@
 package com.example.firstproject.Entity;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,14 +17,17 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.example.firstproject.Dto.NoticeDto;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
@@ -73,7 +77,12 @@ public class NoticeEntity {
 	
 	@CreatedDate
 	@Column(updatable = false)//스프링부트말고 자바컬럼 업데이트시점에서 업데이트막음 
-	private LocalDateTime red;
+	private String red;
+	//데이터포맷
+	 @PrePersist
+	  public void onpersist() {
+	   this.red=LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd/HH:mm:s"));
+	 }
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="Member_id")
@@ -106,7 +115,7 @@ public class NoticeEntity {
 
 	public NoticeDto toDto(Long num,
 			String username,String nickname
-			,String title, String text,LocalDateTime red,
+			,String title, String text,String red,
 			List<CommentEntity> comments,
 			List<detachfile> detachfiles
 			,int likes,String temp,String sky,String pty,String rain) {
@@ -128,7 +137,7 @@ public class NoticeEntity {
 	}
 	
 	public NoticeDto toDto(Long num,String username,String nickname
-			,String title, String text,LocalDateTime red
+			,String title, String text,String red
 			,int likes,String temp,String sky,String pty,String rain) {
 		return NoticeDto.builder()
 				.num(num)

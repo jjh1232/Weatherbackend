@@ -47,4 +47,7 @@ public interface NoticeHandler {
 
 	public void favoritesave(FavoriteEntity favorite);
 	public void favoritedelete(FavoriteEntity favorite);
+
+	public Page<FavoriteEntity> favoritenoticefind(MemberEntity member,Pageable pageable);
+
 }

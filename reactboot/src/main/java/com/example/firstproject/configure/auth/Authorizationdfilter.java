@@ -98,9 +98,12 @@ public class Authorizationdfilter extends BasicAuthenticationFilter{
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			String Accesstoken=jwtservice.createtoken(principal);
 		
-			
+			String Refreshtoken=jwtservice.createrefreshtoken();
 			//두필터에서는 헤더수정이안됨;;
+			jwtservice.Setrefreshtoken(entity.getUsername(), Refreshtoken);
 			response.addHeader("Authorization",Accesstoken);
+			response.addHeader("Refreshtoken",Refreshtoken);
+			
 			
 			
 			System.out.println(Accesstoken);

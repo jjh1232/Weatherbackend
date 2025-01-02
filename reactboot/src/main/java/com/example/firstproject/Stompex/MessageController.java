@@ -20,6 +20,7 @@ public class MessageController {
 	@MessageMapping("/chat/message")
 	public void enter(ChatMessage message) {
 		if (message.getType().equals(ChatMessage.MessageType.ENTER)) {
+			message.setSender("시스템메세지");
 			message.setMessage(message.getSender()+"님이입장하였습니다");
 		}
 		sendingoperations.convertAndSend("/sub/chat/room/"+message.getRoomId(),message);

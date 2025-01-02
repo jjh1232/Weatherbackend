@@ -40,7 +40,7 @@ public class JwtService {
 				
 				.withClaim("nickname", member.getMember().getNickname())
 				.withClaim("role", member.getMember().getRole())
-				.withExpiresAt(new Date(System.currentTimeMillis()+(1000*60)))//일단*60뺴고
+				.withExpiresAt(new Date(System.currentTimeMillis()+(1000*60*60)))//일단*60뺴고
 				.sign(Algorithm.HMAC512(secretkey));
 			
 	}

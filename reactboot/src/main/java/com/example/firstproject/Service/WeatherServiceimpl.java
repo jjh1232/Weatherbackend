@@ -86,7 +86,7 @@ public class WeatherServiceimpl implements WeatherService{
 		// TODO Auto-generated method stub
 		String servicekey ="1UxOsFtGRc1qt%2FBSr5YDb%2B%2BBfx9rWkUUCg9Pbt8%2BbpYlHmJLRPr4aiWZINe4hGjWTia37Y5QAVtOO9D%2B6HyRFA%3D%3D";
 		String url="http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst";
-		System.out.println("날씨api서비스시작");
+		System.out.println("날씨api 겟데이터 서비스");
 		
 		Calendar cal1=Calendar.getInstance();
 		cal1.add(Calendar.HOUR, -3);//-2시간 더하기 
@@ -126,7 +126,7 @@ public class WeatherServiceimpl implements WeatherService{
 				asd,
 				String.class
 				);
-		System.out.println("api갔나");
+		System.out.println("날씨api보냄");
 		System.out.println(response.toString());
 		
 		Weatherapiresponse weatherresponse=null;//내부클래스를 static 으로 해줘야하는데 설명좀봐야할듯
@@ -319,7 +319,7 @@ public class WeatherServiceimpl implements WeatherService{
 			time.add(data4);
 			time.add(data5);
 			time.add(data6);
-		System.out.println("맵핑"+time);
+		System.out.println("날씨데이터정리끝"+time);
 		return time;
 	}
 

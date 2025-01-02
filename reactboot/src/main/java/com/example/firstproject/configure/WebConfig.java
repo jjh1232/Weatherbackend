@@ -4,10 +4,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+
 @Configuration
 public class WebConfig implements WebMvcConfigurer{
 
-	//시큐리티가아닌 스프링 설정
+	//시큐리티가아닌 스프링 설정 이거설정안하면 날씨api가못받아오는경우가발생
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**") //CORS를 적용할 URL패턴을 정의한다 

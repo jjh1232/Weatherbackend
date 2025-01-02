@@ -35,7 +35,8 @@ public class NoticeDto {
 	private String sky;
 	private String pty;
 	private String rain;
-	private LocalDateTime red;
+	private boolean likeusercheck;
+	private String red;
 	
 	private List<CommentEntity> comments;
 	
@@ -55,6 +56,7 @@ public class NoticeDto {
 		 sky=entity.getSky();
 		 pty=entity.getPty();
 		 rain=entity.getRain();
+		 
 		 detachfiles=entity.getFiles();
 	}
 	
