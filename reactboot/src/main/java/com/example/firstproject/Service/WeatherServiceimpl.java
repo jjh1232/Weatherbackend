@@ -51,7 +51,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 @Transactional
-@CacheConfig(cacheNames="weather")//클래스내부에서 code라는값으로 공통적으로사용
+//@CacheConfig(cacheNames="weather")//클래스내부에서 code라는값으로 공통적으로사용
 //근데 메소드에 밸류 따로주면 그걸로 인식하는듯?
 public class WeatherServiceimpl implements WeatherService{
 
@@ -81,7 +81,7 @@ public class WeatherServiceimpl implements WeatherService{
 
 
 	@Override   //콘피그에서만든캐쉬매니저네임
-	@Cacheable(value = "codeCache",key="#reg1+#reg2+#reg3",unless = "#result==null")
+	@Cacheable(value = "getweather",key="#reg1+#reg2+#reg3",unless = "#result==null")
 	public List<frontweather> getweatherdata(String reg1, String reg2, String reg3,String gridx,String gridy) throws URISyntaxException, UnsupportedEncodingException {
 		// TODO Auto-generated method stub
 		String servicekey ="1UxOsFtGRc1qt%2FBSr5YDb%2B%2BBfx9rWkUUCg9Pbt8%2BbpYlHmJLRPr4aiWZINe4hGjWTia37Y5QAVtOO9D%2B6HyRFA%3D%3D";
@@ -357,7 +357,8 @@ public class WeatherServiceimpl implements WeatherService{
 	}
 	//캐시삭제
 	@Scheduled(fixedDelay = 1000*60*59)//59분마다삭제 //웨더못찾음..
-	@CacheEvict(value = "codeCache",beforeInvocation = false,allEntries = true)
+	@CacheEvict(value = "getweather",beforeInvocation = false,allEntries = true) 
+	//키값넣으면 특정 키값도 삭제가능
 	public void cashwetherdelete() {
 		//어노테이션으로삭제 비폴이노배케이션을실행해서 메서드실행이후에 삭제됨
 		//올엔트리스는다삭제

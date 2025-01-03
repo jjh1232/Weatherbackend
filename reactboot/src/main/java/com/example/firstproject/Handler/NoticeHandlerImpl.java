@@ -1,6 +1,8 @@
 package com.example.firstproject.Handler;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.example.firstproject.Dto.NoticeDto;
+import com.example.firstproject.Dto.NoticeDtointer;
 import com.example.firstproject.Entity.CommentEntity;
 import com.example.firstproject.Entity.FavoriteEntity;
 import com.example.firstproject.Entity.MemberEntity;
@@ -40,6 +44,8 @@ public class NoticeHandlerImpl implements NoticeHandler{
 	public Page<NoticeEntity> read(Pageable page) {
 		System.out.println("페이지핸들러");
 		Page<NoticeEntity> entity=noticerepository.findAll(page);
+		
+	
 		return entity;
 	}
 
@@ -123,7 +129,7 @@ public class NoticeHandlerImpl implements NoticeHandler{
 		log.info("핸들러입갤");
 		Page<NoticeEntity> result=noticerepository.searchtitle(text,pageable);
 		
-		
+		log.info(result.toString());
 		return result;
 	}
 

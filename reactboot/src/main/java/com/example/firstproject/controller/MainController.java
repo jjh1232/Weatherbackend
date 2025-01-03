@@ -33,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriUtils;
 
 import com.example.firstproject.Dto.NoticeDto;
+import com.example.firstproject.Dto.NoticeDtointer;
 import com.example.firstproject.Dto.NoticeUpdate;
 import com.example.firstproject.Dto.Noticeform;
 import com.example.firstproject.Dto.detachVo;
@@ -61,7 +62,17 @@ public class MainController {
 	@Autowired
 	private MemberService memberservice;
 	
-
+	
+	
+	
+	@GetMapping("/open/test")
+	public Page<Object> asd11(@RequestParam(value="page",required =false,defaultValue="1") int page){
+		Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
+		
+		Page<Object> te=repoo.test113(pageable);
+		
+		return te;
+	}
 	
 	@GetMapping("/ex")
 	public List<NoticeDto> aasssd(@RequestParam(value="page",required =false,defaultValue="1") int page){
@@ -228,9 +239,10 @@ public class MainController {
 			){
 		Pageable Pageable=PageRequest.of(page-1,10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
 		
-		Page<NoticeEntity> entity =repoo.searchnoticeex(keyword,Pageable);
+		//Page<NoticeEntity> entity =
+		//repoo.searchnoticeex(keyword,Pageable);
 		
-		return entity;
+		return null;
 	}
 	
 	@PutMapping("/commentupdate")

@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.firstproject.Dto.MemberDto;
 import com.example.firstproject.Dto.NoticeDto;
+import com.example.firstproject.Dto.NoticeDtointer;
 import com.example.firstproject.Dto.NoticeUpdate;
 import com.example.firstproject.Dto.Noticeform;
 import com.example.firstproject.Dto.detachVo;

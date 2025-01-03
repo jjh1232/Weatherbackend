@@ -32,7 +32,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Entity
+@Entity(name="member")
 @Getter@Setter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -56,7 +56,7 @@ public class MemberEntity {
 	private String nickname;
 	@CreatedDate
 	@Column(updatable = false, name="REGDATE") //업데이트불가
-	private LocalDateTime red;
+	private LocalDateTime regdate;
 	
 	private String role;
 	

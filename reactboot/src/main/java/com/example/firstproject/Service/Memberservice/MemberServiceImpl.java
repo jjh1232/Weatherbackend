@@ -103,7 +103,7 @@ public class MemberServiceImpl implements MemberService{
 				entity.getNickname(),
 				entity.getRole(), entity.getRefreshtoken(), entity.getProvider(),
 				entity.getProviderid(),entity.getHomeaddress(),
-				entity.getRed(), entity.getUpdatered());
+				entity.getRegdate(), entity.getUpdatered());
 		
 		
 		

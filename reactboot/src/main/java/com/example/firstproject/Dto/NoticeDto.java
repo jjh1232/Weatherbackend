@@ -37,6 +37,7 @@ public class NoticeDto {
 	private String rain;
 	private boolean likeusercheck;
 	private String red;
+	private String userprofile;
 	
 	private List<CommentEntity> comments;
 	
@@ -44,9 +45,9 @@ public class NoticeDto {
 	private MemberEntity member;
 	
 	public NoticeDto(NoticeEntity entity) {
-		 num=entity.getId();
-		 username=entity.getUsername();
-		 nickname=entity.getNickname();
+		 num=entity.getNoticeid();
+		 username=entity.getNoticeuser();
+		 nickname=entity.getNoticenick();
 		 title=entity.getTitle();
 		 text=entity.getText();
 		 red=entity.getRed();
@@ -56,6 +57,7 @@ public class NoticeDto {
 		 sky=entity.getSky();
 		 pty=entity.getPty();
 		 rain=entity.getRain();
+		 
 		 
 		 detachfiles=entity.getFiles();
 	}

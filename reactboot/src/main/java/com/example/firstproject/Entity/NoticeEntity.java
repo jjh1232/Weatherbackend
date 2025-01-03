@@ -38,23 +38,24 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Entity
+@Entity(name="notice") //엔티티매핑해야jpql이인식하는듯
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name="notice")
+@Table(name="notice") //이게테이블매핑
 @EntityListeners(AuditingEntityListener.class)//이거 createDate 핅수
 public class NoticeEntity {
 
 	@GeneratedValue(strategy =GenerationType.IDENTITY)
 	@Id
-	private Long id;
+	@Column(nullable= true,name="id")
+	private Long noticeid;
 	@Column(nullable= false)
-	private String username;
+	private String noticeuser;
 	@Column(nullable= false)
-	private String nickname;
+	private String noticenick;
 	
 	@Column(nullable= false, unique=true)
 	private String title;
@@ -76,7 +77,7 @@ public class NoticeEntity {
 	private List<detachfile> files=new ArrayList<detachfile>();
 	
 	@CreatedDate
-	@Column(updatable = false)//스프링부트말고 자바컬럼 업데이트시점에서 업데이트막음 
+	@Column(updatable = false,name = "red")//스프링부트말고 자바컬럼 업데이트시점에서 업데이트막음 
 	private String red;
 	//데이터포맷
 	 @PrePersist

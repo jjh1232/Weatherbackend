@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.example.firstproject.Dto.NoticeDto;
+import com.example.firstproject.Dto.NoticeDtointer;
 import com.example.firstproject.Entity.CommentEntity;
 import com.example.firstproject.Entity.FavoriteEntity;
 import com.example.firstproject.Entity.MemberEntity;

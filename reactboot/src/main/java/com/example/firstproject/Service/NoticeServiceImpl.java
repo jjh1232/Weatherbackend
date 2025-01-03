@@ -39,6 +39,7 @@ import org.springframework.web.util.UriUtils;
 import com.example.firstproject.Dto.Detachupdateform;
 import com.example.firstproject.Dto.MemberDto;
 import com.example.firstproject.Dto.NoticeDto;
+import com.example.firstproject.Dto.NoticeDtointer;
 import com.example.firstproject.Dto.NoticeUpdate;
 import com.example.firstproject.Dto.Noticeform;
 import com.example.firstproject.Dto.datachfiledto;
@@ -83,9 +84,10 @@ public class NoticeServiceImpl implements NoticeService {
 		System.out.println("게시판리드서비스");
 		Page<NoticeEntity> entity = noticehandler.read(page);
 		
+		
 		Page<NoticeDto> dtlist =entity.map
-				(m->m.toDto(m.getId(),
-						m.getUsername(),m.getNickname(), m.getTitle()
+				(m->m.toDto(m.getNoticeid(),
+						m.getNoticeuser(),m.getNoticenick(), m.getTitle()
 						,m.getText(),m.getRed()
 						,m.getLikeuser().size()
 						,m.getTemp(),m.getSky(),m.getPty(),m.getRain()
@@ -94,7 +96,7 @@ public class NoticeServiceImpl implements NoticeService {
 						
 						);
 		
-		//Page<NoticeDto> dtlist=entity.map(m-> new NoticeDto());페이지맵핑dto로
+		//Page<NoticeDto> dtlist=entity.map(m-> new NoticeDto());//페이지맵핑dto로
 
 		// TODO Auto-generated method stub
 		return dtlist;
@@ -151,8 +153,8 @@ public class NoticeServiceImpl implements NoticeService {
 	 public List<NoticeDto> readfd(int page) { // TODO
 	   List<NoticeEntity> entity =noticehandler.readfd(page);
 	   List<NoticeDto> dtlist=new ArrayList();
-	  for(NoticeEntity a:entity) { NoticeDto dto =a.toDto(a.getId(),a.getUsername(),
-	  a.getNickname(),a.getTitle(),a.getText(),a.getRed(),a.getLikeuser().size()
+	  for(NoticeEntity a:entity) { NoticeDto dto =a.toDto(a.getNoticeid(),a.getNoticeuser(),
+	  a.getNoticenick(),a.getTitle(),a.getText(),a.getRed(),a.getLikeuser().size()
 	  ,a.getTemp(),a.getSky(),a.getPty(),a.getRain()
 			  );
 	  dtlist.add(dto); }
@@ -171,8 +173,8 @@ public class NoticeServiceImpl implements NoticeService {
 		
 			
 	 NoticeEntity Entity =NoticeEntity.builder()
-			 			.username(form.getUsername())
-			 			.nickname(form.getNickname())
+			 			.noticeuser(form.getUsername())
+			 			.noticenick(form.getNickname())
 			 			.title(form.getTitle())
 			 			.text(form.getText())
 			 			.member(member)
@@ -317,8 +319,8 @@ public class NoticeServiceImpl implements NoticeService {
 		}
 		Entity.setFiles(newdetach);
 		
-		NoticeDto dto =Entity.toDto(Entity.getId(),Entity.getUsername(),
-				  Entity.getNickname(),Entity.getTitle(),Entity.getText(),Entity.getRed()
+		NoticeDto dto =Entity.toDto(Entity.getNoticeid(),Entity.getNoticeuser(),
+				  Entity.getNoticenick(),Entity.getTitle(),Entity.getText(),Entity.getRed()
 				,Entity.getLikeuser().size(),
 				Entity.getTemp(),Entity.getSky(),Entity.getPty(),Entity.getRain()
 				);;
@@ -335,9 +337,9 @@ public class NoticeServiceImpl implements NoticeService {
 		
 		System.out.println("코멘트:"+Entity.getComments());
 		NoticeDto dto=Entity.toDto
-						(Entity.getId(),
-						Entity.getUsername(),
-						Entity.getNickname(),
+						(Entity.getNoticeid(),
+						Entity.getNoticeuser(),
+						Entity.getNoticenick(),
 						Entity.getTitle(), 
 						Entity.getText(),
 						Entity.getRed(),
@@ -495,8 +497,8 @@ public class NoticeServiceImpl implements NoticeService {
 			
 		}
 		String uuid=UUID.randomUUID().toString();
-		String oriname=image.getOriginalFilename();
-		String savefilename=savefolder.toPath()+File.separator+uuid+"_"+oriname+".png";
+		String oriname=image.getOriginalFilename(); //png붙어서그런가
+		String savefilename=savefolder.toPath()+File.separator+uuid+"_"+oriname;//+".png";
 		log.info("궁금해서topath내용:"+savefolder.toPath());
 		Path savePath=Paths.get(savefilename);
 		log.info("최종생성경로:"+savePath);
@@ -688,9 +690,9 @@ public class NoticeServiceImpl implements NoticeService {
 		 		//아이거내가거꾸로좋아요했음
 		 		NoticeEntity notice=favoriteentity.getNotice();
 		 		NoticeDto dto=NoticeDto.builder().comments(notice.getComments()).detachfiles(notice.getFiles())
-		 				.likes(notice.getLikeuser().size()).nickname(notice.getNickname()).num(notice.getId())
+		 				.likes(notice.getLikeuser().size()).nickname(notice.getNoticenick()).num(notice.getNoticeid())
 		 				.pty(notice.getPty()).temp(notice.getTemp()).sky(notice.getSky()).rain(notice.getRain())
-		 				.text(notice.getText()).title(notice.getTitle()).username(notice.getUsername()).likeusercheck(true)
+		 				.text(notice.getText()).title(notice.getTitle()).username(notice.getNoticeuser()).likeusercheck(true)
 		 				.red(notice.getRed()).build();
 		 		
 		 		pagedto.add(dto);
