@@ -37,6 +37,7 @@ import com.example.firstproject.Dto.NoticeDtointer;
 import com.example.firstproject.Dto.NoticeUpdate;
 import com.example.firstproject.Dto.Noticeform;
 import com.example.firstproject.Dto.detachVo;
+import com.example.firstproject.Dto.noticeDao;
 import com.example.firstproject.Dto.Comment.CommentDto;
 import com.example.firstproject.Dto.Comment.Commentform;
 import com.example.firstproject.Entity.MemberEntity;
@@ -64,16 +65,19 @@ public class MainController {
 	
 	
 	
-	
+	//==========================================jpa연습용 일단 ㅈㅈ==========================
 	@GetMapping("/open/test")
-	public Page<Object> asd11(@RequestParam(value="page",required =false,defaultValue="1") int page){
+	public Page<NoticeEntity>asd11(@RequestParam(value="page",required =false,defaultValue="1") int page){
 		Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
 		
-		Page<Object> te=repoo.test113(pageable);
+		Page<NoticeEntity> te=repoo.test113(pageable);
+		for(NoticeEntity tes:te) {
+			System.out.println(tes.getMember().getProfileimg());
+		}
 		
 		return te;
 	}
-	
+	//======================================================================================
 	@GetMapping("/ex")
 	public List<NoticeDto> aasssd(@RequestParam(value="page",required =false,defaultValue="1") int page){
 		//Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));

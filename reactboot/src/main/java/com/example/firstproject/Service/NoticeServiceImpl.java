@@ -84,20 +84,21 @@ public class NoticeServiceImpl implements NoticeService {
 		System.out.println("게시판리드서비스");
 		Page<NoticeEntity> entity = noticehandler.read(page);
 		
-		
+		/*
 		Page<NoticeDto> dtlist =entity.map
 				(m->m.toDto(m.getNoticeid(),
 						m.getNoticeuser(),m.getNoticenick(), m.getTitle()
 						,m.getText(),m.getRed()
 						,m.getLikeuser().size()
 						,m.getTemp(),m.getSky(),m.getPty(),m.getRain()
-						
+						,m.getMember().getProfileimg()
 						)
 						
 						);
-		
+		*/
+		Page<NoticeDto> dtlist=entity.map(m-> new NoticeDto(m));
 		//Page<NoticeDto> dtlist=entity.map(m-> new NoticeDto());//페이지맵핑dto로
-
+		
 		// TODO Auto-generated method stub
 		return dtlist;
 	}
@@ -431,7 +432,8 @@ public class NoticeServiceImpl implements NoticeService {
 					a.getUsername(),
 					a.getNickname(),
 					a.getText(),
-					a.getRedtime()
+					a.getRedtime(),
+					a.getMember().getProfileimg()
 					);
 			dtolist.add(dto);
 			}
@@ -693,7 +695,9 @@ public class NoticeServiceImpl implements NoticeService {
 		 				.likes(notice.getLikeuser().size()).nickname(notice.getNoticenick()).num(notice.getNoticeid())
 		 				.pty(notice.getPty()).temp(notice.getTemp()).sky(notice.getSky()).rain(notice.getRain())
 		 				.text(notice.getText()).title(notice.getTitle()).username(notice.getNoticeuser()).likeusercheck(true)
-		 				.red(notice.getRed()).build();
+		 				.red(notice.getRed())
+		 				.userprofile(notice.getMember().getProfileimg())
+		 				.build();
 		 		
 		 		pagedto.add(dto);
 		 	}

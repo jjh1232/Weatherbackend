@@ -121,6 +121,8 @@ public class MemberEntity {
     @OneToMany(mappedBy="member",fetch= FetchType.LAZY,cascade = CascadeType.ALL)
     private List<FavoriteEntity> favorite;
     
+    
+    
 	public MemberDto toDto(Long id,
 			String username,String password,String nickname,String role,
 			String refreshtoken,String provider,String providerid,Address region,

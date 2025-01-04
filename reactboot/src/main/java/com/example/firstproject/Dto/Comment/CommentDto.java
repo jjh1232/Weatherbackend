@@ -27,8 +27,10 @@ public class CommentDto {
 	private String nickname;
 	private String text;
 	private LocalDateTime redtime;
+	private String userprofile;
 	
-	public CommentEntity toEntity(Long id,int depth,int cnum,String username,String name,String text,LocalDateTime redtime) {
+	public CommentEntity toEntity(Long id,int depth,int cnum,String username,String name,
+			String text,LocalDateTime redtime) {
 		return CommentEntity.builder()
 				.id(id)
 				
@@ -38,6 +40,7 @@ public class CommentDto {
 				.nickname(nickname)
 				.text(text)
 				.redtime(redtime)
+				
 				.build();
 	}
 	

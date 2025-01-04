@@ -78,16 +78,18 @@ public class CommentEntity {
 	
 	
 	
-	public CommentDto toDto(Long id,int depth,int cnum,String username,String nickname,String text,LocalDateTime redtime) {
+	public CommentDto toDto(Long id,int depth,int cnum,String username,String nickname,
+			String text,LocalDateTime redtime,String userprofile) {
 		return CommentDto.builder()
 				.id(id)
-				
+			
 				.depth(depth)
 				.cnum(cnum)
 				.username(username)
 				.nickname(nickname)
 				.text(text)
 				.redtime(redtime)
+				.userprofile(userprofile)
 				.build();
 	}
 

@@ -98,6 +98,7 @@ public class NoticeEntity {
 	@OneToMany(mappedBy="notice",fetch = FetchType.LAZY,cascade =CascadeType.ALL)
 	private List<FavoriteEntity> likeuser;
 	
+	//임시어거지용
 	
 	
 	public void addcomments(CommentEntity comment) {
@@ -134,6 +135,7 @@ public class NoticeEntity {
 				.sky(sky)
 				.pty(pty)
 				.rain(rain)
+				
 				.build();
 	}
 	
