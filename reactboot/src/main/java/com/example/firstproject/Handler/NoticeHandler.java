@@ -52,4 +52,5 @@ public interface NoticeHandler {
 
 	public Page<FavoriteEntity> favoritenoticefind(MemberEntity member,Pageable pageable);
 
+	public Page<NoticeEntity> findbyidall(Long userid,Pageable pageable);
 }

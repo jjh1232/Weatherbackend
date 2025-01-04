@@ -1,8 +1,10 @@
 package com.example.firstproject.Service.Memberservice;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -10,6 +12,7 @@ import com.example.firstproject.Dto.MemberDto;
 import com.example.firstproject.Dto.Memberform;
 import com.example.firstproject.Dto.Weather.MemberUpdateDto;
 import com.example.firstproject.Dto.follow.findDto;
+import com.example.firstproject.Dto.userdataDto.UserDto;
 import com.example.firstproject.Entity.MemberEntity;
 
 public interface MemberService {
@@ -43,5 +46,8 @@ public interface MemberService {
 	
 	public String existingprofile(String profileurl);
 
+	public Map<String,Object> userpagedate(String username,int page); 
+		
+	
 
 }

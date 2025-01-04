@@ -6,7 +6,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -14,6 +16,11 @@ import java.util.stream.Stream;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,15 +28,18 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import com.example.firstproject.Dto.MemberDto;
 import com.example.firstproject.Dto.Memberform;
+import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.Weather.MemberUpdateDto;
 import com.example.firstproject.Dto.Weather.userregionDto;
 import com.example.firstproject.Dto.follow.findDto;
+import com.example.firstproject.Dto.userdataDto.UserDto;
 import com.example.firstproject.Entity.Address;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
 import com.example.firstproject.Entity.follow.FollowEntity;
 import com.example.firstproject.Handler.FollowHandler;
 import com.example.firstproject.Handler.MemberHandler;
+import com.example.firstproject.Handler.NoticeHandler;
 import com.example.firstproject.Handler.WeatherServiceHandler;
 import com.example.firstproject.Repository.EmitterRepository;
 import com.example.firstproject.Repository.Memberdeleterepository;
@@ -63,6 +73,8 @@ public class MemberServiceImpl implements MemberService{
 	private final Memberdeleterepository deleterepo;
 	
 	private final FollowHandler followhandler;
+	
+	private final NoticeHandler noticehandler;
 	@Override
 	public MemberDto membercreate(Memberform form) {
 		// TODO Auto-generated method stub
@@ -384,6 +396,40 @@ public class MemberServiceImpl implements MemberService{
 			}
 		}
 		return null;
+	}
+
+
+
+	//======================유저페이지데이터=======================================
+	@Override
+	public Map<String,Object> userpagedate(String username,int page) {
+		// TODO Auto-generated method stub
+		MemberEntity user=handler.login(username).orElseThrow(()->{
+			return new IllegalArgumentException("해당유저가존재하지 않습니다!");
+		});
+		UserDto userdto=UserDto.builder()
+						.username(user.getUsername())
+						.nickname(user.getNickname())
+						.profileimg(user.getProfileimg())
+						.myintro(user.getMyintro())
+						.regdate(user.getRegdate())
+						.build();
+		
+		Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
+		Page<NoticeEntity> notice=noticehandler.findbyidall(user.getId(), pageable);
+		
+		Page<NoticeDto> noticedto=notice.map((m)->{
+			System.out.println("데이터확인"+m.getNoticeuser());
+			return new NoticeDto(m);
+			
+					});
+		
+			
+			Map<String,Object> dto=new HashMap<>();
+			
+			dto.put("user", userdto);
+			dto.put("notice", noticedto);
+		return dto;
 	}
 
 

@@ -69,4 +69,8 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 	//@Query(value="select n.* from notice n join fetch n.member m where m.id=n.member_id where n.nickname like %:text%")
 	@Query(value="Select * from notice  where nickname like %:text%",nativeQuery=true)
 	Page<NoticeEntity> searchnoticeex(@Param("text") String text,Pageable page);
+	
+	
+	@Query(value="select n from notice n where n.member.id=:userid")
+	Page<NoticeEntity> findbyidall(Long userid, Pageable page);
 }

@@ -68,8 +68,10 @@ public class MemberEntity {
 	@Embedded //서로관련있는걸 따로클래스로 만들어 임베디드타입으로사용 
 	private Address homeaddress; //속성을분리하대 Db테이블은따로만들기싫을때
 	
+	@Column(nullable = true)
 	private String auth;
 	
+	private String myintro;
 	//팔로우 목록추가
 	
 	@OneToMany(mappedBy="member",fetch=FetchType.LAZY,cascade = CascadeType.ALL)

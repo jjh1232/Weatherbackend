@@ -694,7 +694,8 @@ public class NoticeServiceImpl implements NoticeService {
 		 		NoticeDto dto=NoticeDto.builder().comments(notice.getComments()).detachfiles(notice.getFiles())
 		 				.likes(notice.getLikeuser().size()).nickname(notice.getNoticenick()).num(notice.getNoticeid())
 		 				.pty(notice.getPty()).temp(notice.getTemp()).sky(notice.getSky()).rain(notice.getRain())
-		 				.text(notice.getText()).title(notice.getTitle()).username(notice.getNoticeuser()).likeusercheck(true)
+		 				.text(notice.getText()).title(notice.getTitle()).username(notice.getNoticeuser())
+		 				.likeusercheck(true)
 		 				.red(notice.getRed())
 		 				.userprofile(notice.getMember().getProfileimg())
 		 				.build();

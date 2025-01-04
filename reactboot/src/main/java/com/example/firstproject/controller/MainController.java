@@ -350,4 +350,14 @@ public class MainController {
 		return ResponseEntity.ok(like);
 	}
 	
+	
+	//==============================유저정보페이지==================================
+	
+	@GetMapping("/open/userpage/{username}")
+	public ResponseEntity userpage(@PathVariable String username,@RequestParam(required = false,defaultValue = "1") int page) {
+		
+		Map<String,Object> data=memberservice.userpagedate(username, page);
+		
+		return ResponseEntity.ok(data);
+	}
 }
