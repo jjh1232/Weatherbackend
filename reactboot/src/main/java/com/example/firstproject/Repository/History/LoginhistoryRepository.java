@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.example.firstproject.Entity.LoginHistory;
 
 @Repository
+
 public interface LoginhistoryRepository extends JpaRepository<LoginHistory, Long> {
 
 	List<LoginHistory> findByuseridOrderByLogindtDesc(String userId);

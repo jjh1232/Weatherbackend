@@ -24,6 +24,7 @@ spring:
     password: spring5
     connection-timeout:  10000
     maximum-pool-size: 10
+  
   jpa:
    properties:
     default_batch_fetch_size: 1000
@@ -36,6 +37,7 @@ spring:
     host: localhost
     port: 6379
     type: redis
+    
     
     
   mail:

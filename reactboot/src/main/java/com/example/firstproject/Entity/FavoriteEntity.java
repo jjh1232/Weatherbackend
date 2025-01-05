@@ -20,6 +20,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.example.firstproject.Entity.StompRoom.BaseTime;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
@@ -35,7 +36,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-public class FavoriteEntity {
+public class FavoriteEntity extends BaseTime{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,9 +53,9 @@ public class FavoriteEntity {
 	private NoticeEntity notice;
 	
 	
-	@CreatedDate
-	@Column(updatable = false)//스프링부트말고 자바컬럼 업데이트시점에서 업데이트막음 
-	private LocalDateTime createat;
+	//@CreatedDate
+	//@Column(updatable = false)//스프링부트말고 자바컬럼 업데이트시점에서 업데이트막음 
+	//private LocalDateTime createat;
 	
 	
 }

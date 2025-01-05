@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
+import com.example.firstproject.Entity.StompRoom.BaseTime;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
@@ -24,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Notification {
+public class Notification extends BaseTime{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

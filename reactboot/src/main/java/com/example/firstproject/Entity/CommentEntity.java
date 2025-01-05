@@ -21,6 +21,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.example.firstproject.Dto.Comment.CommentDto;
+import com.example.firstproject.Entity.StompRoom.BaseTime;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
@@ -38,7 +39,7 @@ import lombok.ToString;
 @Builder
 @Table(name="comment")
 @EntityListeners(AuditingEntityListener.class)//이거 createDate 핅수
-public class CommentEntity {
+public class CommentEntity extends BaseTime{
 	
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
@@ -61,9 +62,9 @@ public class CommentEntity {
 	@Column(nullable = false)
 	private String text;
 	
-	@CreatedDate
-	@Column(nullable = false)
-	private LocalDateTime redtime;
+	//@CreatedDate
+	//@Column(nullable = false)
+	//private LocalDateTime redtime;
 	
 	
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -79,7 +80,7 @@ public class CommentEntity {
 	
 	
 	public CommentDto toDto(Long id,int depth,int cnum,String username,String nickname,
-			String text,LocalDateTime redtime,String userprofile) {
+			String text,String redtime,String userprofile) {
 		return CommentDto.builder()
 				.id(id)
 			

@@ -19,7 +19,7 @@ public class UserDto {
 	
 	private String profileimg;
 	
-	private LocalDateTime regdate;
+	private String regdate;
 	
 	
 }

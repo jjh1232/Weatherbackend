@@ -201,6 +201,7 @@ public class NoticeServiceImpl implements NoticeService {
 					.path(file.getUrl())
 					.rangeindex(file.getIndex())
 					.notice(Entity)
+					.member(member)
 					.build();
 			log.info("디태치엔티티:"+detachentity);
 			Entity.addfiles(detachentity);
@@ -432,7 +433,7 @@ public class NoticeServiceImpl implements NoticeService {
 					a.getUsername(),
 					a.getNickname(),
 					a.getText(),
-					a.getRedtime(),
+					a.getCreatedDate(),
 					a.getMember().getProfileimg()
 					);
 			dtolist.add(dto);

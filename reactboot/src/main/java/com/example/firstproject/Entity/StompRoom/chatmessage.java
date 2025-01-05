@@ -34,7 +34,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class chatmessage {
+public class chatmessage extends BaseTime{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,9 +50,9 @@ public class chatmessage {
 	
 	private String MessageType;
 	
-	@CreatedDate
-	@Column(updatable = false)
-	private LocalDateTime sendDate;
+	//@CreatedDate
+	//@Column(updatable = false)
+	//private LocalDateTime sendDate;
 	
 	
 }

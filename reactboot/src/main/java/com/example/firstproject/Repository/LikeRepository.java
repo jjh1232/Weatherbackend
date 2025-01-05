@@ -14,6 +14,7 @@ import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
 
 @Repository
+
 public interface LikeRepository extends JpaRepository<FavoriteEntity,Long> {
 
 	

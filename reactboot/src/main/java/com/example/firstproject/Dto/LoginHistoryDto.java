@@ -21,7 +21,7 @@ public class LoginHistoryDto {
 
 	private Long id;
 	private String userid;
-	private LocalDateTime logindt;
+	private String logindt;
 	private String clientip;
 	private String userdata;
 	

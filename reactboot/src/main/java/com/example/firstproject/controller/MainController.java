@@ -135,7 +135,7 @@ public class MainController {
 	@GetMapping("/onlikenotice")
 	public ResponseEntity search(Authentication authentication,@RequestParam(defaultValue="1") int page){
 		PrincipalDetails principal=(PrincipalDetails) authentication.getPrincipal();
-		Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"createat"));
+		Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"createdDate"));
 		System.out.println("들어온페이지:"+page);
 		Map<String,Object> dto=noticeservice.favoritenotice(principal.getMember(),pageable);
 		

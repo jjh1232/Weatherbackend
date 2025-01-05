@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.example.firstproject.Entity.CommentEntity;
 
+
 public interface CommentRepository extends JpaRepository<CommentEntity,Long>{
 
 	

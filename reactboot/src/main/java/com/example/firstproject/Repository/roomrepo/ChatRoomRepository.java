@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.firstproject.Entity.StompRoom.Room;
 
+
 @Repository
 public interface ChatRoomRepository extends JpaRepository<Room, Long> {
 	

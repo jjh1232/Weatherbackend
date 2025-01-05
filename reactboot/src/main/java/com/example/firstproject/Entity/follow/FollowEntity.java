@@ -18,6 +18,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.example.firstproject.Entity.MemberEntity;
+import com.example.firstproject.Entity.StompRoom.BaseTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,7 +34,7 @@ import lombok.Setter;
 @Builder
 @Getter
 @EntityListeners(AuditingEntityListener.class)
-public class FollowEntity {
+public class FollowEntity extends BaseTime{
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,8 +51,8 @@ public class FollowEntity {
     @ColumnDefault("false")
     private boolean favorite;
     
-    @CreatedDate //@LastModifiedDate이건 업데이트기준 크리에이트는 그냥 엔티티생성시
-    private LocalDateTime times;
+   // @CreatedDate //@LastModifiedDate이건 업데이트기준 크리에이트는 그냥 엔티티생성시
+   // private LocalDateTime times;
 
    
 }

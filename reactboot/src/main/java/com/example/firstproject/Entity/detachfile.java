@@ -18,6 +18,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 
+import com.example.firstproject.Entity.StompRoom.BaseTime;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
@@ -33,7 +34,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @Table(name="detachfiles")
-public class detachfile {
+public class detachfile extends BaseTime{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,13 +51,17 @@ public class detachfile {
 	@Column(nullable = false)
 	public String path;
 	
-
+	
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="notice_id" )
 	@JsonIgnore
 	private NoticeEntity notice;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="member_id")
+	@JsonIgnore
+	private MemberEntity member;
 	
 	
 }

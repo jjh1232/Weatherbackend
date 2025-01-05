@@ -17,6 +17,7 @@ import com.example.firstproject.Dto.noticeDao;
 import com.example.firstproject.Entity.NoticeEntity;
 
 @Repository
+
 public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 	
 	//====================================서브쿼리연습용=======================================

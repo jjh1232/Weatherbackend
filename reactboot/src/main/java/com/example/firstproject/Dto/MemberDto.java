@@ -30,8 +30,8 @@ public class MemberDto {
 	private String provider;
 	private String providerid;
 	private Address homeaddress;
-	private LocalDateTime red;
-	private LocalDateTime updatered;
+	private String red;
+	private String updatered;
 	
 	
 }

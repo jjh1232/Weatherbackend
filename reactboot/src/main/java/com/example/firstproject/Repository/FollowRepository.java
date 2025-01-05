@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.example.firstproject.Entity.follow.FollowEntity;
 
 @Repository
+
 public interface FollowRepository extends JpaRepository<FollowEntity,Long>{
 	//여기멤버가 객체이기때문에 따로필요한값을.id등으로 표현해줘야함
 	@Query("select f from FollowEntity f where f.frommember.id=:from and f.tomember.id=:to")

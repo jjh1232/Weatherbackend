@@ -1,14 +1,19 @@
 package com.example.firstproject.Entity;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.example.firstproject.Entity.StompRoom.BaseTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,10 +33,17 @@ public class LoginHistory {//어디팅리스터너가 수정을감지함
 	@Id
 	@GeneratedValue
 	private Long id;
+	
 	private String userid;
 	
 	@CreatedDate
-	private LocalDateTime logindt; //로그인한시간날짜
+	private String logindt; //로그인한시간날짜
+	
+	 @PrePersist
+	  public void onpersist() {
+	   this.logindt=LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd/HH:mm:s"));
+	 }
+	
 	
 	private boolean islogin;//로그인성공여부 
 	

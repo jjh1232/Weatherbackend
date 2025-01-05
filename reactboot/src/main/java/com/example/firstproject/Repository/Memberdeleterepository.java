@@ -3,6 +3,7 @@ package com.example.firstproject.Repository;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
