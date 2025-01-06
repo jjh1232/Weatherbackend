@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.firstproject.Dto.MemberDto;
+import com.example.firstproject.Dto.NoticeDto;
+import com.example.firstproject.Dto.ChatDto.roomlistresponseDto;
 import com.example.firstproject.Entity.MemberEntity;
 
 import lombok.RequiredArgsConstructor;
@@ -36,4 +38,24 @@ public class admincontroller {
 		return ResponseEntity.ok(memberlist);
 		
 	}
+	
+	@GetMapping("/noticemanage")
+	public ResponseEntity noticemanage(@RequestParam(defaultValue="1") int page) {
+		Page<NoticeDto> memberlist=adminservice.allnoticeget(page);
+		
+		 return ResponseEntity.ok(memberlist);
+	}
+	@GetMapping("/commentmanage")
+	public ResponseEntity commentmanage(@RequestParam(defaultValue="1") int page) {
+		//Page<NoticeDto> memberlist=adminservice.allCommentrget(page);
+		
+		 return null;
+	}
+	@GetMapping("/chatroommanage")
+	public ResponseEntity chtroommanage(@RequestParam(defaultValue="1") int page) {
+		Page<roomlistresponseDto> memberlist=adminservice.allRoomget(page);
+		
+		 return ResponseEntity.ok(memberlist);
+	}
+	
 }

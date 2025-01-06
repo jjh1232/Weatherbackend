@@ -20,7 +20,7 @@ import lombok.ToString;
 public class CommentDto {
 
 	private Long id;
-	private int noticenum;
+	private Long noticenum;
 	private int depth;
 	private int cnum;
 	private String username;

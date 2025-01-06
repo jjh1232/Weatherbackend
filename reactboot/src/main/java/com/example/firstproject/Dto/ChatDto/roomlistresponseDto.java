@@ -24,4 +24,6 @@ public class roomlistresponseDto {
 	private String time;
 	
 	private String latelychat;
+	
+	private String red;
 }
