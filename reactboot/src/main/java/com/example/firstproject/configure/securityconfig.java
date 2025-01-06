@@ -108,9 +108,12 @@ public class securityconfig {
 			.formLogin().disable()
 			.httpBasic().disable()
 			.authorizeRequests()
+			.antMatchers("/admin/**").hasAnyRole("Admin")//설정할거먼저 위로올려야한다
 			.antMatchers("/**").permitAll()// 필터체인동작에서 인증/인가예외가발생해도 
+			
 			//exception필터를 거치지 않고 인증객체 존재여부상관없이 api호출이 이루어지는것
 			//지금못쓰는데..이상함
+			.anyRequest().authenticated()
 			.and()
 			.oauth2Login()
 			.authorizationEndpoint() //요청url설정
