@@ -20,15 +20,17 @@ import lombok.ToString;
 public class CommentDto {
 
 	private Long id;
-	private int noticenum;
+	private Long noticenum;
 	private int depth;
 	private int cnum;
 	private String username;
 	private String nickname;
 	private String text;
-	private LocalDateTime redtime;
+	private String redtime;
+	private String userprofile;
 	
-	public CommentEntity toEntity(Long id,int depth,int cnum,String username,String name,String text,LocalDateTime redtime) {
+	public CommentEntity toEntity(Long id,int depth,int cnum,String username,String name,
+			String text) {
 		return CommentEntity.builder()
 				.id(id)
 				
@@ -37,7 +39,8 @@ public class CommentDto {
 				.username(username)
 				.nickname(nickname)
 				.text(text)
-				.redtime(redtime)
+				
+				
 				.build();
 	}
 	

@@ -17,6 +17,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.client.HttpClientErrorException.BadRequest;
@@ -28,6 +29,7 @@ import com.example.firstproject.Repository.MemberRepository;
 import com.example.firstproject.Service.JwtService;
 import com.example.firstproject.configure.PrincipalDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mysql.cj.protocol.Security;
 
 import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
@@ -95,7 +97,12 @@ public class Authorizationdfilter extends BasicAuthenticationFilter{
 			MemberEntity entity=opentity.get();
 			PrincipalDetails principal=new PrincipalDetails(entity);
 			Authentication authentication=new UsernamePasswordAuthenticationToken(principal,null,principal.getAuthorities() );
+			System.out.println("로그인유저권한넣기전:"+principal.getAuthorities());
+			if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("User"))) {
+				System.out.println("어드민유저인가");
+			}
 			SecurityContextHolder.getContext().setAuthentication(authentication);
+			
 			String Accesstoken=jwtservice.createtoken(principal);
 		
 			String Refreshtoken=jwtservice.createrefreshtoken();

@@ -42,7 +42,7 @@ public class NoticeDto {
 	private List<CommentEntity> comments;
 	
 	private List<detachfile> detachfiles;
-	private MemberEntity member;
+	
 	
 	public NoticeDto(NoticeEntity entity) {
 		 num=entity.getNoticeid();
@@ -57,7 +57,7 @@ public class NoticeDto {
 		 sky=entity.getSky();
 		 pty=entity.getPty();
 		 rain=entity.getRain();
-		 
+		 userprofile=entity.getMember().getProfileimg();
 		 
 		 detachfiles=entity.getFiles();
 	}

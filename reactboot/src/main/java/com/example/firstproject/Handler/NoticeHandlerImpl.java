@@ -230,6 +230,16 @@ public class NoticeHandlerImpl implements NoticeHandler{
 		Page<FavoriteEntity> followentity=likerepository.findByMember(member, pageable);
 		return followentity;
 	}
+
+
+
+	@Override
+	public Page<NoticeEntity> findbyidall(Long userid,Pageable page) {
+		// TODO Auto-generated method stub
+		//findallby는다가져와서리스트로받아야함 페이징할라면 내가만드는게나은ㄷ스?
+		Page<NoticeEntity> noticeEntity=noticerepository.findbyidall(userid,page);
+		return noticeEntity;
+	}
 	 
 
 }

@@ -1,6 +1,7 @@
 package com.example.firstproject.Entity;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -13,6 +14,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -54,10 +57,26 @@ public class MemberEntity {
 	
 	@Column(unique=false,nullable=false)
 	private String nickname;
+	
 	@CreatedDate
 	@Column(updatable = false, name="REGDATE") //업데이트불가
-	private LocalDateTime regdate;
+	private String regdate;
 	
+	@LastModifiedDate
+	@Column(updatable= true,name="UPDATEREGDATE")
+	private String updatered;
+	
+	 @PrePersist
+	   public void onpersist() {
+		   this.regdate=LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd/HH:mm:s"));
+		   this.updatered=this.regdate;
+	   }
+	  
+	    @PreUpdate
+	    public void onpreupdate() {
+	    	this.updatered=LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd/HH:mm:ss"));
+	    }
+	    
 	private String role;
 	
 	private String refreshtoken;
@@ -68,8 +87,10 @@ public class MemberEntity {
 	@Embedded //서로관련있는걸 따로클래스로 만들어 임베디드타입으로사용 
 	private Address homeaddress; //속성을분리하대 Db테이블은따로만들기싫을때
 	
+	@Column(nullable = true)
 	private String auth;
 	
+	private String myintro;
 	//팔로우 목록추가
 	
 	@OneToMany(mappedBy="member",fetch=FetchType.LAZY,cascade = CascadeType.ALL)
@@ -89,6 +110,8 @@ public class MemberEntity {
 	@OneToMany(mappedBy="member", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<MemberRoom> chatrooms;
 	
+	@OneToMany(mappedBy="member",fetch=FetchType.LAZY,cascade =CascadeType.ALL)
+	private List<detachfile> detachfiles;
 	
 	public void addnotices(NoticeEntity notice) {
 		notices.add(notice);
@@ -103,10 +126,7 @@ public class MemberEntity {
 	public void addchatroom(MemberRoom room) {
 		chatrooms.add(room);
 	}
-	@LastModifiedDate
-	@Column(updatable= true,name="UPDATEREGDATE")
-	private LocalDateTime updatered;
-	
+
 	 //팔로우================================================
 	
     @OneToMany(mappedBy = "frommember", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
@@ -121,10 +141,12 @@ public class MemberEntity {
     @OneToMany(mappedBy="member",fetch= FetchType.LAZY,cascade = CascadeType.ALL)
     private List<FavoriteEntity> favorite;
     
+    
+    
 	public MemberDto toDto(Long id,
 			String username,String password,String nickname,String role,
 			String refreshtoken,String provider,String providerid,Address region,
-			LocalDateTime red,LocalDateTime updatered) {
+			String red,String updatered) {
 		return MemberDto.builder()
 				.id(id)
 				.username(username)
