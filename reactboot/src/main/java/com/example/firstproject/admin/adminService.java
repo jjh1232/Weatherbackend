@@ -1,5 +1,7 @@
 package com.example.firstproject.admin;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +17,7 @@ import com.example.firstproject.Entity.CommentEntity;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
 import com.example.firstproject.Entity.StompRoom.Room;
+import com.example.firstproject.Handler.MemberHandler;
 
 import lombok.RequiredArgsConstructor;
 
@@ -49,10 +52,11 @@ public class adminService {
 		return memberlist;
 		
 	}
+	//=================================게시판페이지관리========================================
 	public Page<NoticeDto> allnoticeget(int page) {
 		
 		System.out.println("핸들러시작");
-		Pageable pageable=PageRequest.of(page-1, 20,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red" ));
+		Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red" ));
 		Page<NoticeEntity> entity=adminhandler.noticeallget(pageable);
 	
 		Page<NoticeDto> list=entity.map((m)->
@@ -70,6 +74,82 @@ public class adminService {
 		
 	}
 	
+	//===============================================게시글검색==================================
+	public Page<NoticeDto> searchnotice(int page,String option,String keyword){
+		Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
+		//케이스문변수중복이안됨;;
+		if (option.equals("titletext")) {
+			
+			String option1="title";
+			String option2="text";
+			Page<NoticeEntity> entity=adminhandler.searchtitletext(keyword,pageable);
+			Page<NoticeDto> list=entity.map((m)->
+			NoticeDto.builder().num(m.getNoticeid()).username(m.getNoticeuser())
+			.nickname(m.getNoticenick()).title(m.getTitle()).text(m.getText())
+			.likes(m.getLikeuser().size()).temp(m.getTemp()).sky(m.getSky())
+			.pty(m.getPty()).rain(m.getRain()).red(m.getRed()).detachfiles(m.getFiles())
+			.comments(m.getComments()).userprofile(m.getMember().getProfileimg()).build()
+			);
+		
+			return list;
+			
+		}
+		else if(option.equals("title")){
+			
+					
+			Page<NoticeEntity> entity=adminhandler.searchtitle(keyword,pageable);
+			Page<NoticeDto> list=entity.map((m)->
+			NoticeDto.builder().num(m.getNoticeid()).username(m.getNoticeuser())
+			.nickname(m.getNoticenick()).title(m.getTitle()).text(m.getText())
+			.likes(m.getLikeuser().size()).temp(m.getTemp()).sky(m.getSky())
+			.pty(m.getPty()).rain(m.getRain()).red(m.getRed()).detachfiles(m.getFiles())
+			.comments(m.getComments()).userprofile(m.getMember().getProfileimg()).build()
+			);
+			return list;
+		}
+		else if(option.equals("text")) {
+			
+			Page<NoticeEntity> entity=adminhandler.searchtext(keyword,pageable);
+			
+			Page<NoticeDto> dtlist=entity.map(m-> new NoticeDto(m));
+			Page<NoticeDto> list=entity.map((m)->
+			NoticeDto.builder().num(m.getNoticeid()).username(m.getNoticeuser())
+			.nickname(m.getNoticenick()).title(m.getTitle()).text(m.getText())
+			.likes(m.getLikeuser().size()).temp(m.getTemp()).sky(m.getSky())
+			.pty(m.getPty()).rain(m.getRain()).red(m.getRed()).detachfiles(m.getFiles())
+			.comments(m.getComments()).userprofile(m.getMember().getProfileimg()).build()
+			);
+			return list;
+		
+		}
+		else {
+			
+			Page<NoticeEntity> entity=adminhandler.searchname(keyword,pageable);
+			Page<NoticeDto> list=entity.map((m)->
+			NoticeDto.builder().num(m.getNoticeid()).username(m.getNoticeuser())
+			.nickname(m.getNoticenick()).title(m.getTitle()).text(m.getText())
+			.likes(m.getLikeuser().size()).temp(m.getTemp()).sky(m.getSky())
+			.pty(m.getPty()).rain(m.getRain()).red(m.getRed()).detachfiles(m.getFiles())
+			.comments(m.getComments()).userprofile(m.getMember().getProfileimg()).build()
+			);
+			
+			return list;
+			
+		}
+
+	
+		
+	}
+	//==============게시글삭제
+	public void deletenotice(Long noticeid) throws IllegalAccessException {
+		NoticeEntity entity= adminhandler.findbynotice(noticeid).orElseThrow(()->new IllegalAccessException("게시글이없습니다"));
+		
+		adminhandler.deletenotice(entity);
+		
+	}
+	
+	
+	//=================================게시판댓글관리========================================
 	public Page<CommentDto> allCommentrget(int page) {
 		
 		
@@ -113,5 +193,20 @@ public class adminService {
 		
 	}
 	
+	
+	
+	//==================================멤버삭제 서비스=================================
+	
+	
+	
+	public String memberdelete(Long userid) throws IllegalAccessException {
+		MemberEntity member=adminhandler.findmember(userid).orElseThrow(()->
+			 new IllegalAccessException("회원이없습니다")
+		);
+		
+		adminhandler.memberdelete(member);
+		
+		return "멤버삭제성공";
+	}
 
 }

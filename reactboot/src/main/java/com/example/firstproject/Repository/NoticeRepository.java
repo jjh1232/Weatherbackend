@@ -60,7 +60,7 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 	Page<NoticeEntity> searchtext(@Param("text") String text,Pageable pageable	);
 	
 	//@Query(value="select n.* from notice n join fetch n.member m where m.id=n.member_id where n.nickname like %:text%")
-	@Query(value="Select * from notice   where nickname like %:text%",nativeQuery=true)
+	@Query(value="Select * from notice   where noticenick like %:text%",nativeQuery=true)
 	Page<NoticeEntity> searchname(@Param("text") String text,Pageable pageable	);
 	
 	//@Query(value="select n.* from notice n join fetch n.member m where m.id=n.member_id where n.title like %:text% or text like %:text%")
@@ -68,7 +68,7 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 	Page<NoticeEntity> searchtitletext(@Param("text") String text,Pageable pageable);
 	
 	//@Query(value="select n.* from notice n join fetch n.member m where m.id=n.member_id where n.nickname like %:text%")
-	@Query(value="Select * from notice  where nickname like %:text%",nativeQuery=true)
+	@Query(value="Select * from notice  where noticenick like %:text%",nativeQuery=true)
 	Page<NoticeEntity> searchnoticeex(@Param("text") String text,Pageable page);
 	
 	
