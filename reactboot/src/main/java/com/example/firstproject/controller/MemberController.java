@@ -262,7 +262,7 @@ public class MemberController {
 		json.put("gridx", member.getHomeaddress().getGridx());
 		json.put("gridy", member.getHomeaddress().getGridy());
 		json.put("profileimg", member.getProfileimg());
-		
+		json.put("userrole", member.getRole());
 	   Cookie idCookie=new Cookie("userinfo",URLEncoder.encode(json.toJSONString(),"UTF-8"));
 		
 		idCookie.setPath("/");//사용가능한패스

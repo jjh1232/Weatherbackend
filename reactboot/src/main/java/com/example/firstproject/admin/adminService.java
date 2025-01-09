@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.firstproject.Dto.MemberDto;
@@ -13,11 +14,13 @@ import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.ChatDto.ChatRoomDto;
 import com.example.firstproject.Dto.ChatDto.roomlistresponseDto;
 import com.example.firstproject.Dto.Comment.CommentDto;
+import com.example.firstproject.Entity.Address;
 import com.example.firstproject.Entity.CommentEntity;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
 import com.example.firstproject.Entity.StompRoom.Room;
 import com.example.firstproject.Handler.MemberHandler;
+import com.example.firstproject.admin.form.Adminmembercreateform;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,10 +32,13 @@ public class adminService {
 	private final adminhandler adminhandler;
 	
 	
+	private final BCryptPasswordEncoder passen;
+	//==================================//멤버=========================================
+	
 	public Page<MemberDto> allmemberget(int page) {
 	
 		System.out.println("핸들러시작");
-		Pageable pageable=PageRequest.of(page-1, 20,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"regdate" ));
+		Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"regdate" ));
 		Page<MemberEntity> memberentity=adminhandler.memberlistget(pageable);
 	
 		Page<MemberDto> memberlist=memberentity.map((m)->
@@ -52,6 +58,75 @@ public class adminService {
 		return memberlist;
 		
 	}
+	
+	//==============멤버 검색============================
+	public Page<MemberDto> searchmembers(String option,String keyword,int page){
+		Pageable pageable=PageRequest.of(page-1, 20,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"regdate" ));
+		
+		if(option.equals("email")){
+			
+			Page<MemberEntity> memberentity=adminhandler.allusernamesearch(pageable,keyword);
+			Page<MemberDto> memberlist=memberentity.map((m)->
+			MemberDto.builder().id(m.getId())
+			.username(m.getUsername())
+			.nickname(m.getNickname())
+			.role(m.getRole())
+			.provider(m.getProvider())
+			.red(m.getRegdate())
+			.homeaddress(m.getHomeaddress())
+			.build());	
+
+			return memberlist;
+		}
+		else if(option.equals("nickname")) {
+			Page<MemberEntity> memberentity=adminhandler.allnicknamesearch(pageable,keyword);
+		
+			Page<MemberDto> memberlist=memberentity.map((m)->
+			MemberDto.builder().id(m.getId())
+			.username(m.getUsername())
+			.nickname(m.getNickname())
+			.role(m.getRole())
+			.provider(m.getProvider())
+			.red(m.getRegdate())
+			.homeaddress(m.getHomeaddress())
+			.build());	
+
+			return memberlist;
+		}
+		
+		return null;
+	}
+	
+	//멤버생성=======================================================
+	public String membercreate(Adminmembercreateform form) {
+		
+		String newpass=passen.encode(form.getPassword());//시큐리티로그인도 인코딩해줌
+		Address regions=Address.builder().juso(form.getRegion()).gridx(form.getGridx()).gridy(form.getGridy())
+		.build();
+		
+		
+		MemberEntity entity=MemberEntity.builder()
+				
+				.username(form.getUsername())
+				
+				.nickname(form.getNickname())
+				.password(newpass)
+				
+				.provider(form.getProvider())
+				.providerid(null)
+				.homeaddress(regions)
+				.role(form.getRole())
+				
+				.build();
+		
+		MemberEntity okentity=adminhandler.membercreate(entity);
+		
+		return okentity.getNickname();
+	}
+	
+	
+	
+	
 	//=================================게시판페이지관리========================================
 	public Page<NoticeDto> allnoticeget(int page) {
 		

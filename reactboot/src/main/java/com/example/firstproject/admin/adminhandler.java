@@ -30,13 +30,30 @@ public class adminhandler {
 	private final CommentRepository commentrepo;
 	
 	private final ChatRoomRepository roomrepo;
-	//=================================게시판핸들러관리========================================
+	//=================================멤버핸들러관리========================================
 	public Page<MemberEntity> memberlistget(Pageable page){
 		System.out.println("핸들러시작");
 		Page<MemberEntity> memberlist=memberrepo.findAll(page);		
 		System.out.println("리포종료");
 		return memberlist;
 		
+	}
+	
+	public Page<MemberEntity> allusernamesearch(Pageable page,String keyword){
+		Page<MemberEntity> memberlist=memberrepo.findByUsernameContaining(page,keyword);
+		return memberlist;
+		
+	}
+	public Page<MemberEntity> allnicknamesearch(Pageable page,String keyword){
+		Page<MemberEntity> memberlist=memberrepo.findByNicknameContaining(page,keyword);
+		return memberlist;
+		
+	}
+	
+	//멤버가입
+	public MemberEntity membercreate(MemberEntity member){
+		MemberEntity entity=memberrepo.save(member);
+		return entity;
 	}
 	//=================================게시판페이지관리========================================
 	public Page<NoticeEntity> noticeallget(Pageable page){
