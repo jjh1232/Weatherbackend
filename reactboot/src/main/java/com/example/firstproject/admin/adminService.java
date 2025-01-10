@@ -2,6 +2,8 @@ package com.example.firstproject.admin;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +22,7 @@ import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
 import com.example.firstproject.Entity.StompRoom.Room;
 import com.example.firstproject.Handler.MemberHandler;
+import com.example.firstproject.admin.form.Admemberupdateform;
 import com.example.firstproject.admin.form.Adminmembercreateform;
 
 import lombok.RequiredArgsConstructor;
@@ -101,10 +104,18 @@ public class adminService {
 	public String membercreate(Adminmembercreateform form) {
 		
 		String newpass=passen.encode(form.getPassword());//시큐리티로그인도 인코딩해줌
-		Address regions=Address.builder().juso(form.getRegion()).gridx(form.getGridx()).gridy(form.getGridy())
+		Address regions=new Address();
+	
+		if(form.getRegion().equals("")) {
+			System.out.println("레기온빈값");
+			regions=Address.builder().juso("서울특별시  종로구  청운효자동").gridx("60").gridy("127").build();
+		}
+		else {
+			System.out.println("레기온있음");
+		 regions=Address.builder().juso(form.getRegion()).gridx(form.getGridx()).gridy(form.getGridy())
 		.build();
-		
-		
+		}
+		System.out.println("크레잇서비스주소확인:"+form.getRegion());
 		MemberEntity entity=MemberEntity.builder()
 				
 				.username(form.getUsername())
@@ -124,7 +135,24 @@ public class adminService {
 		return okentity.getNickname();
 	}
 	
+	//멤버정보 업데이트 
+	@Transactional
+	public String memberupdate(Long userid,Admemberupdateform form) throws IllegalAccessException {
 	
+		Address regions=Address.builder().juso(form.getRegion()).gridx(form.getGridx()).gridy(form.getGridy())
+				.build();
+	
+		MemberEntity okentity=adminhandler.findmember(userid).orElseThrow(()->new IllegalAccessException("해당하는유저없음"));
+	
+		okentity.setUsername(form.getUsername());
+		
+		okentity.setNickname(form.getNickname());
+		okentity.setProvider(form.getProvider());
+		okentity.setHomeaddress(regions);
+		okentity.setRole(form.getRole());
+		
+		return "성공적으로변경";
+	}
 	
 	
 	//=================================게시판페이지관리========================================

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +19,7 @@ import com.example.firstproject.Dto.MemberDto;
 import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.ChatDto.roomlistresponseDto;
 import com.example.firstproject.Entity.MemberEntity;
+import com.example.firstproject.admin.form.Admemberupdateform;
 import com.example.firstproject.admin.form.Adminmembercreateform;
 
 import lombok.RequiredArgsConstructor;
@@ -66,6 +68,14 @@ public class admincontroller {
 		String nickname=adminservice.membercreate(form);
 		
 		return ResponseEntity.ok(nickname+"으로 회원가입되었습니다");
+	}
+	//어드민권한으로 회원정보수정하기
+	@PutMapping("/memberupdate/{userid}")
+	public ResponseEntity memberupdate(@PathVariable long userid,@RequestBody Admemberupdateform form) throws IllegalAccessException {
+		
+		adminservice.memberupdate(userid, form);
+		
+		return null;
 	}
 	//=================================게시판페이지관리========================================
 	@GetMapping("/noticemanage")

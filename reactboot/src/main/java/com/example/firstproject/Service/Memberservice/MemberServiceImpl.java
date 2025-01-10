@@ -82,8 +82,17 @@ public class MemberServiceImpl implements MemberService{
 	
 		
 		String newpass=passen.encode(form.getPassword());//시큐리티로그인도 인코딩해줌
-		Address regions=Address.builder().juso(form.getRegion()).gridx(form.getGridx()).gridy(form.getGridy())
+		Address regions=new Address();
+		
+		if(form.getRegion().equals("")) {
+			System.out.println("레기온빈값");
+			regions=Address.builder().juso("서울특별시  종로구  청운효자동").gridx("60").gridy("127").build();
+		}
+		else {
+			System.out.println("레기온있음");
+		 regions=Address.builder().juso(form.getRegion()).gridx(form.getGridx()).gridy(form.getGridy())
 		.build();
+		}
 		
 		
 		MemberEntity entity=MemberEntity.builder()
