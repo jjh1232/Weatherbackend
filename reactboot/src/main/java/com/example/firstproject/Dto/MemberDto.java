@@ -30,6 +30,12 @@ public class MemberDto {
 	private String provider;
 	private String providerid;
 	private Address homeaddress;
+	private int usercomments;
+	
+	private int usernotice;
+	
+	private int userchatroom;
+	
 	private String red;
 	private String updatered;
 	

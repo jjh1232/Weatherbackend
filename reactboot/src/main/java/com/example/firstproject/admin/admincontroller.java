@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.firstproject.Dto.MemberDto;
 import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.ChatDto.roomlistresponseDto;
+import com.example.firstproject.Dto.Comment.CommentDto;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.admin.form.Admemberupdateform;
 import com.example.firstproject.admin.form.Adminmembercreateform;
@@ -109,23 +110,41 @@ public class admincontroller {
 	}
 	
 	//=================================댓글페이지관리========================================
+	
 	@GetMapping("/commentmanage")
 	public ResponseEntity commentmanage(@RequestParam(defaultValue="1") int page,
 			@RequestParam(required = false) String option,
 			@RequestParam(required =false) String searchtext) {
-		//Page<NoticeDto> memberlist=adminservice.allCommentrget(page);
+		if(searchtext==null) {
+			Page<CommentDto> commentlist=adminservice.allCommentrget(page);
+			return ResponseEntity.ok(commentlist);
+		}else {
+			Page<CommentDto> commentlist=adminservice.commentsearch(page,option,searchtext);
+			
+			return ResponseEntity.ok(commentlist);
+		}
 		
-		 return null;
+		
+		 
 	}
 	
 	//=================================채팅방페이지관리========================================
 	@GetMapping("/chatroommanage")
 	public ResponseEntity chtroommanage(@RequestParam(defaultValue="1") int page,
 			@RequestParam(required = false) String option,
-			@RequestParam(required =false) String searchtext) {
-		Page<roomlistresponseDto> memberlist=adminservice.allRoomget(page);
+			@RequestParam(required =false) String searchtext) throws IllegalAccessException {
 		
-		 return ResponseEntity.ok(memberlist);
+		if(searchtext==null) {
+			Page<roomlistresponseDto> chatroomlist=adminservice.allRoomget(page);
+			return ResponseEntity.ok(chatroomlist);
+		}else {
+			Page<roomlistresponseDto> chatroomlist=adminservice.searchrooms(page,option,searchtext);
+			
+			return ResponseEntity.ok(chatroomlist);
+		}
+		
+		
+		
 	}
 	
 	

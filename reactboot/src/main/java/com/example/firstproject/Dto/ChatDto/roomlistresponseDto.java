@@ -25,5 +25,9 @@ public class roomlistresponseDto {
 	
 	private String latelychat;
 	
+	private int chatnum;
+	
+	private String lastchatred;
+	
 	private String red;
 }

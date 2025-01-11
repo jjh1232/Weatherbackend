@@ -11,11 +11,15 @@ import org.springframework.stereotype.Service;
 import com.example.firstproject.Entity.CommentEntity;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
+import com.example.firstproject.Entity.StompRoom.MemberRoom;
 import com.example.firstproject.Entity.StompRoom.Room;
+import com.example.firstproject.Entity.StompRoom.chatmessage;
 import com.example.firstproject.Repository.CommentRepository;
 import com.example.firstproject.Repository.MemberRepository;
 import com.example.firstproject.Repository.NoticeRepository;
+import com.example.firstproject.Repository.roomrepo.ChatMessageRepository;
 import com.example.firstproject.Repository.roomrepo.ChatRoomRepository;
+import com.example.firstproject.Repository.roomrepo.MemberRoomRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,6 +34,10 @@ public class adminhandler {
 	private final CommentRepository commentrepo;
 	
 	private final ChatRoomRepository roomrepo;
+	
+	private final MemberRoomRepository memberroomrepo;
+	
+	private final ChatMessageRepository chatrepo;
 	//=================================멤버핸들러관리========================================
 	public Page<MemberEntity> memberlistget(Pageable page){
 		System.out.println("핸들러시작");
@@ -54,6 +62,11 @@ public class adminhandler {
 	public MemberEntity membercreate(MemberEntity member){
 		MemberEntity entity=memberrepo.save(member);
 		return entity;
+	}
+	//유저아이디로멤버검색
+	public Optional<MemberEntity> usernamefind(String username){
+		Optional<MemberEntity> member=memberrepo.findByUsername(username);
+		return member;
 	}
 	//=================================게시판페이지관리========================================
 	public Page<NoticeEntity> noticeallget(Pageable page){
@@ -113,12 +126,33 @@ public class adminhandler {
 		noticerepo.delete(entity);
 	}
 	//=================================게시판코멘트관리========================================
-	public Page<CommentEntity> commentget(Pageable page){
+	//======================================================================================
+		public Page<CommentEntity> commentget(Pageable page){
 		
 		Page<CommentEntity> noticelist=commentrepo.findAll(page);
 		
 		return noticelist;
 	}
+		//이메일검색
+		public Page<CommentEntity> emailcomment(Pageable page,String keyword){
+			
+			Page<CommentEntity> entity=commentrepo.findByUsernameContaining(page, keyword);
+			
+			return entity;
+		}
+		//텍스트검색
+		public Page<CommentEntity> nicknamecomment(Pageable page,String keyword){
+
+			Page<CommentEntity> entity=commentrepo.findByNicknameContaining(page, keyword);
+			return entity;
+		}
+		
+		//게시글번호검색
+		public Page<CommentEntity> noticenumcomment(Pageable page,Long keyword){
+
+			Page<CommentEntity> entity=commentrepo.findByNoticeIdContaining(page, keyword);
+			return entity;
+		}
 	//=================================채팅방페이지관리========================================
 	public Page<Room> chatroomallget(Pageable page){
 		
@@ -126,6 +160,24 @@ public class adminhandler {
 		
 		return noticelist;
 	}
+	//채팅방이름검색
+	public Page<Room> roomnamefind(Pageable page,String keyword){
+		Page<Room> room=roomrepo.findByRoomnameContaining(page, keyword);
+		
+		return room;
+	}//참가리스트검색
+	public Page<MemberRoom> roomnamelistfind(Pageable page,MemberEntity member){
+		//멤버룸에서가져와야함
+		Page<MemberRoom> namelist=memberroomrepo.findByMember(page, member);
+		return namelist;
+		}
+	//채팅텍스트검색
+	public Page<chatmessage> roomchatfind(Pageable page,String keyword){
+			//챗메세지타입에서가져오기
+		Page<chatmessage> chat=chatrepo.findByMessageContaining(page, keyword);
+		return chat;
+	}
+	
 //=========================================멤버삭제와 멤버엔티티찾기=========================
 	public Optional<MemberEntity> findmember(Long id){
 		Optional<MemberEntity> member=memberrepo.findById(id);

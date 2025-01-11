@@ -20,6 +20,7 @@ import com.example.firstproject.Entity.Address;
 import com.example.firstproject.Entity.CommentEntity;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
+import com.example.firstproject.Entity.StompRoom.MemberRoom;
 import com.example.firstproject.Entity.StompRoom.Room;
 import com.example.firstproject.Handler.MemberHandler;
 import com.example.firstproject.admin.form.Admemberupdateform;
@@ -52,6 +53,9 @@ public class adminService {
 			.provider(m.getProvider())
 			.red(m.getRegdate())
 			.homeaddress(m.getHomeaddress())
+			.usernotice(m.getNotices().size())
+			.usercomments(m.getComments().size())
+			.userchatroom(m.getChatrooms().size())
 			.build());	
 				
 			
@@ -77,6 +81,9 @@ public class adminService {
 			.provider(m.getProvider())
 			.red(m.getRegdate())
 			.homeaddress(m.getHomeaddress())
+			.usernotice(m.getNotices().size())
+			.usercomments(m.getComments().size())
+			.userchatroom(m.getChatrooms().size())
 			.build());	
 
 			return memberlist;
@@ -92,6 +99,9 @@ public class adminService {
 			.provider(m.getProvider())
 			.red(m.getRegdate())
 			.homeaddress(m.getHomeaddress())
+			.usernotice(m.getNotices().size())
+			.usercomments(m.getComments().size())
+			.userchatroom(m.getChatrooms().size())
 			.build());	
 
 			return memberlist;
@@ -191,7 +201,10 @@ public class adminService {
 			.nickname(m.getNoticenick()).title(m.getTitle()).text(m.getText())
 			.likes(m.getLikeuser().size()).temp(m.getTemp()).sky(m.getSky())
 			.pty(m.getPty()).rain(m.getRain()).red(m.getRed()).detachfiles(m.getFiles())
-			.comments(m.getComments()).userprofile(m.getMember().getProfileimg()).build()
+			.comments(m.getComments())
+			.userprofile(m.getMember().getProfileimg())
+			
+			.build()
 			);
 		
 			return list;
@@ -253,10 +266,11 @@ public class adminService {
 	
 	
 	//=================================게시판댓글관리========================================
+	//=======================================================================================
 	public Page<CommentDto> allCommentrget(int page) {
 		
 		
-		Pageable pageable=PageRequest.of(page-1, 20,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"regdate" ));
+		Pageable pageable=PageRequest.of(page-1, 20,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"createdDate" ));
 		Page<CommentEntity> entity=adminhandler.commentget(pageable);
 	
 		Page<CommentDto> list=entity.map((m)->
@@ -276,7 +290,68 @@ public class adminService {
 		return list;
 		
 	}
+	//게시글검색조건===========================================================================
+	public Page<CommentDto> commentsearch(int page,String option,String keyword){
+		
 	
+	
+		if(option.equals("email")) {
+			Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"createdDate" ));
+			Page<CommentEntity> entity=adminhandler.emailcomment(pageable, keyword);
+			Page<CommentDto> list=entity.map((m)->
+			CommentDto.builder().id(m.getId())
+			.username(m.getUsername())
+			.nickname(m.getNickname())
+			.text(m.getText()).depth(m.getDepth()).cnum(m.getCnum())
+			.redtime(m.getCreatedDate()).userprofile(m.getMember().getProfileimg())
+			.noticenum(m.getNotice().getNoticeid())
+					
+			.build());	
+				
+					
+			return list;
+		}else if(option.equals("nickname")) {
+			Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"createdDate" ));
+			Page<CommentEntity> entity=adminhandler.nicknamecomment(pageable, keyword);
+			Page<CommentDto> list=entity.map((m)->
+			CommentDto.builder().id(m.getId())
+			.username(m.getUsername())
+			.nickname(m.getNickname())
+			.text(m.getText()).depth(m.getDepth()).cnum(m.getCnum())
+			.redtime(m.getCreatedDate()).userprofile(m.getMember().getProfileimg())
+			.noticenum(m.getNotice().getNoticeid())
+					
+			.build());	
+				
+			return list;
+		}else if (option.equals("noticenum")) {
+			//리포지토리에서 노티스객체를 못받아서 네이티브쿼리로처리했는데 그럴시 page객체에 sql문 원문그대로놓아줘야하는듯?
+			//어쩔수없이 if문마다 다르게 pageable작성
+			Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"created_date" ));
+			
+			System.out.println("게시글번호:"+keyword);
+			Long noticeid=Long.parseLong(keyword);
+			Page<CommentEntity> entity=adminhandler.noticenumcomment(pageable, noticeid);
+			Page<CommentDto> list=entity.map((m)->
+			CommentDto.builder().id(m.getId())
+			.username(m.getUsername())
+			.nickname(m.getNickname())
+			.text(m.getText()).depth(m.getDepth()).cnum(m.getCnum())
+			.redtime(m.getCreatedDate()).userprofile(m.getMember().getProfileimg())
+			.noticenum(m.getNotice().getNoticeid())
+					
+			.build());	
+				
+			return list;
+		}
+		else {
+			System.out.println("잘못된검색옵션입니다");
+			return null;
+		}
+			}
+	
+	//============================채티방관련 서비스================================================
+	//기본채팅방
 	public Page<roomlistresponseDto> allRoomget(int page) {
 		
 		System.out.println("핸들러시작");
@@ -286,6 +361,9 @@ public class adminService {
 		Page<roomlistresponseDto> list=entity.map((m)->
 		roomlistresponseDto.builder().roomid(m.getId()).roomname(m.getRoomname())
 		.namelist(m.getUserlist()).red(m.getCreatedDate())
+		.chatnum(m.getChatdata().size())
+		.latelychat(m.getChatdata().get(m.getChatdata().size()-1).getMessage())
+		.lastchatred(m.getChatdata().get(m.getChatdata().size()-1).getCreatedDate())
 		.build());
 				
 			
@@ -295,7 +373,48 @@ public class adminService {
 		return list;
 		
 	}
-	
+	//채팅검색 시
+	public Page<roomlistresponseDto> searchrooms(int page,String option,String keyword) throws IllegalAccessException{
+		Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"createdDate" ));
+		if(option.equals("roomname")) {
+			Page<Room> entity=adminhandler.roomnamefind(pageable, keyword);
+			Page<roomlistresponseDto> list=entity.map((m)->
+			roomlistresponseDto.builder().roomid(m.getId()).roomname(m.getRoomname())
+			.namelist(m.getUserlist()).red(m.getCreatedDate())
+			.chatnum(m.getChatdata().size())
+			.latelychat(m.getChatdata().get(m.getChatdata().size()-1).getMessage())
+			.lastchatred(m.getChatdata().get(m.getChatdata().size()-1).getCreatedDate())
+			.build());
+			
+			return list;
+			
+		}
+		else if(option.equals("partilist")) {
+			MemberEntity member=adminhandler.usernamefind(keyword).orElseThrow(()->
+				new IllegalAccessException("해당하는회원이없습니다")
+			);
+			
+			Page<MemberRoom> entity=adminhandler.roomnamelistfind(pageable, member);
+			Page<roomlistresponseDto> list=entity.map((m)->
+			roomlistresponseDto.builder().roomid(m.getRoom().getId())
+			.roomname(m.getRoom().getRoomname())
+			.namelist(m.getRoom().getUserlist()).red(m.getRoom().getCreatedDate())
+			.chatnum(m.getRoom().getChatdata().size())
+			.latelychat(m.getRoom().getChatdata().get(m.getRoom().getChatdata().size()-1).getMessage())
+			.lastchatred(m.getRoom().getChatdata().get(m.getRoom().getChatdata().size()-1).getCreatedDate())
+			.build());
+			return list;
+		}
+		/*
+		else if(option.equals("chattext")) {
+			adminhandler.roomchatfind(pageable, keyword);
+		}
+		*/
+		else {
+			System.out.println("올바르지않은검색입니다");
+			return null;
+		}
+	}
 	
 	
 	//==================================멤버삭제 서비스=================================

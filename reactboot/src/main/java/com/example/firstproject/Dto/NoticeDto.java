@@ -38,7 +38,7 @@ public class NoticeDto {
 	private boolean likeusercheck;
 	private String red;
 	private String userprofile;
-	
+
 	private List<CommentEntity> comments;
 	
 	private List<detachfile> detachfiles;
