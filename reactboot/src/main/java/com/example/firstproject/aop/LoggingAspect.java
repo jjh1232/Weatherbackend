@@ -26,7 +26,8 @@ public class LoggingAspect {
 		//근데이거 bcycreept 빈이생성이안되서 실행을못시킴..
 	}
 	
-	@Pointcut("execution(* com.example.firstproject.controller..*.*(..))")
+	@Pointcut("execution(* com.example.firstproject.controller..*.*(..))||"
+			+ "execution(* com.example.firstproject.admin.admincontroller.*(..))")
 	public void controller() {
 		//컨트롤러에 적용 
 	}

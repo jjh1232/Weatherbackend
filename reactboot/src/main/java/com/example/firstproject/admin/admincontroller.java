@@ -83,7 +83,7 @@ public class admincontroller {
 	public ResponseEntity noticemanage(@RequestParam(defaultValue="1") int page,
 			@RequestParam(required = false) String option,
 			@RequestParam(required =false) String searchtext
-			) {
+			) throws IllegalAccessException {
 		System.out.println("노티스컨트롤페이지:"+page);
 		System.out.println("노티스컨트롤서치:"+searchtext);
 		

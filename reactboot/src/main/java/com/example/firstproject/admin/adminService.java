@@ -188,7 +188,7 @@ public class adminService {
 	}
 	
 	//===============================================게시글검색==================================
-	public Page<NoticeDto> searchnotice(int page,String option,String keyword){
+	public Page<NoticeDto> searchnotice(int page,String option,String keyword) throws IllegalAccessException{
 		Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
 		//케이스문변수중복이안됨;;
 		if (option.equals("titletext")) {
@@ -238,6 +238,19 @@ public class adminService {
 			return list;
 		
 		}
+		else if(option.equals("email")){
+			MemberEntity member=adminhandler.usernamefind(keyword).orElseThrow(()->
+			new IllegalAccessException("해당하는유저가없습니다"));
+			Page<NoticeEntity> entity=adminhandler.searchusername(member, pageable);
+			Page<NoticeDto> list=entity.map((m)->
+			NoticeDto.builder().num(m.getNoticeid()).username(m.getNoticeuser())
+			.nickname(m.getNoticenick()).title(m.getTitle()).text(m.getText())
+			.likes(m.getLikeuser().size()).temp(m.getTemp()).sky(m.getSky())
+			.pty(m.getPty()).rain(m.getRain()).red(m.getRed()).detachfiles(m.getFiles())
+			.comments(m.getComments()).userprofile(m.getMember().getProfileimg()).build()
+			);
+			return list;
+		}	
 		else {
 			
 			Page<NoticeEntity> entity=adminhandler.searchname(keyword,pageable);
@@ -390,11 +403,23 @@ public class adminService {
 			
 		}
 		else if(option.equals("partilist")) {
-			MemberEntity member=adminhandler.usernamefind(keyword).orElseThrow(()->
-				new IllegalAccessException("해당하는회원이없습니다")
-			);
+			//MemberEntity member=adminhandler.usernamefind(keyword).orElseThrow(()->new IllegalAccessException("해당하는회원이없습니다"));
 			
-			Page<MemberRoom> entity=adminhandler.roomnamelistfind(pageable, member);
+			Page<MemberRoom> entity=adminhandler.roomnamelistfind(pageable, keyword);
+			Page<roomlistresponseDto> list=entity.map((m)->
+			roomlistresponseDto.builder().roomid(m.getRoom().getId())
+			.roomname(m.getRoom().getRoomname())
+			.namelist(m.getRoom().getUserlist()).red(m.getRoom().getCreatedDate())
+			.chatnum(m.getRoom().getChatdata().size())
+			.latelychat(m.getRoom().getChatdata().get(m.getRoom().getChatdata().size()-1).getMessage())
+			.lastchatred(m.getRoom().getChatdata().get(m.getRoom().getChatdata().size()-1).getCreatedDate())
+			.build());
+			return list;
+		}
+		else if (option.equals("email")) {
+			//유저네임검색 일단콘테이닝말고 정확한명
+			MemberEntity member=adminhandler.usernamefind(keyword).orElseThrow(()->new IllegalAccessException("해당하는회원이없습니다"));
+			Page<MemberRoom> entity=adminhandler.roomusernametfind(pageable, member);
 			Page<roomlistresponseDto> list=entity.map((m)->
 			roomlistresponseDto.builder().roomid(m.getRoom().getId())
 			.roomname(m.getRoom().getRoomname())

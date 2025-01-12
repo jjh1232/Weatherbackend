@@ -14,5 +14,7 @@ public interface MemberRoomRepository extends JpaRepository<MemberRoom, Long>{
 
 	Optional<MemberRoom> findByRoom_idAndMember_Id(Long roomid,Long memberid);
 	
+	Page<MemberRoom> findByMembernickname(Pageable page,String membernickname);
+	
 	Page<MemberRoom> findByMember(Pageable page,MemberEntity member);
 }

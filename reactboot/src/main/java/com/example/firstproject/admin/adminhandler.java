@@ -107,7 +107,10 @@ public class adminhandler {
 	}
 
 
-
+	public Page<NoticeEntity> searchusername(MemberEntity member,Pageable page){
+		Page<NoticeEntity> result =noticerepo.findByMember(member, page);
+		return result;
+	}
 
 	public Page<NoticeEntity> searchname(String text,Pageable pageable) {
 			Page<NoticeEntity> result=noticerepo.searchname(text,pageable);
@@ -166,9 +169,15 @@ public class adminhandler {
 		
 		return room;
 	}//참가리스트검색
-	public Page<MemberRoom> roomnamelistfind(Pageable page,MemberEntity member){
+	public Page<MemberRoom> roomnamelistfind(Pageable page,String nickname ){
 		//멤버룸에서가져와야함
-		Page<MemberRoom> namelist=memberroomrepo.findByMember(page, member);
+		Page<MemberRoom> namelist=memberroomrepo.findByMembernickname(page,nickname );
+		return namelist;
+		}
+	
+	public Page<MemberRoom> roomusernametfind(Pageable page,MemberEntity member ){
+		//멤버룸에서가져와야함
+		Page<MemberRoom> namelist=memberroomrepo.findByMember(page,member );
 		return namelist;
 		}
 	//채팅텍스트검색

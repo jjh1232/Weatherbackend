@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.NoticeDtointer;
 import com.example.firstproject.Dto.noticeDao;
+import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
 
 @Repository
@@ -74,4 +75,6 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 	
 	@Query(value="select n from notice n where n.member.id=:userid")
 	Page<NoticeEntity> findbyidall(Long userid, Pageable page);
+	
+	Page<NoticeEntity> findByMember(MemberEntity member,Pageable page);
 }
