@@ -191,7 +191,7 @@ public class NoticeServiceImpl implements NoticeService {
 	 
 		List<detachfile> detachfiles=new ArrayList<>();
 	 for(datachfiledto file:form.getFiles()) {
-			if(file.getId()==null) {
+			if(file.getId()==0) {
 				log.info("널이왜있어씹;");
 			}else {
 				log.info(form.toString());

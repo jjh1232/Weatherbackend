@@ -75,7 +75,10 @@ public class adminhandler {
 		
 		return noticelist;
 	}
-	
+	public NoticeEntity noticedetail(Long noticeid) throws IllegalAccessException {
+		NoticeEntity entity=noticerepo.findById(noticeid).orElseThrow(()->new IllegalAccessException("게시글업승"));
+		return entity;
+	}
 	//==============================검색핸들러=====================================
 	
 	public Page<NoticeEntity> searchtitle(String text,Pageable pageable) {

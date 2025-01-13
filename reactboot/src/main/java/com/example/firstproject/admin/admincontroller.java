@@ -100,6 +100,12 @@ public class admincontroller {
 		
 		 
 	}
+	@GetMapping("/noticedetail/{noticeid}")
+	public NoticeDto noticedetailget(@PathVariable Long noticeid) throws IllegalAccessException {
+		NoticeDto dto=adminservice.getnoticedetail(noticeid);
+		
+		return dto;
+	}
 	
 	//삭제 
 	@DeleteMapping("/notice/{noticeid}/delete")

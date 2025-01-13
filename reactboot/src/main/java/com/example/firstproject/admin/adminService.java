@@ -363,6 +363,30 @@ public class adminService {
 		}
 			}
 	
+	//게시글업데이트 어드민 버전
+	public NoticeDto getnoticedetail(Long noticeid) throws IllegalAccessException {
+NoticeEntity Entity=adminhandler.noticedetail(noticeid);
+		
+		System.out.println("코멘트:"+Entity.getComments());
+		NoticeDto dto=Entity.toDto
+						(Entity.getNoticeid(),
+						Entity.getNoticeuser(),
+						Entity.getNoticenick(),
+						Entity.getTitle(), 
+						Entity.getText(),
+						Entity.getRed(),
+						Entity.getComments(),
+						Entity.getFiles(), 
+						Entity.getLikeuser().size(),
+						Entity.getTemp(),Entity.getSky(),Entity.getPty(),Entity.getRain()
+								);
+		
+		
+		
+		// TODO Auto-generated method stub
+		return dto;
+	}
+	
 	//============================채티방관련 서비스================================================
 	//기본채팅방
 	public Page<roomlistresponseDto> allRoomget(int page) {
