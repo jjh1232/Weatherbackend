@@ -191,13 +191,13 @@ public class NoticeServiceImpl implements NoticeService {
 	 
 		List<detachfile> detachfiles=new ArrayList<>();
 	 for(datachfiledto file:form.getFiles()) {
-			if(file.getId()==0) {
+			if(file.getUrl().equals("")) {
 				log.info("널이왜있어씹;");
 			}else {
 				log.info(form.toString());
 			detachfile detachentity=detachfile.builder()
 					.filename(file.getFilename())
-					.idx(file.getId())
+					.idx(file.getIdx())
 					.path(file.getUrl())
 					.rangeindex(file.getIndex())
 					.notice(Entity)
@@ -245,6 +245,7 @@ public class NoticeServiceImpl implements NoticeService {
 		log.info(Entity.getFiles().toString());
 		List<removetestDto> remove=new ArrayList<>();
 		List<detachfile> newdetach=new ArrayList<>();
+		
 		Iterator<detachfile> dbfileiterator=Entity.getFiles().iterator();
 	
 		

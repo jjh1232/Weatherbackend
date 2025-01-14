@@ -1,5 +1,12 @@
 package com.example.firstproject.admin;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -11,8 +18,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.firstproject.Dto.Detachupdateform;
 import com.example.firstproject.Dto.MemberDto;
 import com.example.firstproject.Dto.NoticeDto;
+import com.example.firstproject.Dto.removetestDto;
 import com.example.firstproject.Dto.ChatDto.ChatRoomDto;
 import com.example.firstproject.Dto.ChatDto.roomlistresponseDto;
 import com.example.firstproject.Dto.Comment.CommentDto;
@@ -20,22 +29,28 @@ import com.example.firstproject.Entity.Address;
 import com.example.firstproject.Entity.CommentEntity;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
+import com.example.firstproject.Entity.detachfile;
 import com.example.firstproject.Entity.StompRoom.MemberRoom;
 import com.example.firstproject.Entity.StompRoom.Room;
 import com.example.firstproject.Handler.MemberHandler;
+import com.example.firstproject.Repository.DetachfileRepository;
 import com.example.firstproject.admin.form.Admemberupdateform;
 import com.example.firstproject.admin.form.Adminmembercreateform;
+import com.example.firstproject.admin.form.AdminnoticeUpdateform;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class adminService {
 	
 	
 	private final adminhandler adminhandler;
 	
 	
+	private final DetachfileRepository detachrepo;
 	private final BCryptPasswordEncoder passen;
 	//==================================//멤버=========================================
 	
@@ -364,6 +379,127 @@ public class adminService {
 			}
 	
 	//게시글업데이트 어드민 버전
+	@Transactional
+	public void noticeupdate(Long noticeid,AdminnoticeUpdateform form) throws IllegalAccessException {
+		NoticeEntity notice=adminhandler.findbynotice(noticeid).orElseThrow(()->new IllegalAccessException("해당게시글없음"));
+		notice.setNoticeuser(form.getUsername());
+		notice.setNoticenick(form.getNickname());
+		notice.setTitle(form.getTitle());
+		notice.setText(form.getText());
+		notice.setTemp(form.getTemp());
+		notice.setSky(form.getSky());
+		notice.setPty(form.getPty());
+		notice.setRain(form.getRain());
+		
+		MemberEntity member=notice.getMember();
+	
+			log.info("파일데이터"+notice.getFiles());
+			List<removetestDto> remove=new ArrayList<>();
+			List<detachfile> newdetach=new ArrayList<>();
+		if(notice.getFiles().isEmpty()) {
+					System.out.println("기존값비었음");
+					if(!form.getFiles().isEmpty()) {
+						System.out.println("새로운이미지있음");
+						for(Detachupdateform data:form.getFiles()) {
+						detachfile detach=detachfile.builder()
+								.idx(data.getIdx())
+								.rangeindex(data.getRangeindex())
+								.filename(data.getFilename())
+								.path(data.getPath())
+								.notice(notice)
+								.member(member)
+								.build();
+						
+						member.adddetachfiles(detach);
+						newdetach.add(detach);
+						
+						}
+						notice.setFiles(newdetach);
+						
+						
+					}
+		}
+		else {
+				//이미지파일처리
+				System.out.println("기존값 안비었음");
+				Iterator<detachfile> dbfileiterator=notice.getFiles().iterator();
+		while(dbfileiterator.hasNext()) {
+				detachfile dbdata=dbfileiterator.next(); //다음값삽입
+				
+				removetestDto removedto=removetestDto.builder().id(dbdata.getId()).idx(dbdata.getIdx()).url(dbdata.getPath()).test(false).build();
+				remove.add(removedto);
+				
+		}
+		
+			
+		
+		
+			for(Detachupdateform data:form.getFiles()) {
+					log.info("폼시작데이터:"+data.getId());
+				
+				for(removetestDto removedata:remove) {
+						log.info("삭제체크기존데이터:"+removedata.getId());
+					if(removedata.getIdx()==data.getIdx()) {
+						log.info("수정하지않은데이터:"+data.getId());
+						removedata.setTest(true);
+						continue ;
+						
+					}
+					
+										
+					
+				}
+				
+				log.info("해당하지않는데이터"+data.getId());
+				log.info("새데이터");
+				detachfile detach=detachfile.builder()
+						.idx(data.getIdx())
+						.rangeindex(data.getRangeindex())
+						.filename(data.getFilename())
+						.path(data.getPath())
+						.notice(notice)
+						.member(member)
+						.build();
+				
+			newdetach.add(detach);
+			log.info("이게문제?"+detach.getPath());
+			
+		
+			
+			}
+			
+		//MemberEntity noticemember=memberhandler.findemail(Entity.getUsername()).get();
+		
+		//noticehandler.update(Entity);
+		
+	
+		String filepublic="D:/study프로그램/react/bootproject/public";
+		for(removetestDto removes:remove) {
+			log.info(removes.getId().toString());
+			System.out.println(removes.isTest());
+			if(!removes.isTest()) {
+				log.info("삭제예정"+removes.getId().toString());
+				detachrepo.deleteById(removes.getId());//db에서삭제
+				//삭제되는지확인
+				String deletepath=filepublic+removes.getUrl();
+				String asd=deletepath.replace("/",File.separator);//파일삭제패스
+				Path removepath=Paths.get(asd);
+				try {
+					Files.delete(removepath);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		notice.setFiles(newdetach);
+				}
+		
+	}
+	
+	
+	
+	
 	public NoticeDto getnoticedetail(Long noticeid) throws IllegalAccessException {
 NoticeEntity Entity=adminhandler.noticedetail(noticeid);
 		

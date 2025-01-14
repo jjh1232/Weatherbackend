@@ -22,6 +22,7 @@ import com.example.firstproject.Dto.Comment.CommentDto;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.admin.form.Admemberupdateform;
 import com.example.firstproject.admin.form.Adminmembercreateform;
+import com.example.firstproject.admin.form.AdminnoticeUpdateform;
 
 import lombok.RequiredArgsConstructor;
 
@@ -105,6 +106,14 @@ public class admincontroller {
 		NoticeDto dto=adminservice.getnoticedetail(noticeid);
 		
 		return dto;
+	}
+	//수정
+	@PutMapping("/noticeupdate/{noticeid}")
+	public ResponseEntity noticeupdate(@PathVariable Long noticeid,@RequestBody AdminnoticeUpdateform form) throws IllegalAccessException {
+		System.out.println("어드민게시글업데이트");
+		adminservice.noticeupdate(noticeid,form);
+		
+		return ResponseEntity.ok("수정완료");
 	}
 	
 	//삭제 

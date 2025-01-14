@@ -127,6 +127,9 @@ public class MemberEntity {
 	public void addchatroom(MemberRoom room) {
 		chatrooms.add(room);
 	}
+	public void adddetachfiles(detachfile detach) {
+		detachfiles.add(detach);
+	}
 
 	 //팔로우================================================
 	
