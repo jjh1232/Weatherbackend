@@ -442,7 +442,8 @@ public class adminService {
 					if(removedata.getIdx()==data.getIdx()) {
 						log.info("수정하지않은데이터:"+data.getId());
 						removedata.setTest(true);
-						continue ;
+						data.setCurrent(true);
+						break ;
 						
 					}
 					
@@ -450,6 +451,7 @@ public class adminService {
 					
 				}
 				
+				if(!data.isCurrent()) {
 				log.info("해당하지않는데이터"+data.getId());
 				log.info("새데이터");
 				detachfile detach=detachfile.builder()
@@ -462,8 +464,9 @@ public class adminService {
 						.build();
 				
 			newdetach.add(detach);
+				
 			log.info("이게문제?"+detach.getPath());
-			
+				}
 		
 			
 			}

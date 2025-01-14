@@ -186,7 +186,7 @@ public class NoticeServiceImpl implements NoticeService {
 			 			.build();
 	 log.info(form.getFiles().toString());
 	 if(form.getFiles() != null) {
-		 log.info("이미지파일존재함!");
+		 log.info("이미지파일존재함!"+form.getFiles());
 		 
 	 
 		List<detachfile> detachfiles=new ArrayList<>();
@@ -241,34 +241,61 @@ public class NoticeServiceImpl implements NoticeService {
 		NoticeEntity Entity=find.get();
 		Entity.setTitle(update.getTitle());
 		Entity.setText(update.getText());
-		
+		MemberEntity member=Entity.getMember();
 		log.info(Entity.getFiles().toString());
 		List<removetestDto> remove=new ArrayList<>();
 		List<detachfile> newdetach=new ArrayList<>();
 		
-		Iterator<detachfile> dbfileiterator=Entity.getFiles().iterator();
+		
 	
-		
+		if(Entity.getFiles().isEmpty()) {
+			System.out.println("기존값비었음");
+			if(!update.getDetach().isEmpty()) {
+				System.out.println("새로운이미지있음");
+				for(Detachupdateform data:update.getDetach()) {
+				detachfile detach=detachfile.builder()
+						.idx(data.getIdx())
+						.rangeindex(data.getRangeindex())
+						.filename(data.getFilename())
+						.path(data.getPath())
+						.notice(Entity)
+						.member(member)
+						.build();
+				
+				member.adddetachfiles(detach);
+				newdetach.add(detach);
+				
+				}
+				Entity.setFiles(newdetach);
+				
+				
+			}
+}
+		else {
 					
-		
+	Iterator<detachfile> dbfileiterator=Entity.getFiles().iterator();
 		while(dbfileiterator.hasNext()) {
 				detachfile dbdata=dbfileiterator.next(); //다음값삽입
 				
 				removetestDto removedto=removetestDto.builder().id(dbdata.getId()).url(dbdata.getPath()).test(false).build();
 				remove.add(removedto);
 		}
-		for(removetestDto removedata:remove) {
-			log.info("삭제체크기존데이터:"+removedata.getId());
+	
+			
 			for(Detachupdateform data:update.getDetach()) {
 					log.info("폼시작데이터:"+data.getId());
-				
+					for(removetestDto removedata:remove) {
 					
-					if(removedata.getId()==data.getId()) {
+					if(removedata.getIdx()==data.getIdx()) {
 						log.info("수정하지않은데이터:"+data.getId());
 						removedata.setTest(true);
+						data.setCurrent(true);
 						break;
 						
-					}else if(data.getId()==0) {
+					}
+					
+
+					if(!data.isCurrent()) {
 						log.info("새데이터");
 						detachfile detach=detachfile.builder()
 								.idx(data.getIdx())
@@ -281,13 +308,8 @@ public class NoticeServiceImpl implements NoticeService {
 						
 					newdetach.add(detach);
 					log.info("이게문제?"+detach.getPath());
-					
-						break;
-					
-					}else {
-						log.info("해당하지않는데이터");
-						
 					}
+					
 					
 									
 				
@@ -320,6 +342,7 @@ public class NoticeServiceImpl implements NoticeService {
 				}
 			}
 		}
+}
 		Entity.setFiles(newdetach);
 		
 		NoticeDto dto =Entity.toDto(Entity.getNoticeid(),Entity.getNoticeuser(),

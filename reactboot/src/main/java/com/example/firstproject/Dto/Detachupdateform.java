@@ -10,4 +10,5 @@ public class Detachupdateform {
 	private Long rangeindex;
 	private String filename;
 	private String path;
+	private boolean current=false;
 }
