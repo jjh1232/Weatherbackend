@@ -195,13 +195,22 @@ public class adminhandler {
 		Page<MemberRoom> namelist=memberroomrepo.findByMember(page,member );
 		return namelist;
 		}
-	//채팅텍스트검색
+	//채팅텍스트검색================================================================
 	public Page<chatmessage> roomchatfind(Pageable page,String keyword){
 			//챗메세지타입에서가져오기
 		Page<chatmessage> chat=chatrepo.findByMessageContaining(page, keyword);
 		return chat;
 	}
+	//룸찾기
+	public Optional<Room> roomget(Long loomid) {
+		Optional<Room> entity=roomrepo.findById(loomid);
+		return entity;
+	}
 	
+	//룸삭제
+	public void deleteroom(Room roomentity) {
+		roomrepo.delete(roomentity);
+	}
 //=========================================멤버삭제와 멤버엔티티찾기=========================
 	public Optional<MemberEntity> findmember(Long id){
 		Optional<MemberEntity> member=memberrepo.findById(id);

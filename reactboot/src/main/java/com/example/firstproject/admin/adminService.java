@@ -23,6 +23,7 @@ import com.example.firstproject.Dto.Detachupdateform;
 import com.example.firstproject.Dto.MemberDto;
 import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.removetestDto;
+import com.example.firstproject.Dto.ChatDto.AdminroomdetailDto;
 import com.example.firstproject.Dto.ChatDto.ChatRoomDto;
 import com.example.firstproject.Dto.ChatDto.roomlistresponseDto;
 import com.example.firstproject.Dto.Comment.CommentDto;
@@ -563,6 +564,29 @@ NoticeEntity Entity=adminhandler.noticedetail(noticeid);
 
 		
 		return list;
+		
+	}
+	
+	//채팅방삭제
+	@Transactional
+	public Long roomdelete(Long roomid) throws IllegalAccessException {
+		Room roomentity=adminhandler.roomget(roomid).orElseThrow(()->new IllegalAccessException("룸없음"));
+		adminhandler.deleteroom(roomentity);
+		return roomentity.getId();
+	}
+	//채팅방디테일
+	public AdminroomdetailDto roomdetail(Long roomid) throws IllegalAccessException {
+		Room roomentity=adminhandler.roomget(roomid).orElseThrow(()->new IllegalAccessException("룸없음"));
+		AdminroomdetailDto dto=AdminroomdetailDto.builder().roomid(roomentity.getId())
+				.roomname(roomentity.getRoomname())
+				.namelist(roomentity.getUserlist())
+				.beforechat(roomentity.getChatdata())
+				.time(roomentity.getCreatedDate())
+				.build();
+		
+		return dto;
+		
+		
 		
 	}
 	//채팅검색 시

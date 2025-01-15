@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.firstproject.Dto.MemberDto;
 import com.example.firstproject.Dto.NoticeDto;
+import com.example.firstproject.Dto.ChatDto.AdminroomdetailDto;
 import com.example.firstproject.Dto.ChatDto.roomlistresponseDto;
 import com.example.firstproject.Dto.Comment.CommentDto;
 import com.example.firstproject.Dto.Comment.Commentform;
@@ -176,8 +177,25 @@ public class admincontroller {
 		
 		
 	}
+	//채팅방삭제
+	@DeleteMapping("/roomdelete/{roomid}")
+	public ResponseEntity roomdelete(@PathVariable Long roomid) throws IllegalAccessException {
+		Long getroomid=adminservice.roomdelete(roomid);
+		
+		return ResponseEntity.ok(getroomid+"번방 삭제되었습니다");
+	}
 	
 	
+	//채팅방들어가기
+	@GetMapping("/room/{roomid}")
+	public ResponseEntity roomdetail(@PathVariable Long roomid) throws IllegalAccessException {
+		
+		AdminroomdetailDto dto=adminservice.roomdetail(roomid);
+		
+		
+		return ResponseEntity.ok(dto);
+		
+	}
 	//=================================멤버페이지관리========================================
 	
 	@DeleteMapping("/member/{userid}/delete")

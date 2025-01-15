@@ -117,6 +117,7 @@ public class ChatMemberController {
 		return userroomlist;
 		}
 	
+	//채팅방디테일
 	@GetMapping("/chatroomdataget")
 	public ResponseEntity chatroomdata(@RequestParam Long roomid){
 		log.info("방데이터가죠오기");

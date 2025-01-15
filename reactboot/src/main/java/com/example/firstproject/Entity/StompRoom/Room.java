@@ -51,7 +51,8 @@ public class Room extends BaseTime{
 	@OneToMany(mappedBy="room", fetch=FetchType.LAZY,cascade = CascadeType.ALL)
 	private Set<MemberRoom> userlist=new HashSet<>(); //유저리스트
 	
-	@OneToMany(mappedBy="room",fetch=FetchType.LAZY)
+	//룸삭제시채팅도삭제해야
+	@OneToMany(mappedBy="room",fetch=FetchType.LAZY,cascade = CascadeType.ALL)
 	private List<chatmessage> chatdata=new ArrayList<>();//채팅불러오기
 	
 	public void adduserlist(MemberRoom entity) {
