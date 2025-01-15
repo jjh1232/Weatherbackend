@@ -159,6 +159,18 @@ public class adminhandler {
 			Page<CommentEntity> entity=commentrepo.findByNoticeIdContaining(page, keyword);
 			return entity;
 		}
+		
+		//코멘트찾기 
+		public Optional<CommentEntity> commentfind(Long commentid){
+			Optional<CommentEntity> entity=commentrepo.findById(commentid);
+			return entity;
+		}
+		
+		//댓글삭제핸들러
+		public void deletecomment(CommentEntity comment) {
+			commentrepo.delete(comment);
+			
+		}
 	//=================================채팅방페이지관리========================================
 	public Page<Room> chatroomallget(Pageable page){
 		

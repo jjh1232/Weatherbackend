@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.firstproject.Dto.MemberDto;
 import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.ChatDto.roomlistresponseDto;
 import com.example.firstproject.Dto.Comment.CommentDto;
+import com.example.firstproject.Dto.Comment.Commentform;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.admin.form.Admemberupdateform;
 import com.example.firstproject.admin.form.Adminmembercreateform;
@@ -141,6 +143,19 @@ public class admincontroller {
 		
 		
 		 
+	}
+	//댓글 업데이트 
+	@PutMapping("/commentupdate/{commentid}")
+	public ResponseEntity commentupdate(@PathVariable Long commentid,@RequestBody Commentform form) throws IllegalAccessException {
+		Long commentnum=adminservice.commentupdate(commentid, form);
+		return ResponseEntity.ok(commentnum+"번글 수정되었습니다");
+	}
+	
+	@DeleteMapping("/commentdelete/{commentid}")
+	public ResponseEntity commentdelete(@PathVariable Long commentid) throws IllegalAccessException {
+		adminservice.commentdelete(commentid);
+		return ResponseEntity.ok("삭제되었습니다!");
+		
 	}
 	
 	//=================================채팅방페이지관리========================================

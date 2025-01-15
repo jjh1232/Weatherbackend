@@ -197,6 +197,8 @@ public class MainController {
 		
 		
 	}
+	
+	//실제수정
 	@PutMapping("/noticeupdate/{num}")
 	public NoticeDto update(@PathVariable Long num,@Validated @RequestBody NoticeUpdate update) {
 		NoticeDto dto=noticeservice.noticeupdate(num,update);

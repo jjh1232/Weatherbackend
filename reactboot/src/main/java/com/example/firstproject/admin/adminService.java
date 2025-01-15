@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -25,6 +26,7 @@ import com.example.firstproject.Dto.removetestDto;
 import com.example.firstproject.Dto.ChatDto.ChatRoomDto;
 import com.example.firstproject.Dto.ChatDto.roomlistresponseDto;
 import com.example.firstproject.Dto.Comment.CommentDto;
+import com.example.firstproject.Dto.Comment.Commentform;
 import com.example.firstproject.Entity.Address;
 import com.example.firstproject.Entity.CommentEntity;
 import com.example.firstproject.Entity.MemberEntity;
@@ -316,6 +318,20 @@ public class adminService {
 
 		
 		return list;
+		
+	}
+	//댓글업데이트 
+	@Transactional
+	public Long commentupdate(Long commentid,Commentform form) throws IllegalAccessException {
+		CommentEntity entity=adminhandler.commentfind(commentid).orElseThrow(()->new IllegalAccessException("없는댓글이빈다"));
+		entity.setUsername(form.getUsername());
+		entity.setText(form.getText());
+		entity.setNickname(form.getNickname());
+		return entity.getId();
+	}
+	public void commentdelete(Long commentid) throws IllegalAccessException {
+		CommentEntity entity=adminhandler.commentfind(commentid).orElseThrow(()->new IllegalAccessException("없는댓글이빈다"));
+		adminhandler.deletecomment(entity);
 		
 	}
 	//게시글검색조건===========================================================================

@@ -294,7 +294,7 @@ public class NoticeServiceImpl implements NoticeService {
 						
 					}
 					
-
+					}
 					if(!data.isCurrent()) {
 						log.info("새데이터");
 						detachfile detach=detachfile.builder()
@@ -315,7 +315,7 @@ public class NoticeServiceImpl implements NoticeService {
 				
 			//폴문끝
 			//Entity.setFiles(newdetach);
-		}
+		
 			
 			}
 			
