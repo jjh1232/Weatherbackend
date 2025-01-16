@@ -127,6 +127,12 @@ public class admincontroller {
 		return ResponseEntity.ok("게시글삭제성공");
 	}
 	
+	@GetMapping("/notice/detail/{noticeid}")
+	public ResponseEntity noticedetail(@PathVariable Long noticeid) throws IllegalAccessException {
+		NoticeDto dto=adminservice.getnoticedetail(noticeid);
+		return ResponseEntity.ok(dto);
+	}
+	
 	//=================================댓글페이지관리========================================
 	
 	@GetMapping("/commentmanage")

@@ -287,6 +287,19 @@ public class adminService {
 	
 		
 	}
+	
+	public NoticeDto noticedetail(Long noticeid) throws IllegalAccessException {
+		NoticeEntity m=adminhandler.findbynotice(noticeid).orElseThrow(()->new IllegalAccessException("해당게시글없습니다"));
+		System.out.println("유저프로파일이미지"+m.getMember().getProfileimg());
+		NoticeDto dto=	NoticeDto.builder().num(m.getNoticeid()).username(m.getNoticeuser())
+				.nickname(m.getNoticenick()).title(m.getTitle()).text(m.getText())
+				.likes(m.getLikeuser().size()).temp(m.getTemp()).sky(m.getSky())
+				.pty(m.getPty()).rain(m.getRain()).red(m.getRed()).detachfiles(m.getFiles())
+				.comments(m.getComments()).userprofile(m.getMember().getProfileimg()).build();
+		
+		return dto;
+		
+	}
 	//==============게시글삭제
 	public void deletenotice(Long noticeid) throws IllegalAccessException {
 		NoticeEntity entity= adminhandler.findbynotice(noticeid).orElseThrow(()->new IllegalAccessException("게시글이없습니다"));
