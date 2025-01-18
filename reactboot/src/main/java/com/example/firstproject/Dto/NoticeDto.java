@@ -38,8 +38,8 @@ public class NoticeDto {
 	private boolean likeusercheck;
 	private String red;
 	private String userprofile;
-
-	private List<CommentEntity> comments;
+	private int commentcount;
+	private List<CommentDto> comments;
 	
 	private List<detachfile> detachfiles;
 	
@@ -51,7 +51,7 @@ public class NoticeDto {
 		 title=entity.getTitle();
 		 text=entity.getText();
 		 red=entity.getRed();
-		 comments=entity.getComments();
+		 //comments=entity.getComments();
 		 likes=entity.getLikeuser().size();
 		 temp=entity.getTemp();
 		 sky=entity.getSky();

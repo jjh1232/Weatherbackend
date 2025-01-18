@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -716,7 +717,25 @@ public class NoticeServiceImpl implements NoticeService {
 		 	for(FavoriteEntity favoriteentity:followlist) {
 		 		//아이거내가거꾸로좋아요했음
 		 		NoticeEntity notice=favoriteentity.getNotice();
-		 		NoticeDto dto=NoticeDto.builder().comments(notice.getComments()).detachfiles(notice.getFiles())
+		 		List<CommentEntity> comment=notice.getComments();//댓글정렬
+				comment.sort(Comparator.comparing(CommentEntity::getCreatedDate).reversed());
+				List<CommentDto> comdto=new ArrayList<>();
+				
+					for(CommentEntity a:comment) {CommentDto dto = a.toDto(a.getId(),
+							a.getDepth(),
+							a.getCnum(),
+							a.getUsername(),
+							a.getNickname(),
+							a.getText(),
+							a.getCreatedDate(),
+							a.getMember().getProfileimg()
+							);
+					comdto.add(dto);
+				}
+					
+		 		
+		 		NoticeDto dto=NoticeDto.builder().comments(comdto)
+		 				.detachfiles(notice.getFiles())
 		 				.likes(notice.getLikeuser().size()).nickname(notice.getNoticenick()).num(notice.getNoticeid())
 		 				.pty(notice.getPty()).temp(notice.getTemp()).sky(notice.getSky()).rain(notice.getRain())
 		 				.text(notice.getText()).title(notice.getTitle()).username(notice.getNoticeuser())

@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -195,7 +196,9 @@ public class adminService {
 				.nickname(m.getNoticenick()).title(m.getTitle()).text(m.getText())
 				.likes(m.getLikeuser().size()).temp(m.getTemp()).sky(m.getSky())
 				.pty(m.getPty()).rain(m.getRain()).red(m.getRed()).detachfiles(m.getFiles())
-				.comments(m.getComments()).userprofile(m.getMember().getProfileimg()).build()
+				.userprofile(m.getMember().getProfileimg())
+				.commentcount(m.getComments().size())
+				.build()
 				);
 			
 		
@@ -219,7 +222,7 @@ public class adminService {
 			.nickname(m.getNoticenick()).title(m.getTitle()).text(m.getText())
 			.likes(m.getLikeuser().size()).temp(m.getTemp()).sky(m.getSky())
 			.pty(m.getPty()).rain(m.getRain()).red(m.getRed()).detachfiles(m.getFiles())
-			.comments(m.getComments())
+			.commentcount(m.getComments().size())
 			.userprofile(m.getMember().getProfileimg())
 			
 			.build()
@@ -237,7 +240,8 @@ public class adminService {
 			.nickname(m.getNoticenick()).title(m.getTitle()).text(m.getText())
 			.likes(m.getLikeuser().size()).temp(m.getTemp()).sky(m.getSky())
 			.pty(m.getPty()).rain(m.getRain()).red(m.getRed()).detachfiles(m.getFiles())
-			.comments(m.getComments()).userprofile(m.getMember().getProfileimg()).build()
+			.commentcount(m.getComments().size())
+			.userprofile(m.getMember().getProfileimg()).build()
 			);
 			return list;
 		}
@@ -251,7 +255,8 @@ public class adminService {
 			.nickname(m.getNoticenick()).title(m.getTitle()).text(m.getText())
 			.likes(m.getLikeuser().size()).temp(m.getTemp()).sky(m.getSky())
 			.pty(m.getPty()).rain(m.getRain()).red(m.getRed()).detachfiles(m.getFiles())
-			.comments(m.getComments()).userprofile(m.getMember().getProfileimg()).build()
+			.commentcount(m.getComments().size())
+			.userprofile(m.getMember().getProfileimg()).build()
 			);
 			return list;
 		
@@ -265,7 +270,8 @@ public class adminService {
 			.nickname(m.getNoticenick()).title(m.getTitle()).text(m.getText())
 			.likes(m.getLikeuser().size()).temp(m.getTemp()).sky(m.getSky())
 			.pty(m.getPty()).rain(m.getRain()).red(m.getRed()).detachfiles(m.getFiles())
-			.comments(m.getComments()).userprofile(m.getMember().getProfileimg()).build()
+			.commentcount(m.getComments().size())
+			.userprofile(m.getMember().getProfileimg()).build()
 			);
 			return list;
 		}	
@@ -277,7 +283,8 @@ public class adminService {
 			.nickname(m.getNoticenick()).title(m.getTitle()).text(m.getText())
 			.likes(m.getLikeuser().size()).temp(m.getTemp()).sky(m.getSky())
 			.pty(m.getPty()).rain(m.getRain()).red(m.getRed()).detachfiles(m.getFiles())
-			.comments(m.getComments()).userprofile(m.getMember().getProfileimg()).build()
+			.commentcount(m.getComments().size())
+			.userprofile(m.getMember().getProfileimg()).build()
 			);
 			
 			return list;
@@ -291,11 +298,29 @@ public class adminService {
 	public NoticeDto noticedetail(Long noticeid) throws IllegalAccessException {
 		NoticeEntity m=adminhandler.findbynotice(noticeid).orElseThrow(()->new IllegalAccessException("해당게시글없습니다"));
 		System.out.println("유저프로파일이미지"+m.getMember().getProfileimg());
+		List<CommentEntity> comment=m.getComments();//댓글정렬
+		//생각해보면구지정렬을?
+		//comment.sort(Comparator.comparing(CommentEntity::getCreatedDate).reversed());
+		List<CommentDto> comdto=new ArrayList<>();
+		
+			for(CommentEntity a:comment) {CommentDto dto = a.toDto(a.getId(),
+					a.getDepth(),
+					a.getCnum(),
+					a.getUsername(),
+					a.getNickname(),
+					a.getText(),
+					a.getCreatedDate(),
+					a.getMember().getProfileimg()
+					);
+			comdto.add(dto);
+		}
+			
 		NoticeDto dto=	NoticeDto.builder().num(m.getNoticeid()).username(m.getNoticeuser())
 				.nickname(m.getNoticenick()).title(m.getTitle()).text(m.getText())
 				.likes(m.getLikeuser().size()).temp(m.getTemp()).sky(m.getSky())
 				.pty(m.getPty()).rain(m.getRain()).red(m.getRed()).detachfiles(m.getFiles())
-				.comments(m.getComments()).userprofile(m.getMember().getProfileimg()).build();
+				.comments(comdto)
+				.userprofile(m.getMember().getProfileimg()).build();
 		
 		return dto;
 		

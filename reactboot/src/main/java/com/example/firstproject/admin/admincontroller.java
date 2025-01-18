@@ -106,7 +106,8 @@ public class admincontroller {
 	}
 	@GetMapping("/noticedetail/{noticeid}")
 	public NoticeDto noticedetailget(@PathVariable Long noticeid) throws IllegalAccessException {
-		NoticeDto dto=adminservice.getnoticedetail(noticeid);
+		System.out.println("노티스디테일찾기");
+		NoticeDto dto=adminservice.noticedetail(noticeid);
 		
 		return dto;
 	}
@@ -129,7 +130,7 @@ public class admincontroller {
 	
 	@GetMapping("/notice/detail/{noticeid}")
 	public ResponseEntity noticedetail(@PathVariable Long noticeid) throws IllegalAccessException {
-		NoticeDto dto=adminservice.getnoticedetail(noticeid);
+		NoticeDto dto=adminservice.noticedetail(noticeid);
 		return ResponseEntity.ok(dto);
 	}
 	
@@ -195,7 +196,7 @@ public class admincontroller {
 	//채팅방들어가기
 	@GetMapping("/room/{roomid}")
 	public ResponseEntity roomdetail(@PathVariable Long roomid) throws IllegalAccessException {
-		
+		System.out.println("채팅방디테일들어가기on");
 		AdminroomdetailDto dto=adminservice.roomdetail(roomid);
 		
 		

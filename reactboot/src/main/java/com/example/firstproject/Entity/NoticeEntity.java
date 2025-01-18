@@ -128,7 +128,7 @@ public class NoticeEntity {
 				.title(title)
 				.text(text)
 				.red(red)
-				.comments(comments)
+				//.comments(comments)
 				.detachfiles(detachfiles)
 				.likes(likes)
 				.temp(temp)
