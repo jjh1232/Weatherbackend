@@ -133,6 +133,12 @@ public class admincontroller {
 		NoticeDto dto=adminservice.noticedetail(noticeid);
 		return ResponseEntity.ok(dto);
 	}
+	//게시글이미지 변경
+	@PutMapping("/imageban/{detachid}")
+	public ResponseEntity detachchange(@PathVariable Long detachid) throws IllegalAccessException {
+		Long imageid=adminservice.changeimage(detachid);
+		return ResponseEntity.ok(imageid+"가잘변경되었습니다");
+	};
 	
 	//=================================댓글페이지관리========================================
 	

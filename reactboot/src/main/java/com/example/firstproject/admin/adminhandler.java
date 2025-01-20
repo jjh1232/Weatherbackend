@@ -11,10 +11,12 @@ import org.springframework.stereotype.Service;
 import com.example.firstproject.Entity.CommentEntity;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
+import com.example.firstproject.Entity.detachfile;
 import com.example.firstproject.Entity.StompRoom.MemberRoom;
 import com.example.firstproject.Entity.StompRoom.Room;
 import com.example.firstproject.Entity.StompRoom.chatmessage;
 import com.example.firstproject.Repository.CommentRepository;
+import com.example.firstproject.Repository.DetachfileRepository;
 import com.example.firstproject.Repository.MemberRepository;
 import com.example.firstproject.Repository.NoticeRepository;
 import com.example.firstproject.Repository.roomrepo.ChatMessageRepository;
@@ -38,6 +40,8 @@ public class adminhandler {
 	private final MemberRoomRepository memberroomrepo;
 	
 	private final ChatMessageRepository chatrepo;
+	
+	private final DetachfileRepository detachrepo;
 	//=================================멤버핸들러관리========================================
 	public Page<MemberEntity> memberlistget(Pageable page){
 		System.out.println("핸들러시작");
@@ -171,6 +175,13 @@ public class adminhandler {
 			commentrepo.delete(comment);
 			
 		}
+		
+		//부적절한 이미지 변경
+		public Optional<detachfile> detachget(Long detachid){
+			Optional<detachfile> deta=detachrepo.findById(detachid);
+			return deta;
+		}
+		
 	//=================================채팅방페이지관리========================================
 	public Page<Room> chatroomallget(Pageable page){
 		

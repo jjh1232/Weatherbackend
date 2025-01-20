@@ -359,6 +359,20 @@ public class adminService {
 		return list;
 		
 	}
+	//부적절한 이미지 변경
+	@Transactional
+	public Long changeimage(Long detachid) throws IllegalAccessException {
+		
+			detachfile detach=adminhandler.detachget(detachid).orElseThrow(()->new IllegalAccessException("해당하는파일없음"));
+			detach.setPath("/front/Subimages/chdan.png");
+			
+			return detach.getId();
+	
+		
+		
+		
+	}
+	//=====================================================================================
 	//댓글업데이트 
 	@Transactional
 	public Long commentupdate(Long commentid,Commentform form) throws IllegalAccessException {
