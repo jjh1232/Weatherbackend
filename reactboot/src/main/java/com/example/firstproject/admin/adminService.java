@@ -20,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.firstproject.Dto.Admindetachchangeform;
 import com.example.firstproject.Dto.Detachupdateform;
 import com.example.firstproject.Dto.MemberDto;
 import com.example.firstproject.Dto.NoticeDto;
@@ -370,6 +371,16 @@ public class adminService {
 	
 		
 		
+		
+	}
+	//단체 부적절한이미지 변경
+	@Transactional
+	public void manychangeimage(Admindetachchangeform form) throws IllegalAccessException {
+		for (Long detachid:form.getDetachids()) {
+			detachfile detach=adminhandler.detachget(detachid).orElseThrow(()->new IllegalAccessException("해당하는파일없음"));
+			detach.setPath("/front/Subimages/chdan.png");
+		}
+	
 		
 	}
 	//=====================================================================================

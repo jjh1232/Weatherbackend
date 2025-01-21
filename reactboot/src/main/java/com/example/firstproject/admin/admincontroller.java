@@ -1,5 +1,8 @@
 package com.example.firstproject.admin;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Page;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.firstproject.Dto.Admindetachchangeform;
 import com.example.firstproject.Dto.MemberDto;
 import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.ChatDto.AdminroomdetailDto;
@@ -139,7 +143,14 @@ public class admincontroller {
 		Long imageid=adminservice.changeimage(detachid);
 		return ResponseEntity.ok(imageid+"가잘변경되었습니다");
 	};
-	
+	//게시글이미지 단체변경
+	@PutMapping("/manyimageban")
+	public ResponseEntity manyimagechange(@RequestBody Admindetachchangeform form) throws IllegalAccessException {
+		System.out.println(form.getDetachids());
+		adminservice.manychangeimage(form);
+		
+		return ResponseEntity.ok("성공");
+	}
 	//=================================댓글페이지관리========================================
 	
 	@GetMapping("/commentmanage")
