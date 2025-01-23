@@ -30,8 +30,10 @@ import com.example.firstproject.Dto.ChatDto.ChatRoomDto;
 import com.example.firstproject.Dto.ChatDto.roomlistresponseDto;
 import com.example.firstproject.Dto.Comment.CommentDto;
 import com.example.firstproject.Dto.Comment.Commentform;
+import com.example.firstproject.Dto.userdataDto.LoginHistoryDto;
 import com.example.firstproject.Entity.Address;
 import com.example.firstproject.Entity.CommentEntity;
+import com.example.firstproject.Entity.LoginHistory;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
 import com.example.firstproject.Entity.detachfile;
@@ -721,5 +723,19 @@ NoticeEntity Entity=adminhandler.noticedetail(noticeid);
 		
 		return "멤버삭제성공";
 	}
-
+//=================================로그인기록 겟=====================================
+	public List<LoginHistoryDto> finduserhistory(String username){
+		List<LoginHistory> entity=adminhandler.findbyloginhistory(username);
+		List<LoginHistoryDto> dtolist=new ArrayList<>();
+		
+		for(LoginHistory ent:entity) {
+			LoginHistoryDto dto=LoginHistoryDto.builder().username(ent.getUserid()).userlocale(ent.getUserdata())
+			.userip(ent.getClientip()).logintime(ent.getLogindt()).build();
+			
+			dtolist.add(dto);
+		}
+		
+		
+		return dtolist;
+	}
 }

@@ -1,5 +1,6 @@
 package com.example.firstproject.admin;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.xml.stream.events.Comment;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.firstproject.Entity.CommentEntity;
+import com.example.firstproject.Entity.LoginHistory;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
 import com.example.firstproject.Entity.detachfile;
@@ -19,6 +21,7 @@ import com.example.firstproject.Repository.CommentRepository;
 import com.example.firstproject.Repository.DetachfileRepository;
 import com.example.firstproject.Repository.MemberRepository;
 import com.example.firstproject.Repository.NoticeRepository;
+import com.example.firstproject.Repository.History.LoginhistoryRepository;
 import com.example.firstproject.Repository.roomrepo.ChatMessageRepository;
 import com.example.firstproject.Repository.roomrepo.ChatRoomRepository;
 import com.example.firstproject.Repository.roomrepo.MemberRoomRepository;
@@ -42,6 +45,8 @@ public class adminhandler {
 	private final ChatMessageRepository chatrepo;
 	
 	private final DetachfileRepository detachrepo;
+	
+	private final LoginhistoryRepository loginrepo;
 	//=================================멤버핸들러관리========================================
 	public Page<MemberEntity> memberlistget(Pageable page){
 		System.out.println("핸들러시작");
@@ -231,8 +236,11 @@ public class adminhandler {
 	public void memberdelete(MemberEntity member) {
 		memberrepo.delete(member);
 		
-		
-		
-		
 	}
+	public List<LoginHistory> findbyloginhistory(String username){
+		List<LoginHistory> data=loginrepo.findByuseridOrderByLogindtDesc(username);
+		return data;
+	}
+	
+	
 }

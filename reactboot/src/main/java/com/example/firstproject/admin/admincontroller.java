@@ -26,6 +26,7 @@ import com.example.firstproject.Dto.ChatDto.AdminroomdetailDto;
 import com.example.firstproject.Dto.ChatDto.roomlistresponseDto;
 import com.example.firstproject.Dto.Comment.CommentDto;
 import com.example.firstproject.Dto.Comment.Commentform;
+import com.example.firstproject.Dto.userdataDto.LoginHistoryDto;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.admin.form.Admemberupdateform;
 import com.example.firstproject.admin.form.Adminmembercreateform;
@@ -86,6 +87,15 @@ public class admincontroller {
 		
 		return null;
 	}
+	//회원 로그인기록 확인하기
+	@GetMapping("/loginhistory")
+	public ResponseEntity loginhistoryget(@RequestParam String username) {
+		
+		List<LoginHistoryDto> dtolist=adminservice.finduserhistory(username);
+		
+		return ResponseEntity.ok(dtolist);
+	}
+	
 	//=================================게시판페이지관리========================================
 	@GetMapping("/noticemanage")
 	public ResponseEntity noticemanage(@RequestParam(defaultValue="1") int page,
