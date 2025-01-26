@@ -526,7 +526,7 @@ public class NoticeServiceImpl implements NoticeService {
 		}
 		String uuid=UUID.randomUUID().toString();
 		String oriname=image.getOriginalFilename(); //png붙어서그런가
-		String savefilename=savefolder.toPath()+File.separator+uuid+"_"+oriname;//+".png";
+		String savefilename=savefolder.toPath()+File.separator+uuid+"_"+oriname+".png";//+".png";
 		log.info("궁금해서topath내용:"+savefolder.toPath());
 		Path savePath=Paths.get(savefilename);
 		log.info("최종생성경로:"+savePath);
@@ -544,7 +544,7 @@ public class NoticeServiceImpl implements NoticeService {
 			
 		}
 				
-		return filesaveData+"/"+uuid+"_"+oriname;
+		return filesaveData+"/"+uuid+"_"+oriname+".png";
 	}
 
 

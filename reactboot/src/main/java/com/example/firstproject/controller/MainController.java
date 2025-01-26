@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriUtils;
@@ -284,7 +285,7 @@ public class MainController {
 
 	//이미지데이터 저장 
 	@PostMapping("/contentimage")
-	public String imagesave(MultipartFile image) {
+	public String imagesave(@RequestPart(value = "image") MultipartFile image) {
 		System.out.println("들어온이미지:"+image);
 		String path=noticeservice.contentimagesave(image);
 		log.info("리액트패스경로확인용:"+path);
