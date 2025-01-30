@@ -237,10 +237,16 @@ public class adminhandler {
 		memberrepo.delete(member);
 		
 	}
-	public List<LoginHistory> findbyloginhistory(String username){
-		List<LoginHistory> data=loginrepo.findByuseridOrderByLogindtDesc(username);
+	//===================================로그인히스토리======================================
+	public Page<LoginHistory> findbyloginhistory(String username,Pageable pageable){
+		Page<LoginHistory> data=loginrepo.findByUserid(username,pageable);
 		return data;
 	}
 	
-	
+	//로그인 히스토리 검색조건 
+	public Page<LoginHistory> loginhistorysearch(String username,String date,Pageable pageable){
+		Page<LoginHistory> data=loginrepo.findByUseridAndLogindtContaining(username,date,pageable);
+		
+		return data;
+	}
 }

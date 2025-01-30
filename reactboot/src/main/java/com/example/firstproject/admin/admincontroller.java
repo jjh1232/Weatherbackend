@@ -89,9 +89,14 @@ public class admincontroller {
 	}
 	//회원 로그인기록 확인하기
 	@GetMapping("/loginhistory")
-	public ResponseEntity loginhistoryget(@RequestParam String username) {
+	public ResponseEntity loginhistoryget(@RequestParam String username,
+										  @RequestParam(defaultValue = "1") int page,
+										  @RequestParam(defaultValue = "novalue") String year,
+										  @RequestParam(defaultValue = "novalue") String month,
+										  @RequestParam(defaultValue = "false") boolean isasc
+			) {
 		
-		List<LoginHistoryDto> dtolist=adminservice.finduserhistory(username);
+		Page<LoginHistoryDto> dtolist=adminservice.finduserhistory(username,page,year,month,isasc);
 		
 		return ResponseEntity.ok(dtolist);
 	}

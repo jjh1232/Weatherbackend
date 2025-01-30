@@ -14,6 +14,7 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -723,17 +724,38 @@ NoticeEntity Entity=adminhandler.noticedetail(noticeid);
 		
 		return "멤버삭제성공";
 	}
+	
 //=================================로그인기록 겟=====================================
-	public List<LoginHistoryDto> finduserhistory(String username){
-		List<LoginHistory> entity=adminhandler.findbyloginhistory(username);
-		List<LoginHistoryDto> dtolist=new ArrayList<>();
+	public Page<LoginHistoryDto> finduserhistory(String username,int page,String year,String month,boolean isasc){
 		
-		for(LoginHistory ent:entity) {
-			LoginHistoryDto dto=LoginHistoryDto.builder().username(ent.getUserid()).userlocale(ent.getUserdata())
-			.userip(ent.getClientip()).logintime(ent.getLogindt()).build();
+		Sort.Direction direction=isasc?Sort.Direction.ASC:Sort.Direction.DESC;
+		PageRequest pageable=PageRequest.of(page-1, 15,Sort.by(direction,"Logindt"));
+		long totalelements=0;
+		List<LoginHistory> content=new ArrayList<>();
+		//페이지객체초기화 선언 하는버이라고함
+		Page<LoginHistory> entity= new PageImpl<>(content,pageable,totalelements);
+		if(year.equals("novalue")) {
+			System.out.println("년도선택안함");
+			entity=adminhandler.findbyloginhistory(username, pageable);
+		}else if(month.equals("novalue")) {
 			
-			dtolist.add(dto);
+			System.out.println("달선택안함");
+			entity=adminhandler.loginhistorysearch(username,year, pageable);
+		}else {
+			System.out.println("두가지모두선택할경우");
+			entity=adminhandler.loginhistorysearch(username,year+"-"+month, pageable);
 		}
+		
+		//List<LoginHistory> entity=adminhandler.findbyloginhistory(username);
+		
+		Page<LoginHistoryDto> dtolist=entity.map((m)->
+			LoginHistoryDto.builder().username(m.getUserid()).userlocale(m.getUserdata())
+			.userip(m.getClientip()).logintime(m.getLogindt()).islogin(m.isIslogin())
+			.build());
+				
+				
+		
+	
 		
 		
 		return dtolist;

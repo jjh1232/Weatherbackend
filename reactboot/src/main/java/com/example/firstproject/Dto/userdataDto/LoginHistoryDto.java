@@ -17,4 +17,6 @@ public class LoginHistoryDto {
 	
 	private String userip;
 	
+	private boolean islogin;
+	
 }
