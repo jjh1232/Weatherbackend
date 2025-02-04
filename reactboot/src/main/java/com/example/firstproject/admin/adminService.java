@@ -621,7 +621,7 @@ NoticeEntity Entity=adminhandler.noticedetail(noticeid);
 		roomlistresponseDto.builder().roomid(m.getId()).roomname(m.getRoomname())
 		.namelist(m.getUserlist()).red(m.getCreatedDate())
 		.chatnum(m.getChatdata().size())
-		.latelychat(m.getChatdata().get(m.getChatdata().size()-1).getMessage())
+		.latelychat(m.getChatdata().get(m.getChatdata().size()-1).getSender()+":"+m.getChatdata().get(m.getChatdata().size()-1).getMessage())
 		.lastchatred(m.getChatdata().get(m.getChatdata().size()-1).getCreatedDate())
 		.build());
 				
