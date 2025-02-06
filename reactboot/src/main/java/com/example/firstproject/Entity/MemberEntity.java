@@ -26,6 +26,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import com.example.firstproject.Dto.MemberDto;
 import com.example.firstproject.Entity.StompRoom.MemberRoom;
 import com.example.firstproject.Entity.StompRoom.Room;
+import com.example.firstproject.Entity.StompRoom.chatmessage;
 import com.example.firstproject.Entity.follow.FollowEntity;
 
 import lombok.AllArgsConstructor;
@@ -113,6 +114,9 @@ public class MemberEntity {
 	
 	@OneToMany(mappedBy="member",fetch=FetchType.LAZY,cascade =CascadeType.ALL)
 	private List<detachfile> detachfiles;
+	
+	@OneToMany(mappedBy="member",fetch=FetchType.LAZY,cascade=CascadeType.PERSIST)
+	private List<chatmessage> chats;
 	
 	public void addnotices(NoticeEntity notice) {
 		notices.add(notice);

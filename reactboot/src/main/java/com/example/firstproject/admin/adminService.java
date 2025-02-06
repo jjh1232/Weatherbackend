@@ -27,6 +27,7 @@ import com.example.firstproject.Dto.MemberDto;
 import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.removetestDto;
 import com.example.firstproject.Dto.ChatDto.AdminroomdetailDto;
+import com.example.firstproject.Dto.ChatDto.ChatResponseDto;
 import com.example.firstproject.Dto.ChatDto.ChatRoomDto;
 import com.example.firstproject.Dto.ChatDto.roomlistresponseDto;
 import com.example.firstproject.Dto.Comment.CommentDto;
@@ -40,6 +41,7 @@ import com.example.firstproject.Entity.NoticeEntity;
 import com.example.firstproject.Entity.detachfile;
 import com.example.firstproject.Entity.StompRoom.MemberRoom;
 import com.example.firstproject.Entity.StompRoom.Room;
+import com.example.firstproject.Entity.StompRoom.chatmessage;
 import com.example.firstproject.Handler.MemberHandler;
 import com.example.firstproject.Repository.DetachfileRepository;
 import com.example.firstproject.admin.form.Admemberupdateform;
@@ -643,10 +645,25 @@ NoticeEntity Entity=adminhandler.noticedetail(noticeid);
 	//채팅방디테일
 	public AdminroomdetailDto roomdetail(Long roomid) throws IllegalAccessException {
 		Room roomentity=adminhandler.roomget(roomid).orElseThrow(()->new IllegalAccessException("룸없음"));
+		
+		List<ChatResponseDto> list=new ArrayList<>();
+		
+		for(chatmessage data:roomentity.getChatdata()) {
+			ChatResponseDto dto=ChatResponseDto.builder()
+					.roomId(data.getId())
+					.messageType(data.getMessageType())
+					.userprofile(data.getMember().getProfileimg())
+					.writer(data.getSender())
+					.message(data.getMessage())
+					.red(data.getCreatedDate())
+					.build();
+			list.add(dto);
+		}
+		
 		AdminroomdetailDto dto=AdminroomdetailDto.builder().roomid(roomentity.getId())
 				.roomname(roomentity.getRoomname())
 				.namelist(roomentity.getUserlist())
-				.beforechat(roomentity.getChatdata())
+				.beforechat(list)
 				.time(roomentity.getCreatedDate())
 				.build();
 		

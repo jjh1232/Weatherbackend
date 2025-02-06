@@ -18,6 +18,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.example.firstproject.Entity.Address;
 import com.example.firstproject.Entity.CommentEntity;
+import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
 import com.example.firstproject.Entity.Notification;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -45,6 +46,12 @@ public class chatmessage extends BaseTime{
 	@JoinColumn(name="room_id")
 	@JsonIgnore
 	private Room room;
+	
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="member_id")
+	@JsonIgnore
+	private MemberEntity member;
 	
 	private String sender;
 	

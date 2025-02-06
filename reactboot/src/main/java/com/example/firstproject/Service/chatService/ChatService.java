@@ -15,6 +15,7 @@ import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.StompRoom.MemberRoom;
 import com.example.firstproject.Entity.StompRoom.Room;
 import com.example.firstproject.Entity.StompRoom.chatmessage;
+import com.example.firstproject.Handler.MemberHandler;
 import com.example.firstproject.Repository.MemberRepository;
 import com.example.firstproject.Repository.roomrepo.ChatMessageRepository;
 import com.example.firstproject.Repository.roomrepo.ChatRoomRepository;
@@ -35,6 +36,8 @@ public class ChatService {
 	private final MemberRepository memberrepo;
 	
 	private final MemberRoomRepository memberroomrepo;
+	
+	
 	
 	@Transactional
 	public Long createChatroom(String roomname,List<String> memberlist) {
@@ -74,7 +77,7 @@ public class ChatService {
 			log.info("맴버객체에챗룸추가");
 			
 			chatmessage enterchat=chatmessage.builder()
-					//.sender(member.getNickname()) 두번처리해야해서 귀찮아서 
+					.sender("System") //이렇게설정할까 
 					.MessageType("Message")
 					.message(member.getNickname()+"님이 입장하셨습니다!")
 					.room(chatroom)
@@ -92,12 +95,15 @@ public class ChatService {
 		
 	}
 	//챗데이터 db에저장 
-	public ChatResponseDto chatsave(Long roomid,String sender,String messageType,String message) {
+	public ChatResponseDto chatsave(Long roomid,String username,String sender,String messageType,String message) throws IllegalAccessException {
 		log.info("디비저장서비스");
 		
 		Room room=roomrepo.findById(roomid).orElseThrow();
+		MemberEntity member=memberrepo.findByUsername(username).orElseThrow(()->new IllegalAccessException("회원없음"));
+		
 		chatmessage save=chatmessage.builder()
-				.sender(sender)
+				.member(member)
+				.sender(member.getNickname())
 				.MessageType(messageType)
 				.message(message)
 				.room(room)
@@ -108,7 +114,8 @@ public class ChatService {
 		
 		
 		ChatResponseDto dto=ChatResponseDto.builder()
-				.writer(save.getSender())
+				.userprofile(member.getProfileimg())
+				.writer(member.getNickname())
 				.messageType(save.getMessageType())
 				.message(save.getMessage())
 				.roomId(roomid)
@@ -128,9 +135,10 @@ public class ChatService {
 			ChatResponseDto dto=ChatResponseDto.builder()
 					.roomId(data.getId())
 					.messageType(data.getMessageType())
+					.userprofile(data.getMember().getProfileimg())
 					.writer(data.getSender())
 					.message(data.getMessage())
-					
+					.red(data.getCreatedDate())
 					.build();
 			list.add(dto);
 		}

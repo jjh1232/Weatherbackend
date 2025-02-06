@@ -43,13 +43,13 @@ public class StompController {
 	@NoLogging
 	@MessageMapping("/channel/{roomid}") //pub를 붙여 메세지 발행시 들어오는 처리 ex)pub/chat/{userid}
 	//@Sendto("주소") //이걸로리턴으로 보낼수도있다고함
-	public void sendMessage(@DestinationVariable Long roomid,stompchatDto messageDto ) { //만든 챗메세지 dto와 @Header등으로 헤더정보나 메세지를 가져옴
+	public void sendMessage(@DestinationVariable Long roomid,stompchatDto messageDto ) throws IllegalAccessException { //만든 챗메세지 dto와 @Header등으로 헤더정보나 메세지를 가져옴
 		log.info("해당챗방룸아이디 :"+roomid);
 		log.info("메세지발행Dto:"+messageDto.getMessage());
 		log.info("메세지발행Dto:"+messageDto.getSender());
 		
 		//@PathVariable ("userid") String userid
-		ChatResponseDto dto=chatservice.chatsave(roomid,messageDto.getSender(),messageDto.getMessageType(),messageDto.getMessage());
+		ChatResponseDto dto=chatservice.chatsave(roomid,messageDto.getUsername(),messageDto.getSender(),messageDto.getMessageType(),messageDto.getMessage());
 		
 		
 		template.convertAndSend("/sub/channel/"+roomid,dto);//해당하는 토픽에 구독한 주소,그리고 메세지를 전달 

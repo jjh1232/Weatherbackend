@@ -23,7 +23,7 @@ public class AdminroomdetailDto {
 	private Set<MemberRoom> namelist;
 	
 	
-	private List<chatmessage> beforechat;
+	private List<ChatResponseDto> beforechat;
 	
 
 	private String time;

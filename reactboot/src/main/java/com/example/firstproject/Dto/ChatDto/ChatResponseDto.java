@@ -13,8 +13,8 @@ public class ChatResponseDto {
 
 	private Long roomId;
 	private String messageType;
-	
+	private String userprofile;
 	private String writer;
 	private String message;
-	private LocalDateTime time;
+	private String red;
 }
