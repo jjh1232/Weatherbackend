@@ -119,7 +119,7 @@ public class ChatService {
 				.messageType(save.getMessageType())
 				.message(save.getMessage())
 				.roomId(roomid)
-				
+				.red(save.getCreatedDate())
 				.build();
 		
 		
