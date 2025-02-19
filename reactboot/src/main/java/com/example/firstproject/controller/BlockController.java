@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.configure.PrincipalDetails;
 
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,7 @@ public class BlockController {
 	@PostMapping("/noticeblock")
 	public ResponseEntity noticeblock(Authentication authentication,@RequestBody Map<String,Object> data) {
 		PrincipalDetails principal=(PrincipalDetails) authentication.getPrincipal();
+		MemberEntity member=principal.getMember();
 		
 		Long noticeid=(Long) data.get("noticeid");
 		
