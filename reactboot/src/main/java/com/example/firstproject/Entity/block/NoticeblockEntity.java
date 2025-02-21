@@ -1,7 +1,15 @@
 package com.example.firstproject.Entity.block;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.annotation.Generated;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,7 +17,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import com.example.firstproject.Entity.MemberEntity;
+import com.example.firstproject.Entity.StompRoom.BaseTime;
+import com.example.firstproject.Entity.block.BlockEnum.NoticeblockEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import ch.qos.logback.core.subst.Token.Type;
@@ -21,7 +33,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class NoticeblockEntity {
+@EntityListeners(AuditingEntityListener.class)
+public class NoticeblockEntity extends BaseTime{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,4 +48,14 @@ public class NoticeblockEntity {
 
 
 	private Long noticeid;
+	
+	@Enumerated(EnumType.STRING)
+	@Builder.Default
+	//@ElementCollection//값타임컬렉션 db가 컬렉션을 인지못해서 이거넣는다고함
+	private NoticeblockEnum reason;
+	
+	public void addreason(NoticeblockEnum data) {
+		//this.reason.add(data);
+	}
+	
 }
