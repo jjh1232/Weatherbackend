@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.firstproject.Dto.blockDto.NoticeblockDto;
+import com.example.firstproject.Dto.blockDto.NoticedecleDto;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Service.Blockservice.Blockservice;
 import com.example.firstproject.configure.PrincipalDetails;
@@ -35,5 +36,14 @@ public class BlockController {
 		
 		return ResponseEntity.ok("차단완료");
 }
+
+	@PostMapping("/noticedecle")
+	public ResponseEntity noticedecle(Authentication authentication,@RequestBody NoticedecleDto dto) {
+		PrincipalDetails principal =(PrincipalDetails) authentication.getPrincipal();
+		MemberEntity member=principal.getMember();
+		
+		service.Noticedecle(member, dto);
+		return ResponseEntity.ok("신고완료");
+	}
 	
 }

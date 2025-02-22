@@ -27,6 +27,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.example.firstproject.Dto.NoticeDto;
+import com.example.firstproject.Entity.block.NoticedecleEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -99,7 +100,9 @@ public class NoticeEntity {
 	private List<FavoriteEntity> likeuser;
 	
 	//임시어거지용
-	
+	//신고당한정보
+	@OneToMany(mappedBy="notice",fetch=FetchType.LAZY,cascade = CascadeType.ALL)
+	private List<NoticedecleEntity> decles;
 	
 	public void addcomments(CommentEntity comment) {
 		comments.add(comment);

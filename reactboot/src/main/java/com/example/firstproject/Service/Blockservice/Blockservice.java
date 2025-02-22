@@ -7,10 +7,14 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 
 import com.example.firstproject.Dto.blockDto.NoticeblockDto;
+import com.example.firstproject.Dto.blockDto.NoticedecleDto;
 import com.example.firstproject.Entity.MemberEntity;
+import com.example.firstproject.Entity.NoticeEntity;
 import com.example.firstproject.Entity.block.NoticeblockEntity;
+import com.example.firstproject.Entity.block.NoticedecleEntity;
 import com.example.firstproject.Entity.block.BlockEnum.NoticeblockEnum;
 import com.example.firstproject.Handler.Blockhandler;
+import com.example.firstproject.Handler.NoticeHandler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +25,8 @@ import lombok.extern.slf4j.Slf4j;
 public class Blockservice {
 
 	private final Blockhandler handler;
+	
+	private final NoticeHandler noticehandler;
 	
 	public void noticeblock(MemberEntity member,NoticeblockDto dto) {
 		
@@ -77,6 +83,23 @@ public class Blockservice {
 		
 		
 		handler.noticeblock(entity);
+		
+	}
+	
+	public void Noticedecle(MemberEntity member,NoticedecleDto dto) {
+		
+		//enum안쓰고 걍스트링으로하기 ,표를기준으로할려함
+		
+		NoticeEntity noticeentity=noticehandler.findbyId(dto.getNoticeid()).orElseThrow(()->new IllegalAccessError("게시글없음;"));
+		
+		NoticedecleEntity entity=NoticedecleEntity.builder()
+				.member(member)
+				.notice(noticeentity)
+				.reason(dto.getReason())
+				.build();
+		
+		handler.noticedecleadd(entity);
+		
 		
 	}
 }
