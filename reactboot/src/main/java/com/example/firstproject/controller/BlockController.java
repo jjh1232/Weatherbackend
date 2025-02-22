@@ -35,4 +35,5 @@ public class BlockController {
 		
 		return ResponseEntity.ok("차단완료");
 }
+	
 }

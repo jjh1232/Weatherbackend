@@ -1,5 +1,6 @@
 package com.example.firstproject.Service.Blockservice;
 
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,43 +26,37 @@ public class Blockservice {
 		
 		log.info("노티스아이디:"+dto.getNoticeid());
 		log.info("리즌:"+dto.getReason());
-		Set<NoticeblockEnum> enu=new HashSet<>();
-		enu.add(NoticeblockEnum.baduser);
 		
-		NoticeblockEntity entity=NoticeblockEntity.builder().member(member)
-				.noticeid(dto.getNoticeid())			
-				.reason(NoticeblockEnum.baduser)
-				.build();
+		//빈깡통추가
+		EnumSet<NoticeblockEnum> blockreason=EnumSet.noneOf(NoticeblockEnum.class);
 		
-		
-		log.info("엔티티리즌:"+entity.getReason());
-		/*
+		//이거말곤추가할방법없나 ..case늘수록 오히려더느릴텐디
 		for(NoticeblockEnum data:dto.getReason()) {
 			log.info("리스트순회로맵세팅:"+data);
 			switch (data) {
 			case spam: {
-				entity.addreason(NoticeblockEnum.spam);
+				blockreason.add(NoticeblockEnum.spam);
 				break;
 			}	case discomfort: {
-				entity.addreason(NoticeblockEnum.discomfort);
+				blockreason.add(NoticeblockEnum.discomfort);
 				break;
 			}	case violent: {
-				entity.addreason(NoticeblockEnum.violent);
+				blockreason.add(NoticeblockEnum.violent);
 				break;
 			}	case nsfw: {
-				entity.addreason(NoticeblockEnum.nsfw);
+				blockreason.add(NoticeblockEnum.nsfw);
 				break;
 			}	case nointerested: {
-				entity.addreason(NoticeblockEnum.nointerested);
+				blockreason.add(NoticeblockEnum.nointerested);
 				break;
 			}	case baduser: {
-				entity.addreason(NoticeblockEnum.baduser);
+				blockreason.add(NoticeblockEnum.baduser);
 				break;
 			}	case noreason: {
-				entity.addreason(NoticeblockEnum.noreason);
+				blockreason.add(NoticeblockEnum.noreason);
 				break;
 			}	case etc: {
-				entity.addreason(NoticeblockEnum.etc);
+				blockreason.add(NoticeblockEnum.etc);
 				break;
 			}
 			default:
@@ -69,8 +64,17 @@ public class Blockservice {
 			}
 			
 		}
+		NoticeblockEntity entity=NoticeblockEntity.builder().member(member)
+				.noticeid(dto.getNoticeid())			
+				.reason(blockreason)
+				.build();
 		
-		*/
+		
+		log.info("엔티티리즌:"+entity.getReason());
+		
+		
+		
+		
 		
 		handler.noticeblock(entity);
 		
