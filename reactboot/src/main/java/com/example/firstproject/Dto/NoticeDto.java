@@ -40,7 +40,7 @@ public class NoticeDto {
 	private String userprofile;
 	private int commentcount;
 	private List<CommentDto> comments;
-	
+	private int declaircount;
 	private List<detachfile> detachfiles;
 	
 	
@@ -58,7 +58,7 @@ public class NoticeDto {
 		 pty=entity.getPty();
 		 rain=entity.getRain();
 		 userprofile=entity.getMember().getProfileimg();
-		 
+		 declaircount=entity.getDecles().size();
 		 detachfiles=entity.getFiles();
 	}
 	

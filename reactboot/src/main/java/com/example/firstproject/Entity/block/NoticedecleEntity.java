@@ -13,8 +13,11 @@ import com.example.firstproject.Entity.NoticeEntity;
 import com.example.firstproject.Entity.StompRoom.BaseTime;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 /*
@@ -30,6 +33,8 @@ import lombok.Setter;
 */ //다중유니크컬럼하는법 근데난테이블에서만들어서 ㅇㅇ;
 @Getter
 @Setter
+@RequiredArgsConstructor
+@AllArgsConstructor
 @Builder
 @Entity
 public class NoticedecleEntity extends BaseTime{

@@ -2,8 +2,13 @@ package com.example.firstproject.Service.Blockservice;
 
 import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.firstproject.Dto.blockDto.NoticeblockDto;
@@ -18,7 +23,7 @@ import com.example.firstproject.Handler.NoticeHandler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
+import com.example.firstproject.Dto.blockDto.Adminnoticedecleresponsedto;
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -95,11 +100,32 @@ public class Blockservice {
 		NoticedecleEntity entity=NoticedecleEntity.builder()
 				.member(member)
 				.notice(noticeentity)
-				.reason(dto.getReason())
+				.reason(dto.getReason().toString())
 				.build();
 		
 		handler.noticedecleadd(entity);
 		
+		
+	}
+	//노티스에서 신고정보가져오기
+	public Page<Adminnoticedecleresponsedto> noticedecledata(Long noticeid,int page){
+		PageRequest pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"created_date"));
+		//일단 아이디로 해보자 안되면 노티스엔티티가져와야;
+		
+		Page<NoticedecleEntity> entitylist=handler.findbynoticeidget(pageable, noticeid);
+		Page<Adminnoticedecleresponsedto> dtolist=entitylist.map((m)->{
+			
+			return Adminnoticedecleresponsedto.builder().username(m.getMember().getUsername())
+					.noticeid(m.getNotice().getNoticeid())
+					.datetime(m.getCreatedDate())
+					.reason(m.getReason())
+					.build();
+					
+					
+					
+		});
+		
+		return dtolist;
 		
 	}
 }

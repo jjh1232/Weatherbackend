@@ -204,6 +204,7 @@ public class adminService {
 				.pty(m.getPty()).rain(m.getRain()).red(m.getRed()).detachfiles(m.getFiles())
 				.userprofile(m.getMember().getProfileimg())
 				.commentcount(m.getComments().size())
+				.declaircount(m.getDecles().size())
 				.build()
 				);
 			

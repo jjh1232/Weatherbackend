@@ -166,6 +166,14 @@ public class admincontroller {
 		
 		return ResponseEntity.ok("성공");
 	}
+	
+	//게시판 신고 정보 가져오기===============================================================
+	@GetMapping("/noticedecle/{noticeid}")
+	public ResponseEntity decleget(@PathVariable Long noticeid) {
+		
+		
+		return ResponseEntity.ok(null);
+	}
 	//=================================댓글페이지관리========================================
 	
 	@GetMapping("/commentmanage")
