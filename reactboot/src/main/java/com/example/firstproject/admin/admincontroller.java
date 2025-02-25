@@ -26,8 +26,10 @@ import com.example.firstproject.Dto.ChatDto.AdminroomdetailDto;
 import com.example.firstproject.Dto.ChatDto.roomlistresponseDto;
 import com.example.firstproject.Dto.Comment.CommentDto;
 import com.example.firstproject.Dto.Comment.Commentform;
+import com.example.firstproject.Dto.blockDto.Adminnoticedecleresponsedto;
 import com.example.firstproject.Dto.userdataDto.LoginHistoryDto;
 import com.example.firstproject.Entity.MemberEntity;
+import com.example.firstproject.Service.Blockservice.Blockservice;
 import com.example.firstproject.admin.form.Admemberupdateform;
 import com.example.firstproject.admin.form.Adminmembercreateform;
 import com.example.firstproject.admin.form.AdminnoticeUpdateform;
@@ -40,6 +42,8 @@ import lombok.RequiredArgsConstructor;
 public class admincontroller {
 
 	private final adminService adminservice;
+	
+	private final Blockservice blockservice;
 	
 	@GetMapping("/main")
 	public ResponseEntity getmain() {
@@ -171,8 +175,9 @@ public class admincontroller {
 	@GetMapping("/noticedecle/{noticeid}")
 	public ResponseEntity decleget(@PathVariable Long noticeid) {
 		
+		Page<Adminnoticedecleresponsedto> list=blockservice.noticedecledata(noticeid, 1);
 		
-		return ResponseEntity.ok(null);
+		return ResponseEntity.ok(list);
 	}
 	//=================================댓글페이지관리========================================
 	

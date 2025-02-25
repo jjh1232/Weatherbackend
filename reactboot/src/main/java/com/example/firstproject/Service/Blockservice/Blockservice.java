@@ -109,7 +109,7 @@ public class Blockservice {
 	}
 	//노티스에서 신고정보가져오기
 	public Page<Adminnoticedecleresponsedto> noticedecledata(Long noticeid,int page){
-		PageRequest pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"created_date"));
+		PageRequest pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"createdDate"));
 		//일단 아이디로 해보자 안되면 노티스엔티티가져와야;
 		
 		Page<NoticedecleEntity> entitylist=handler.findbynoticeidget(pageable, noticeid);
