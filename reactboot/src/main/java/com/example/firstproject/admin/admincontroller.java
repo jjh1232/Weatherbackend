@@ -173,9 +173,10 @@ public class admincontroller {
 	
 	//게시판 신고 정보 가져오기===============================================================
 	@GetMapping("/noticedecle/{noticeid}")
-	public ResponseEntity decleget(@PathVariable Long noticeid) {
-		
-		Page<Adminnoticedecleresponsedto> list=blockservice.noticedecledata(noticeid, 1);
+	public ResponseEntity decleget(@PathVariable Long noticeid
+			,@RequestParam(name = "page",defaultValue = "1") int page) {
+		System.out.println("페이지:"+page);
+		Page<Adminnoticedecleresponsedto> list=blockservice.noticedecledata(noticeid, page);
 		
 		return ResponseEntity.ok(list);
 	}
