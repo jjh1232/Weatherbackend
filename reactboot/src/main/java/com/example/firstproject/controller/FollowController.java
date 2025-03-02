@@ -108,7 +108,7 @@ public class FollowController {
 		return ResponseEntity.ok().body(list);
 		}
 	}
-	//개인팔로우여부 체크
+	//개인팔로우여부 체크 이거..음..
 	@GetMapping("/followcheck")
 	@Logoutano 
 	public ResponseEntity followcheck(Authentication authentication,@RequestParam String friendname) {
@@ -160,7 +160,23 @@ public class FollowController {
 	}
 						
 			
+	//메뉴판에 한번에 데이터받는게효율이좋을거같아서 만듬
+	@GetMapping("/usermenudata")
+	@Logoutano 
+	public ResponseEntity noticemenucheck(Authentication authentication,
+			@RequestParam String friendname,
+			@RequestParam Long noticeid
+			) {
+		MemberEntity frommember=memberservice.findemail(authentication.getName()).orElseThrow();		
 		
+		MemberEntity tomember=memberservice.findemail(friendname).orElseThrow();
+		
+		boolean followcheck=followservice.flowcheck(frommember, tomember);
+		
+		
+		
+		return null;
+	}
 		
 	
 }

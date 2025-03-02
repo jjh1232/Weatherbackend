@@ -36,6 +36,7 @@ public class JwtService {
 	public String createtoken(PrincipalDetails member) {
 		return JWT.create()
 				.withSubject("Accesstoken")
+				.withClaim("id", member.getMember().getId())
 				.withClaim("username", member.getUsername())
 				
 				.withClaim("nickname", member.getMember().getNickname())

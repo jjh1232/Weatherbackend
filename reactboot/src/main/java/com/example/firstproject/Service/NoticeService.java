@@ -60,4 +60,8 @@ public interface NoticeService {
 	public boolean noticelikecheck(MemberEntity member,Long noticeid);
 	
 	public  Map<String,Object> favoritenotice(MemberEntity member,Pageable pageable);
+	
+	public Page<NoticeDto> loginnoticeget(Long userid,int page);
+	
+	public Page<NoticeDto> loginnoticesearchget(Long userid,String option,String content,int page);
 }

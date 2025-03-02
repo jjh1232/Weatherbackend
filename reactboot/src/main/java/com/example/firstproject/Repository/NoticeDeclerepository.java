@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.example.firstproject.Dto.blockDto.Adminnoticedecleresponsedto;
 import com.example.firstproject.Entity.NoticeEntity;
@@ -17,4 +18,6 @@ public interface NoticeDeclerepository  extends JpaRepository<NoticedecleEntity,
 	//@Query(value = "Select new com.example.firstproject.Dto.blockDto.Adminnoticedecleresponsedto(d.member.username,d.notice.id,d.reason,d.datetime) from NoticedecleEntity d where d.notice.id=:noticeid")
 	//Dto로받긴데 왜안될까..
 		
+	@Query(value = "select exists (select * from noticedecle_entity where member_id =:userid and notice_id=:noticeid)",nativeQuery = true)
+	public Long noticeblockcheck(@Param("userid")Long userid,@Param("noticeid")Long noticeid);
 }

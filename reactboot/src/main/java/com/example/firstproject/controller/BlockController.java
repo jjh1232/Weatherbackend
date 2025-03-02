@@ -5,8 +5,10 @@ import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.firstproject.Dto.blockDto.NoticeblockDto;
@@ -29,6 +31,7 @@ public class BlockController {
 	public ResponseEntity noticeblock(Authentication authentication,@RequestBody NoticeblockDto dto) {
 		PrincipalDetails principal=(PrincipalDetails) authentication.getPrincipal();
 		MemberEntity member=principal.getMember();
+		log.info("멤버아이디:"+member.getUsername());
 		//long변환을 모르겠네왜안되는지 integer변환후 롱으로 다시바꿈;
 		//map으로 받았는데 reason도추가해야해서 ;;걍 dto로
 		
@@ -44,6 +47,25 @@ public class BlockController {
 		
 		service.Noticedecle(member, dto);
 		return ResponseEntity.ok("신고완료");
+	}
+	//블록과 신고여부
+	@GetMapping("/noticeblockcheck")
+	public ResponseEntity noticeblockcheck(Authentication authentication,@RequestParam Long noticeid) {
+		PrincipalDetails principal =(PrincipalDetails) authentication.getPrincipal();
+		MemberEntity member=principal.getMember();
+		System.out.println("유저아이디"+member.getId());
+		System.out.println("노티스아이디:"+noticeid);
+		boolean check=service.noticeblockcheck(member.getId(), noticeid);
+		return ResponseEntity.ok(check);
+	}
+	@GetMapping("/noticedelclecheck")
+	public ResponseEntity noticedeclecheck(Authentication authentication,@RequestParam Long noticeid) {
+		PrincipalDetails principal =(PrincipalDetails) authentication.getPrincipal();
+		MemberEntity member=principal.getMember();
+		System.out.println("유저아이디"+member.getId());
+		System.out.println("노티스아이디:"+noticeid);
+		boolean check=service.noticedeclecheck(member.getId(), noticeid);
+		return ResponseEntity.ok(check);
 	}
 	
 }

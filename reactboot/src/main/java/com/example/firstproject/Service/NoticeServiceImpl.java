@@ -53,7 +53,9 @@ import com.example.firstproject.Entity.FavoriteEntity;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
 import com.example.firstproject.Entity.detachfile;
+import com.example.firstproject.Entity.block.NoticeblockEntity;
 import com.example.firstproject.Entity.follow.FollowEntity;
+import com.example.firstproject.Handler.Blockhandler;
 import com.example.firstproject.Handler.MemberHandler;
 import com.example.firstproject.Handler.NoticeHandler;
 import com.example.firstproject.Repository.DetachfileRepository;
@@ -80,6 +82,7 @@ public class NoticeServiceImpl implements NoticeService {
 	
 	private final SseService sseservice;
 	
+	private final Blockhandler blockhandler;
 	@Override
 	public Page<NoticeDto> read(Pageable page) {
 		System.out.println("게시판리드서비스");
@@ -752,6 +755,55 @@ public class NoticeServiceImpl implements NoticeService {
 		 	data.put("totalpage", followlist.getTotalPages());
 		 	data.put("notice", pagedto);
 		return data;
+	}
+
+	
+	//로그인시 차단서비스를위해 새로생성
+	@Override
+	public Page<NoticeDto> loginnoticeget(Long userid,int page) {
+		// TODO Auto-generated method stub
+		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
+		Page<NoticeEntity> entitylist=noticehandler.read(pageable);
+		System.out.println("서비스시작");
+		long start1=System.currentTimeMillis();
+		List<NoticeblockEntity> blocklist=blockhandler.getuserblock(userid);
+		long end1=System.currentTimeMillis();
+		/*얘가더느리네?
+		long start2=System.currentTimeMillis();
+		List<Long> blocklistid=blockhandler.getblocknoticenum(userid);
+		long end2=System.currentTimeMillis();
+		
+		System.out.println("리스트채로:"+(end1-start1/1000)+"초걸림");
+		System.out.println("리스트채로:"+(end2-start2/1000)+"초걸림");
+		*/
+		Page<NoticeDto> dtolist=entitylist.map((m)->{
+			NoticeDto dto=new NoticeDto(m);
+			
+			dto.setIsblock(blocklist.contains(m.getNoticeid()));
+			
+			return dto;
+		});
+		return dtolist;
+	}
+
+	@Override
+	public Page<NoticeDto> loginnoticesearchget(Long userid,String option, String content, int page) {
+		// TODO Auto-generated method stub
+		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
+		System.out.println("서비스시작");
+		long start1=System.currentTimeMillis();
+		List<NoticeblockEntity> blocklist=blockhandler.getuserblock(userid);
+		long end1=System.currentTimeMillis();
+		
+		/*얘가더느리네?
+		long start2=System.currentTimeMillis();
+		List<Long> blocklistid=blockhandler.getblocknoticenum(userid);
+		long end2=System.currentTimeMillis();
+		
+		System.out.println("리스트채로:"+(end1-start1/1000)+"초걸림");
+		System.out.println("리스트채로:"+(end2-start2/1000)+"초걸림");
+			*/
+		return null;
 	}
 	}
 	 

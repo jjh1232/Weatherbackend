@@ -110,9 +110,11 @@ public class MainController {
 	
 	//이게지금 메인트윗으로쓰고있음
 	@GetMapping("/open/noticesearch")
-	public Page<NoticeDto> search(@RequestParam(required = false,defaultValue="title") String option,
+	public Page<NoticeDto> search(
+			@RequestParam(required = false,defaultValue="title") String option,
 			@RequestParam(required = false,defaultValue="") String keyword,
 			@RequestParam(defaultValue="1") int page) {
+		
 		//noticeservice.search(option,keyword);
 		if(keyword.equals("")) {
 			log.info("키워드널 검색어가아님");	
@@ -130,6 +132,29 @@ public class MainController {
 		return Dto;
 		}
 		
+	}
+	//차단목록을위해 새로만드는 로그인시 게시글 가져오기 근데 더짧은로직으로 
+	@GetMapping("/noticeget")
+	public Page<NoticeDto> search(
+			Authentication authentication,
+			@RequestParam(required = false,defaultValue="title") String option,
+			@RequestParam(required = false,defaultValue="") String keyword,
+			@RequestParam(defaultValue="1") int page
+			){
+		System.out.println("로그인시노티스");
+		PrincipalDetails user=(PrincipalDetails) authentication.getPrincipal();
+		if(keyword.equals("")) {
+			//검색어아닐시 
+			
+			Page<NoticeDto> dtolist=noticeservice.loginnoticeget(user.getMember().getId(), page);
+			
+			return dtolist;
+		}else {
+			//Page<NoticeDto> Dto=noticeservice.search(user.getMember().getId(),option,keyword,page);
+			
+			return null;
+		}
+
 	}
 	
 	//=====================================일단 좋아요 목록가져오는컨트롤러 ============================================

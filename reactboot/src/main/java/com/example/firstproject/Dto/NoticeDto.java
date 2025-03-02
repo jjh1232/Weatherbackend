@@ -42,7 +42,7 @@ public class NoticeDto {
 	private List<CommentDto> comments;
 	private int declaircount;
 	private List<detachfile> detachfiles;
-	
+	private boolean isblock;
 	
 	public NoticeDto(NoticeEntity entity) {
 		 num=entity.getNoticeid();

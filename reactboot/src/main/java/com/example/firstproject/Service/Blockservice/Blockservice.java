@@ -33,6 +33,8 @@ public class Blockservice {
 	
 	private final NoticeHandler noticehandler;
 	
+	
+	
 	public void noticeblock(MemberEntity member,NoticeblockDto dto) {
 		
 		log.info("노티스아이디:"+dto.getNoticeid());
@@ -113,6 +115,7 @@ public class Blockservice {
 		//일단 아이디로 해보자 안되면 노티스엔티티가져와야;
 		
 		Page<NoticedecleEntity> entitylist=handler.findbynoticeidget(pageable, noticeid);
+		
 		Page<Adminnoticedecleresponsedto> dtolist=entitylist.map((m)->{
 			
 			return Adminnoticedecleresponsedto.builder().username(m.getMember().getUsername())
@@ -128,4 +131,18 @@ public class Blockservice {
 		return dtolist;
 		
 	}
+
+	public boolean noticeblockcheck(Long userid,Long noticeid) {
+		boolean check=handler.noticeblockcheck(userid,noticeid);
+		
+		return check;
+	}
+
+	public boolean noticedeclecheck(Long userid,Long noticeid) {
+	boolean check=handler.noticedeclecheck(userid,noticeid);
+		
+		return check;
+	}
+	
+	
 }
