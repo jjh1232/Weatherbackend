@@ -1,6 +1,7 @@
 package com.example.firstproject.Handler;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -81,6 +82,29 @@ public class Blockhandler {
 		List<Long> blocks=blockrepository.userblocknoticeid(userid);
 		
 		return blocks;
+	}
+	
+	//유저블록 가져오기 
+	public Optional<NoticeblockEntity> blockfindbyuseridandnoticeid(Long userid,Long noticeid){
+		Optional<NoticeblockEntity> entity=blockrepository.findbymemberidandnoticeid(userid, noticeid);
+		
+		return entity;
+		 
+	}
+	//유저블록 엔티티삭제하기
+	public void deletenoticeblock(NoticeblockEntity entity) {
+		blockrepository.delete(entity);
+	}
+	//게시글 신고 가져오기
+	public Optional<NoticedecleEntity> declefindbyuseridandnoticeid(Long userid,Long noticeid){
+		Optional<NoticedecleEntity> entity=declerepository.findbymemberidandnoticeid(userid, noticeid);
+		
+		return entity;
+	}
+	
+	//게시글 신고 지우기
+	public void deletenoticedecle(NoticedecleEntity entity) {
+		declerepository.delete(entity);
 	}
 	
 }

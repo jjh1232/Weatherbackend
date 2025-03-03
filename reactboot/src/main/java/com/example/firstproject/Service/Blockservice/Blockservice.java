@@ -145,4 +145,19 @@ public class Blockservice {
 	}
 	
 	
+	//게시글 신고 차단 취소로직 서비스======================================================
+	
+	public void blockcancle(Long memberid,Long noticeid) throws IllegalAccessException {
+		NoticeblockEntity entity=handler.blockfindbyuseridandnoticeid(memberid, noticeid).orElseThrow(()->new IllegalAccessException("차단목록없음"));
+		handler.deletenoticeblock(entity);
+		
+		
+	
+	}
+	
+	public void declecancel(Long memberid,Long noticeid) throws IllegalAccessException {
+		NoticedecleEntity entity=handler.declefindbyuseridandnoticeid(memberid, noticeid).orElseThrow(()->new IllegalAccessException("신고목록없음"));
+		handler.deletenoticedecle(entity);
+	}
+	
 }

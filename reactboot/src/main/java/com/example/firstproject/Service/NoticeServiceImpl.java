@@ -765,21 +765,23 @@ public class NoticeServiceImpl implements NoticeService {
 		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
 		Page<NoticeEntity> entitylist=noticehandler.read(pageable);
 		System.out.println("서비스시작");
+		/*
 		long start1=System.currentTimeMillis();
 		List<NoticeblockEntity> blocklist=blockhandler.getuserblock(userid);
 		long end1=System.currentTimeMillis();
-		/*얘가더느리네?
+		*/
+		//이게 Long이돌아야하다보니 이렇게가져오는게나은듯
 		long start2=System.currentTimeMillis();
 		List<Long> blocklistid=blockhandler.getblocknoticenum(userid);
 		long end2=System.currentTimeMillis();
 		
-		System.out.println("리스트채로:"+(end1-start1/1000)+"초걸림");
+		//System.out.println("리스트채로:"+(end1-start1/1000)+"초걸림");
 		System.out.println("리스트채로:"+(end2-start2/1000)+"초걸림");
-		*/
+		
 		Page<NoticeDto> dtolist=entitylist.map((m)->{
 			NoticeDto dto=new NoticeDto(m);
 			
-			dto.setIsblock(blocklist.contains(m.getNoticeid()));
+			dto.setIsblock(blocklistid.contains(m.getNoticeid()));
 			
 			return dto;
 		});

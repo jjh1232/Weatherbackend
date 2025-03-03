@@ -1,5 +1,7 @@
 package com.example.firstproject.Repository;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.example.firstproject.Dto.blockDto.Adminnoticedecleresponsedto;
 import com.example.firstproject.Entity.NoticeEntity;
+import com.example.firstproject.Entity.block.NoticeblockEntity;
 import com.example.firstproject.Entity.block.NoticedecleEntity;
 
 public interface NoticeDeclerepository  extends JpaRepository<NoticedecleEntity, Long>{
@@ -20,4 +23,10 @@ public interface NoticeDeclerepository  extends JpaRepository<NoticedecleEntity,
 		
 	@Query(value = "select exists (select * from noticedecle_entity where member_id =:userid and notice_id=:noticeid)",nativeQuery = true)
 	public Long noticeblockcheck(@Param("userid")Long userid,@Param("noticeid")Long noticeid);
+
+
+	//유저블록 가져오기 
+	
+		@Query(value="select b from NoticedecleEntity b where b.member.id =:memberid and b.notice.id=:noticeid")
+		public Optional<NoticedecleEntity> findbymemberidandnoticeid(Long memberid,Long noticeid);
 }

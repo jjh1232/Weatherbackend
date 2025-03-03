@@ -5,7 +5,9 @@ import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -67,5 +69,25 @@ public class BlockController {
 		boolean check=service.noticedeclecheck(member.getId(), noticeid);
 		return ResponseEntity.ok(check);
 	}
+	//게시글 메뉴에서 게시글블록 과신고=================================================
+	@DeleteMapping("/noticeblock/delete/{noticeid}")
+	public ResponseEntity blockcancel(Authentication authentication,@PathVariable Long noticeid) throws IllegalAccessException {
+		PrincipalDetails principal =(PrincipalDetails) authentication.getPrincipal();
+		MemberEntity member=principal.getMember();
+		
+		service.blockcancle(member.getId(), noticeid);
+		return ResponseEntity.ok("차단취소");
+	}
+	//게시글신고취소
+	@DeleteMapping("/noticedecle/delete/{noticeid}")
+	public ResponseEntity declecancel(Authentication authentication,@PathVariable Long noticeid) throws IllegalAccessException {
+		PrincipalDetails principal =(PrincipalDetails) authentication.getPrincipal();
+		MemberEntity member=principal.getMember();
+		
+		service.declecancel(member.getId(), noticeid);
+		
+		return ResponseEntity.ok("신고취소");
+	}
 	
+	//============================================================================
 }

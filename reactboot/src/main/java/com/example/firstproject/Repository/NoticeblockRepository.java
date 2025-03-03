@@ -1,6 +1,7 @@
 package com.example.firstproject.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,4 +20,11 @@ public interface NoticeblockRepository extends JpaRepository<NoticeblockEntity, 
 	@Query(value = "select b.noticeid from NoticeblockEntity b where b.member.id =:userid")
 	public List<Long> userblocknoticeid(Long userid);
 	
+	
+	//유저블록 가져오기 
+	
+	@Query(value="select b from NoticeblockEntity b where b.member.id =:memberid and noticeid=:noticeid")
+	public Optional<NoticeblockEntity> findbymemberidandnoticeid(Long memberid,Long noticeid);
+
+
 }
