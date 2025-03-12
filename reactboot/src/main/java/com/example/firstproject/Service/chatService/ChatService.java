@@ -75,9 +75,11 @@ public class ChatService {
 			log.info("챗룸목록에추가");
 			member.addchatroom(memberroom);
 			log.info("맴버객체에챗룸추가");
-			
+			Long a=(long) 43;
+			MemberEntity System=memberrepo.findById(a).orElseThrow();
 			chatmessage enterchat=chatmessage.builder()
 					.sender("System") //이렇게설정할까 
+					.member(System)//시스템일경우
 					.MessageType("Message")
 					.message(member.getNickname()+"님이 입장하셨습니다!")
 					.room(chatroom)
@@ -164,15 +166,21 @@ public class ChatService {
 		log.info("구한멤버룸"+memberroom.getId().toString());
 		log.info("구한멤버룸"+memberroom.getMembernickname().toString());
 		
+	
+		//유저가 나간것도 채팅으로저장 시스템 멤버가져오기 
+		//근데매번 Db에 가는것도 비효율적인거같긴해서 그냥내가 생성할까
+		Long a=(long) 43;
+		MemberEntity System=memberrepo.findById(a).orElseThrow();
 		
-		//유저가 나간것도 채팅으로저장
 		chatmessage enterchat=chatmessage.builder()
-				//.sender(member.getNickname()) 두번처리해야해서 귀찮아서 
+				.sender("System") //이렇게설정할까 
+				.member(System)//시스템일경우
 				.MessageType("Message")
 				.message(member.getNickname()+"님이 퇴장하셨습니다!")
 				.room(room)
 				.build();
 		
+	
 		messagerepo.save(enterchat);
 		
 		
@@ -224,8 +232,12 @@ public class ChatService {
 			//추가
 			entity.addchatroom(memberroom);
 			room.adduserlist(memberroom);
+			Long a=(long) 43;
+			MemberEntity System=memberrepo.findById(a).orElseThrow();
+	
 			chatmessage enterchat=chatmessage.builder()
-					//.sender(member.getNickname()) 두번처리해야해서 귀찮아서 
+					.sender("System") //이렇게설정할까 
+					.member(System)//시스템일경우
 					.MessageType("Message")
 					.message(entity.getNickname()+"님이 입장하셨습니다!")
 					.room(room)

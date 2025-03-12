@@ -124,7 +124,10 @@ public class ChatMemberController {
 		Room room=chatservice.findbychatroom(roomid);
 		roomlistresponseDto roomdata=chatservice.roomdataget(room);
 		//이것도 룸에서 바로가져와도될듯 
+		log.info("챗방데이터가져왔음");
+		log.info("채팅가져오기");
 		List<ChatResponseDto> beforechat=chatservice.getbeforechat(room);
+		log.info("채팅가져왔음");
 		Map<String,Object> data=new HashMap<>();
 		data.put("roomdata", roomdata);
 		data.put("beforechat",beforechat);

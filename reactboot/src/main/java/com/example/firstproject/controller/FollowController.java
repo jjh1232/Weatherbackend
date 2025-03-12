@@ -61,6 +61,7 @@ public class FollowController {
 			followlistDto listdto=followlistDto.builder()
 					.username(entity.getTomember().getUsername())
 					.nickname(entity.getTomember().getNickname())
+					.profileurl(entity.getTomember().getProfileimg())
 					.favorite(entity.isFavorite())
 					.build();
 			listname.add(listdto);

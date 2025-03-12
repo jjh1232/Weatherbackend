@@ -12,4 +12,5 @@ public class followlistDto {
 	private String username;
 	private String nickname;
 	private boolean favorite;
+	private String profileurl;
 }
