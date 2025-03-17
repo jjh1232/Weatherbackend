@@ -2,6 +2,9 @@ package com.example.firstproject.Service.chatService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -9,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
+import com.example.firstproject.Dto.MemberDto;
 import com.example.firstproject.Dto.ChatDto.ChatResponseDto;
 import com.example.firstproject.Dto.ChatDto.roomlistresponseDto;
 import com.example.firstproject.Entity.MemberEntity;
@@ -276,5 +280,23 @@ public class ChatService {
 		
 		return memberroom;
 		
+	}
+	
+	//멤버정보 sql두번해서가져오기
+	public List<Object> findmemberlist(Long memberid){
+		
+		List<MemberRoom> roomlist=memberroomrepo.findmemberroomlist(memberid);
+		
+		List<Long> roomids=roomlist.stream().map(mr->mr.getRoom().getId()).collect(Collectors.toList());
+		
+		List<MemberRoom> allmemberrooms=memberroomrepo.findMemberRoomsbyroomid(roomids);
+		
+		Map<Long,List<MemberDto>> roommembermap=allmemberrooms.stream()
+				.collect(Collectors.groupingBy(mr->mr.getRoom().getId(),
+						Collectors.mapping(mr-> new MemberDto(mr.getMember()),Collectors.toList())));
+		
+		return roomlist.stream().map(mr->new Roomwithmemberdto(
+				mr.getRoom(),roommembermap.get(mr.getRoom().getId()),mr.getroomname()
+				)).collect(Collectors.toList());
 	}
 }
