@@ -45,6 +45,7 @@ public class MemberRoom extends BaseTime{
 	
 	private String roomname;
 	
+	
 	@ManyToOne
 	//@Cascade(CascadeType.PERSIST)
 	@JoinColumn(name="member_id")//이거자기컬럼이름이고 주인외래키지정은 referencedColumnName의default값임

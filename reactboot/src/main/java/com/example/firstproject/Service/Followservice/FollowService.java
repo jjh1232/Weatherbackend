@@ -69,6 +69,7 @@ public class FollowService {
 			FollowDto dto=FollowDto.builder()
 					.username(toentity.getFrommember().getUsername())
 					.nickname(toentity.getFrommember().getNickname())
+					.profileurl(toentity.getFrommember().getProfileimg())
 					.followcheck(false)
 					.build();
 			
@@ -150,6 +151,7 @@ public class FollowService {
 				followlistDto dto=followlistDto.builder()
 						.username(entity.getTomember().getUsername())
 						.nickname(entity.getTomember().getNickname())
+						.profileurl(entity.getTomember().getProfileimg())
 						.favorite(true)
 						.build();
 				dtolist.add(dto);

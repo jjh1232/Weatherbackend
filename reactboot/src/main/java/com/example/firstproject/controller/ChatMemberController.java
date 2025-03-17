@@ -44,6 +44,9 @@ public class ChatMemberController {
 	private final MemberRepository memberrepository;
 	
 	private final ChatService chatservice;
+	
+	
+
 	//채팅방 만들기 
 	@PostMapping("/createchatroom")
 	public Long createchatroom(Authentication authentication,@RequestBody ChatRoomDto dto) {//참여자리스트랑 채팅방이름 없으면 기본으로 유저아이디
@@ -81,7 +84,10 @@ public class ChatMemberController {
 		PrincipalDetails member=(PrincipalDetails) userdata.getPrincipal();
 		Long memberid=member.getMember().getId();
 		
+		
 		MemberEntity members=memberrepository.findById(memberid).orElseThrow();
+		
+		long beforetime=System.currentTimeMillis();
 		
 		List<roomlistresponseDto> userroomlist=new ArrayList<>(); //리턴할 데이터형식
 		
@@ -105,16 +111,50 @@ public class ChatMemberController {
 			
 			
 		}
+		long aftertime=System.currentTimeMillis();
+		long finaltime=(aftertime-beforetime);
+		System.out.println("기존에 jpa로가져오는시간:"+finaltime);
 		//람다함수로 
 		//Collections.sort(userroomlist,(a,b)->b.getTime()-a.getTime());
 			//내림차순 정렬!
 		userroomlist.sort(Comparator.comparing(roomlistresponseDto::getTime).reversed());
 		
+		
+		long beforetime2=System.currentTimeMillis();
+		
+		List<MemberRoom> roomlist2=chatservice.findbyuserchatroom(memberid);
+		long aftertime2=System.currentTimeMillis();
+		long finaltime2=(aftertime2-beforetime2);
+		System.out.println("조인으로 jpa로가져오는시간:"+finaltime2);
+		
+		List<roomlistresponseDto> userroomlist2=new ArrayList<>(); //리턴할 데이터형식
+		for(MemberRoom list:roomlist2) {
+			Room roomdata=list.getRoom();
+			log.info("룸데이터:"+roomdata);
+			log.info("룸데이터접속리스트:"+roomdata.getUserlist());
+			List<chatmessage> chatdata=roomdata.getChatdata();
+			for(MemberRoom memberrooms:roomdata.getUserlist()) {
+				
+			}
+			chatmessage lately=chatdata.get(chatdata.size()-1);
+			
+			roomlistresponseDto dto = roomlistresponseDto.builder()
+					.roomid(roomdata.getId())
+					.roomname(roomdata.getRoomname())
+					.namelist(roomdata.getUserlist())
+					.time(roomdata.getUpdatedDate())
+					.latelychat(lately.getMessage())
+					.build();
+			
+			userroomlist2.add(dto);
+			
+			
+		}
 		//스트림으로
 		// List<roomlistresponseDto> sortlist=userroomlist.stream().sorted((a,b)->b.getTime()-a.getTime())
 		//		.collect(Collectors.toList());
 		
-		return userroomlist;
+		return userroomlist2;
 		}
 	
 	//채팅방디테일

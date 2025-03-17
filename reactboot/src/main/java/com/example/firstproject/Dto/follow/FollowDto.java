@@ -11,6 +11,7 @@ public class FollowDto {
 
 	private String username;
 	private String nickname;
+	private String profileurl;
 	
 	private boolean followcheck;
 }

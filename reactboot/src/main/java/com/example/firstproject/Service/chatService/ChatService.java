@@ -270,4 +270,11 @@ public class ChatService {
 				.build();
 		return dto;
 	}
+	//멤버정보가져오기 
+	public List<MemberRoom> findbyuserchatroom(Long memberid) {
+		List<MemberRoom> memberroom=memberroomrepo.findMemberrooms(memberid);
+		
+		return memberroom;
+		
+	}
 }
