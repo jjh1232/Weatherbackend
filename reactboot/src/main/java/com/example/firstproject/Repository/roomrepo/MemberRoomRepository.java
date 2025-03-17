@@ -27,4 +27,10 @@ public interface MemberRoomRepository extends JpaRepository<MemberRoom, Long>{
 		       "WHERE r.id IN (SELECT mr2.room.id FROM MemberRoom mr2 WHERE mr2.member.id = :memberid)")
 	List<MemberRoom> findMemberrooms(@Param("memberid") Long memberid);
 	
+	@Query("select mr FROM MemberRoom mr JOIN FETCH mr.room where mr.member.id=:memberid")
+	List<MemberRoom> findmemberroomlist(@Param("memberid") Long memberid);
+	
+	@Query("SELECT mr FROM MemberRoom mr JOIN FETCH mr.member where mr.room.id IN :roomids")
+	List<MemberRoom> findMemberRoomsbyroomid(@Param("roomids") List<Long> roomids);
+	
 }
