@@ -1,6 +1,7 @@
 package com.example.firstproject.Service.chatService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collector;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.firstproject.Dto.MemberDto;
 import com.example.firstproject.Dto.ChatDto.ChatResponseDto;
+import com.example.firstproject.Dto.ChatDto.RoomlistDto;
 import com.example.firstproject.Dto.ChatDto.roomlistresponseDto;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.StompRoom.MemberRoom;
@@ -283,7 +285,7 @@ public class ChatService {
 	}
 	
 	//멤버정보 sql두번해서가져오기
-	public List<Object> findmemberlist(Long memberid){
+	public List<RoomlistDto> findmemberlist(Long memberid){
 		
 		List<MemberRoom> roomlist=memberroomrepo.findmemberroomlist(memberid);
 		
@@ -291,12 +293,42 @@ public class ChatService {
 		
 		List<MemberRoom> allmemberrooms=memberroomrepo.findMemberRoomsbyroomid(roomids);
 		
+		//방별멤버생성
 		Map<Long,List<MemberDto>> roommembermap=allmemberrooms.stream()
+				//스트림을 특정요소기준에따라 그룹화하여map반환
 				.collect(Collectors.groupingBy(mr->mr.getRoom().getId(),
-						Collectors.mapping(mr-> new MemberDto(mr.getMember()),Collectors.toList())));
+						//원하는요소로맵핑
+						Collectors.mapping(mr-> new MemberDto(mr.getMember())
+								,Collectors.toList())));
 		
-		return roomlist.stream().map(mr->new Roomwithmemberdto(
-				mr.getRoom(),roommembermap.get(mr.getRoom().getId()),mr.getroomname()
-				)).collect(Collectors.toList());
+		//방별 메세지생성
+		Map<Long, Map<String, Object>> roomMessageInfo = roomlist.stream()
+			    .collect(Collectors.toMap(
+			        mr -> mr.getRoom().getId(),
+			        mr -> {
+			            List<chatmessage> messages = mr.getRoom().getChatdata(); // 룸 객체에서 메시지 리스트 가져오기
+			            chatmessage lastmessage=messages.isEmpty()?null:
+			            	messages.get(messages.size()-1);
+			           
+			            Map<String,Object> info =new HashMap<>();
+			            info.put("lastmessage", lastmessage);
+			            info.put("totalmessage",messages.size());
+			            return info;
+			        }
+			        ));
+		
+			  return roomlist.stream().map(mr->{
+				  Long roomid=mr.getRoom().getId();
+				  Map<String,Object> messageinfo=roomMessageInfo.get(roomid);
+				 
+				  return new RoomlistDto(
+							mr.getRoom(),
+							roommembermap.get(mr.getRoom().getId()),
+							mr.getRoomname(),
+							(chatmessage) messageinfo.get("lastmessage"),
+							(int) messageinfo.get("totalmessage")
+							);
+				  }).collect(Collectors.toList());
+			  
 	}
 }

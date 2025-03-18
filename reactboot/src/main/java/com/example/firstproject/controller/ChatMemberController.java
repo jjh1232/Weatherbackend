@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.firstproject.Dto.ChatDto.ChatResponseDto;
 import com.example.firstproject.Dto.ChatDto.ChatRoomDto;
+import com.example.firstproject.Dto.ChatDto.RoomlistDto;
 import com.example.firstproject.Dto.ChatDto.Roomuseradd;
 import com.example.firstproject.Dto.ChatDto.roomlistresponseDto;
 import com.example.firstproject.Entity.MemberEntity;
@@ -27,6 +28,7 @@ import com.example.firstproject.Entity.StompRoom.MemberRoom;
 import com.example.firstproject.Entity.StompRoom.Room;
 import com.example.firstproject.Entity.StompRoom.chatmessage;
 import com.example.firstproject.Repository.MemberRepository;
+import com.example.firstproject.Repository.roomrepo.MemberRoomRepository;
 import com.example.firstproject.Service.Memberservice.MemberService;
 import com.example.firstproject.Service.chatService.ChatService;
 import com.example.firstproject.aop.Logoutano;
@@ -78,7 +80,7 @@ public class ChatMemberController {
 	//유저의채팅방목록검색 
 	@GetMapping("/findchatroomlist")
 	@Logoutano 
-	public List<roomlistresponseDto> findchatroom(Authentication userdata) {
+	public List<RoomlistDto> findchatroom(Authentication userdata) {
 		log.info("유저데이터:"+userdata.getName());
 		log.info("유저디테일"+userdata.getPrincipal());
 		PrincipalDetails member=(PrincipalDetails) userdata.getPrincipal();
@@ -86,7 +88,7 @@ public class ChatMemberController {
 		
 		
 		MemberEntity members=memberrepository.findById(memberid).orElseThrow();
-		
+		/* 기존코드
 		long beforetime=System.currentTimeMillis();
 		
 		List<roomlistresponseDto> userroomlist=new ArrayList<>(); //리턴할 데이터형식
@@ -114,19 +116,24 @@ public class ChatMemberController {
 		long aftertime=System.currentTimeMillis();
 		long finaltime=(aftertime-beforetime);
 		System.out.println("기존에 jpa로가져오는시간:"+finaltime);
+		
 		//람다함수로 
 		//Collections.sort(userroomlist,(a,b)->b.getTime()-a.getTime());
 			//내림차순 정렬!
 		userroomlist.sort(Comparator.comparing(roomlistresponseDto::getTime).reversed());
 		
-		
+		*/
 		long beforetime2=System.currentTimeMillis();
+		List<RoomlistDto> memberRooms=chatservice.findmemberlist(memberid);
 		
-		List<MemberRoom> roomlist2=chatservice.findbyuserchatroom(memberid);
+		
+		memberRooms.sort(Comparator.comparing(RoomlistDto::getLastchatred).reversed());
 		long aftertime2=System.currentTimeMillis();
 		long finaltime2=(aftertime2-beforetime2);
 		System.out.println("조인으로 jpa로가져오는시간:"+finaltime2);
 		
+		/* 얘가 더빠르긴하다
+		List<MemberRoom> roomlist2=chatservice.findbyuserchatroom(memberid);
 		List<roomlistresponseDto> userroomlist2=new ArrayList<>(); //리턴할 데이터형식
 		for(MemberRoom list:roomlist2) {
 			Room roomdata=list.getRoom();
@@ -150,11 +157,12 @@ public class ChatMemberController {
 			
 			
 		}
+		*/
 		//스트림으로
 		// List<roomlistresponseDto> sortlist=userroomlist.stream().sorted((a,b)->b.getTime()-a.getTime())
 		//		.collect(Collectors.toList());
 		
-		return userroomlist2;
+		return memberRooms;
 		}
 	
 	//채팅방디테일
