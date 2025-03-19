@@ -157,7 +157,7 @@ public class ChatService {
 	//룸아이디 찾기
 	@Transactional
 	public Room findbychatroom(Long loomid) {
-		
+		//이거 join으로쓰자
 		Room room=roomrepo.findById(loomid).orElseThrow();
 		
 		return room;
