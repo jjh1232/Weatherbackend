@@ -14,9 +14,13 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import com.example.firstproject.Dto.MemberDto;
+import com.example.firstproject.Dto.MessageDto;
 import com.example.firstproject.Dto.ChatDto.ChatResponseDto;
 import com.example.firstproject.Dto.ChatDto.RoomlistDto;
 import com.example.firstproject.Dto.ChatDto.roomlistresponseDto;
+import com.example.firstproject.Dto.ChatDto.Roomdata.EzmemberDto;
+import com.example.firstproject.Dto.ChatDto.Roomdata.MeseageDto;
+import com.example.firstproject.Dto.ChatDto.Roomdata.Roomdata;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.StompRoom.MemberRoom;
 import com.example.firstproject.Entity.StompRoom.Room;
@@ -72,6 +76,7 @@ public class ChatService {
 					.membernickname(member.getNickname())
 					.member(member)
 					.room(chatroom)
+					.roomname(roomname)
 					.build();
 			
 			log.info("멤버룸중간객체생성");
@@ -86,7 +91,7 @@ public class ChatService {
 			chatmessage enterchat=chatmessage.builder()
 					.sender("System") //이렇게설정할까 
 					.member(System)//시스템일경우
-					.MessageType("Message")
+					.MessageType("System")
 					.message(member.getNickname()+"님이 입장하셨습니다!")
 					.room(chatroom)
 					.build();
@@ -161,6 +166,43 @@ public class ChatService {
 		Room room=roomrepo.findById(loomid).orElseThrow();
 		
 		return room;
+	}
+	
+	public Roomdata Roomdataget(Long roomid) {
+		Room room=roomrepo.findbyroomdata(roomid);
+		//멤버데이터가져오기
+		List<EzmemberDto> memberlist=room.getUserlist().stream()
+				.map(ul-> EzmemberDto.builder()
+						.userid(ul.getMember().getId())
+						.email(ul.getMember().getUsername())
+						.nickname(ul.getMember().getNickname())
+						.profileurl(ul.getMember().getProfileimg())
+						.build()
+						
+						
+						).collect(Collectors.toList());
+		
+		List<MeseageDto> chatdatas=room.getChatdata().stream().map(
+				c->MeseageDto.builder().id(c.getId())
+				.messagetype(c.getMessageType())
+				.message(c.getMessage())
+				.red(c.getCreatedDate())
+				.sender(EzmemberDto.builder()
+						.userid(c.getMember().getId())
+						.email(c.getMember().getUsername())
+						.nickname(c.getMember().getNickname())
+						.profileurl(c.getMember().getProfileimg())
+						.build())
+				.build()
+				)
+				.collect(Collectors.toList());
+		
+		return Roomdata.builder().roomid(room.getId())
+				.roomname(room.getRoomname())
+				.createred(room.getCreatedDate())
+				.memberlist(memberlist)
+				.chatdata(chatdatas)
+				.build();
 	}
 	//룸에서 유저 나가기
 	//@Transactional
@@ -244,7 +286,7 @@ public class ChatService {
 			chatmessage enterchat=chatmessage.builder()
 					.sender("System") //이렇게설정할까 
 					.member(System)//시스템일경우
-					.MessageType("Message")
+					.MessageType("System")
 					.message(entity.getNickname()+"님이 입장하셨습니다!")
 					.room(room)
 					.build();

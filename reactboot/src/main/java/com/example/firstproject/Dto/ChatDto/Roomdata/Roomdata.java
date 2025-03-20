@@ -5,6 +5,7 @@ import java.util.List;
 import com.example.firstproject.Dto.MessageDto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Roomdata {
 
 	private Long roomid;
@@ -26,7 +28,7 @@ public class Roomdata {
 	
 
 
-	private List<MessageDto> chatdata;
+	private List<MeseageDto> chatdata;
 	
 
 }

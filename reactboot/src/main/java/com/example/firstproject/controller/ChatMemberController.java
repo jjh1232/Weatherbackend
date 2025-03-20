@@ -23,6 +23,7 @@ import com.example.firstproject.Dto.ChatDto.ChatRoomDto;
 import com.example.firstproject.Dto.ChatDto.RoomlistDto;
 import com.example.firstproject.Dto.ChatDto.Roomuseradd;
 import com.example.firstproject.Dto.ChatDto.roomlistresponseDto;
+import com.example.firstproject.Dto.ChatDto.Roomdata.Roomdata;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.StompRoom.MemberRoom;
 import com.example.firstproject.Entity.StompRoom.Room;
@@ -169,6 +170,8 @@ public class ChatMemberController {
 	@GetMapping("/chatroomdataget")
 	public ResponseEntity chatroomdata(@RequestParam Long roomid){
 		log.info("방데이터가죠오기");
+		/* 기존코드가 1초느리다
+		long start1=System.currentTimeMillis();
 		Room room=chatservice.findbychatroom(roomid);
 		roomlistresponseDto roomdata=chatservice.roomdataget(room);
 		//이것도 룸에서 바로가져와도될듯 
@@ -179,7 +182,16 @@ public class ChatMemberController {
 		Map<String,Object> data=new HashMap<>();
 		data.put("roomdata", roomdata);
 		data.put("beforechat",beforechat);
-		return ResponseEntity.ok().body(data);
+		long end1=System.currentTimeMillis();
+		long res1=end1-start1;
+		System.out.println("기존시간:"+res1);
+		*/
+		long start2=System.currentTimeMillis();
+		Roomdata newdata=chatservice.Roomdataget(roomid);
+		long end2=System.currentTimeMillis();
+		long res2=end2-start2;
+		System.out.println("기존시간2:"+res2);
+		return ResponseEntity.ok().body(newdata);
 	}
 	
 	//채팅방나가기 
