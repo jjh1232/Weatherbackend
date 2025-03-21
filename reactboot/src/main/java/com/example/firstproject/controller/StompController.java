@@ -12,6 +12,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import com.example.firstproject.Dto.ChatDto.ChatResponseDto;
 import com.example.firstproject.Dto.ChatDto.stompchatDto;
+import com.example.firstproject.Dto.ChatDto.Roomdata.MeseageDto;
 import com.example.firstproject.Service.Followservice.FollowService;
 import com.example.firstproject.Service.chatService.ChatService;
 import com.example.firstproject.aop.NoLogging;
@@ -45,11 +46,10 @@ public class StompController {
 	//@Sendto("주소") //이걸로리턴으로 보낼수도있다고함
 	public void sendMessage(@DestinationVariable Long roomid,stompchatDto messageDto ) throws IllegalAccessException { //만든 챗메세지 dto와 @Header등으로 헤더정보나 메세지를 가져옴
 		log.info("해당챗방룸아이디 :"+roomid);
-		log.info("메세지발행Dto:"+messageDto.getMessage());
-		log.info("메세지발행Dto:"+messageDto.getSender());
+		
 		
 		//@PathVariable ("userid") String userid
-		ChatResponseDto dto=chatservice.chatsave(roomid,messageDto.getUsername(),messageDto.getSender(),messageDto.getMessageType(),messageDto.getMessage());
+		MeseageDto dto=chatservice.chatsave(roomid,messageDto);
 		
 		
 		template.convertAndSend("/sub/channel/"+roomid,dto);//해당하는 토픽에 구독한 주소,그리고 메세지를 전달 

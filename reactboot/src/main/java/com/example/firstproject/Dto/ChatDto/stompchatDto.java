@@ -1,5 +1,7 @@
 package com.example.firstproject.Dto.ChatDto;
 
+import com.example.firstproject.Dto.ChatDto.Roomdata.EzmemberDto;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,9 +9,9 @@ import lombok.Setter;
 @Setter
 public class stompchatDto {
 
-	private String username;
 	
-	private String sender;
+	
+	private EzmemberDto sender;
 	
 	private String message;
 	

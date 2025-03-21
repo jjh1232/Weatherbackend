@@ -643,7 +643,7 @@ NoticeEntity Entity=adminhandler.noticedetail(noticeid);
 		adminhandler.deleteroom(roomentity);
 		return roomentity.getId();
 	}
-	//채팅방디테일
+	//채팅방디테일 수정필요 매세지구조가바뀜==================================================
 	public AdminroomdetailDto roomdetail(Long roomid) throws IllegalAccessException {
 		Room roomentity=adminhandler.roomget(roomid).orElseThrow(()->new IllegalAccessException("룸없음"));
 		
@@ -651,10 +651,10 @@ NoticeEntity Entity=adminhandler.noticedetail(noticeid);
 		
 		for(chatmessage data:roomentity.getChatdata()) {
 			ChatResponseDto dto=ChatResponseDto.builder()
-					.roomId(data.getId())
+					.roomid(data.getId())
 					.messageType(data.getMessageType())
-					.userprofile(data.getMember().getProfileimg())
-					.writer(data.getSender())
+					//.userprofile(data.getMember().getProfileimg())
+					//.writer(data.getSender())
 					.message(data.getMessage())
 					.red(data.getCreatedDate())
 					.build();
