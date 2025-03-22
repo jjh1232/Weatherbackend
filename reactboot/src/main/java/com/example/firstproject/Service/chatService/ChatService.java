@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Repository;
@@ -111,12 +112,22 @@ public class ChatService {
 		
 		
 	}
+	//=========================redis로 유저정보캐쉬에저장해서 사용할경우=============================
+	private final RedisTemplate<String, Object> redistemplate;
 	
-	//메세지큐======================================================================
+	//메세지큐로 채팅방과부하관리======================================================================
 		private final Queue<chatmessage> messagequeue=new ConcurrentLinkedDeque<>();
 		private static final int BATCH_SIZE=100;
+		private static final int Quad_SIZE=50;
+		@Scheduled(fixedDelay=60000)//5초마다 이거 로직더수정할수있을거같음
+		//1분마다 체크해서 보내기 저장딜레이를줄이자
+		public void checkmessage() {
+			if(messagequeue.size()>=Quad_SIZE) {
+				batchSavemessage();
+			}
+		}
 		
-		@Scheduled(fixedDelay=50000)//5초마다 이거 로직더수정할수있을거같음
+		
 		public void batchSavemessage() {
 			List<chatmessage> messagesave=new ArrayList<>();
 			chatmessage message;
@@ -129,6 +140,7 @@ public class ChatService {
 				messagerepo.saveAll(messagesave);
 			}
 		}
+	//=======================================================================================
 	//챗데이터 db에저장  배치처리로 할까 생각했는데 멤버엔티티를 불러와야하는시점에서 배치는별로 레디스로 처리해보자
 	//프론트에서 dto정보만 받으면 되긴하니까 연습용으로 배치도 가능할듯함
 	public MeseageDto chatsave(Long roomid,stompchatDto mdto) throws IllegalAccessException {
@@ -164,7 +176,11 @@ public class ChatService {
 				
 		//메세지큐로해보자
 		//messagerepo.save(save);
-		messagequeue.offer(save); //메세지큐에저장
+		messagequeue.offer(save); 
+		  if (messagequeue.size() >= BATCH_SIZE) {
+			  batchSavemessage();
+	        }
+		//메세지큐에저장
 		/*
 		ChatResponseDto dto=ChatResponseDto.builder()
 				.userprofile(member.getProfileimg())
