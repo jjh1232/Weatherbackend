@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -113,22 +114,30 @@ public class ChatService {
 		
 	}
 	//=========================redis로 유저정보캐쉬에저장해서 사용할경우=============================
-	private final RedisTemplate<String, Object> redistemplate;
+	
+	 // 리스트에 메시지 저장
+   // redisTemplate.opsForList().rightPush("chat:room:" + roomId, message);
+    
+    // 해시에 메타데이터 저장
+   // redisTemplate.opsForHash().put("chat:meta", roomId, LocalDateTime.now());
+	//return redisTemplate.opsForList().range("chat:room:" + roomId, 0, -1);
 	
 	//메세지큐로 채팅방과부하관리======================================================================
 		private final Queue<chatmessage> messagequeue=new ConcurrentLinkedDeque<>();
 		private static final int BATCH_SIZE=100;
 		private static final int Quad_SIZE=50;
-		@Scheduled(fixedDelay=60000)//5초마다 이거 로직더수정할수있을거같음
+		@Scheduled(fixedDelay=5000)//5초마다 이거 로직더수정할수있을거같음
 		//1분마다 체크해서 보내기 저장딜레이를줄이자
 		public void checkmessage() {
 			if(messagequeue.size()>=Quad_SIZE) {
 				batchSavemessage();
 			}
+		
 		}
 		
 		
 		public void batchSavemessage() {
+			System.out.println("배치세이브잘되나");
 			List<chatmessage> messagesave=new ArrayList<>();
 			chatmessage message;
 			while((message= messagequeue.poll())!=null&&messagesave.size()<BATCH_SIZE) {
@@ -143,14 +152,43 @@ public class ChatService {
 	//=======================================================================================
 	//챗데이터 db에저장  배치처리로 할까 생각했는데 멤버엔티티를 불러와야하는시점에서 배치는별로 레디스로 처리해보자
 	//프론트에서 dto정보만 받으면 되긴하니까 연습용으로 배치도 가능할듯함
+		private final RedisTemplate<String, Object> redistemplate;
+		
+		private static final String keypre="member::";
+	@Transactional
 	public MeseageDto chatsave(Long roomid,stompchatDto mdto) throws IllegalAccessException {
 		log.info("디비저장서비스");
-		
+		//레디스캐시에서먼저조회 근데 본체는 연관관계떄매 저장이 어려움 때문에 Ez멤버로
+		String rediskey=keypre+mdto.getSender().getEmail();
+		EzmemberDto member=(EzmemberDto) redistemplate.opsForValue().get(rediskey);
+		if(member ==null) {
+			System.out.println("캐시에없어");
+		MemberEntity memberentity=memberrepo.findByUsername(mdto.getSender().getEmail()).orElseThrow(()->new IllegalAccessException("회원없음"));
+	
+		member=EzmemberDto.builder()
+				.email(memberentity.getUsername())
+				.nickname(memberentity.getNickname())
+				.profileurl(memberentity.getProfileimg())
+				.userid(memberentity.getId())
+				.build();
+		}
+		else {
+			System.out.println("캐시에있어"+member);
+		}
+		//레디스저장 키와 멤버값 시간두개인듯?
+		redistemplate.opsForValue().set(rediskey, member,1800,TimeUnit.SECONDS);
+		/*이후 레디스업데이트로직도 참고
+		 // 캐시 무효화
+        String redisKey = KEY_PREFIX + mdto.getEmail();
+        redisTemplate.delete(redisKey);
+		*/
 		Room room=roomrepo.findById(roomid).orElseThrow();
-		MemberEntity member=memberrepo.findByUsername(mdto.getSender().getEmail()).orElseThrow(()->new IllegalAccessException("회원없음"));
+	
+		//프록시객체가져오기 실제로셀렉트안가져옴
+		MemberEntity froxy=memberrepo.getReferenceById(member.getUserid());
 		
 		chatmessage save=chatmessage.builder()
-				.member(member)
+				.member(froxy)
 				.sender(member.getNickname())
 				.MessageType(mdto.getMessageType())
 				.message(mdto.getMessage())
@@ -166,10 +204,10 @@ public class ChatService {
 				.message(save.getMessage())
 				.messagetype(save.getMessageType())
 				.red(save.getCreatedDate())
-				.sender(EzmemberDto.builder().email(member.getUsername())
+				.sender(EzmemberDto.builder().email(member.getEmail())
 						.nickname(member.getNickname())
-						.profileurl(member.getProfileimg())
-						.userid(member.getId())
+						.profileurl(member.getProfileurl())
+						.userid(member.getUserid())
 						.build()
 						)
 				.build();
