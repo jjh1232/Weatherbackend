@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -30,6 +31,9 @@ import com.example.firstproject.Dto.ChatDto.AdminroomdetailDto;
 import com.example.firstproject.Dto.ChatDto.ChatResponseDto;
 import com.example.firstproject.Dto.ChatDto.ChatRoomDto;
 import com.example.firstproject.Dto.ChatDto.roomlistresponseDto;
+import com.example.firstproject.Dto.ChatDto.Roomdata.EzmemberDto;
+import com.example.firstproject.Dto.ChatDto.Roomdata.MeseageDto;
+import com.example.firstproject.Dto.ChatDto.Roomdata.Roomdata;
 import com.example.firstproject.Dto.Comment.CommentDto;
 import com.example.firstproject.Dto.Comment.Commentform;
 import com.example.firstproject.Dto.userdataDto.LoginHistoryDto;
@@ -644,31 +648,41 @@ NoticeEntity Entity=adminhandler.noticedetail(noticeid);
 		return roomentity.getId();
 	}
 	//채팅방디테일 수정필요 매세지구조가바뀜==================================================
-	public AdminroomdetailDto roomdetail(Long roomid) throws IllegalAccessException {
-		Room roomentity=adminhandler.roomget(roomid).orElseThrow(()->new IllegalAccessException("룸없음"));
+	public Roomdata roomdetail(Long roomid) throws IllegalAccessException {
+		Room room=adminhandler.roomget(roomid).orElseThrow(()->new IllegalAccessException("룸없음"));
 		
-		List<ChatResponseDto> list=new ArrayList<>();
+		List<EzmemberDto> memberlist=room.getUserlist().stream()
+				.map(ul-> EzmemberDto.builder()
+						.userid(ul.getMember().getId())
+						.email(ul.getMember().getUsername())
+						.nickname(ul.getMember().getNickname())
+						.profileurl(ul.getMember().getProfileimg())
+						.build()
+						
+						
+						).collect(Collectors.toList());
 		
-		for(chatmessage data:roomentity.getChatdata()) {
-			ChatResponseDto dto=ChatResponseDto.builder()
-					.roomid(data.getId())
-					.messageType(data.getMessageType())
-					//.userprofile(data.getMember().getProfileimg())
-					//.writer(data.getSender())
-					.message(data.getMessage())
-					.red(data.getCreatedDate())
-					.build();
-			list.add(dto);
-		}
+		List<MeseageDto> chatdatas=room.getChatdata().stream().map(
+				c->MeseageDto.builder().id(c.getId())
+				.messagetype(c.getMessageType())
+				.message(c.getMessage())
+				.red(c.getCreatedDate())
+				.sender(EzmemberDto.builder()
+						.userid(c.getMember().getId())
+						.email(c.getMember().getUsername())
+						.nickname(c.getMember().getNickname())
+						.profileurl(c.getMember().getProfileimg())
+						.build())
+				.build()
+				)
+				.collect(Collectors.toList());
 		
-		AdminroomdetailDto dto=AdminroomdetailDto.builder().roomid(roomentity.getId())
-				.roomname(roomentity.getRoomname())
-				.namelist(roomentity.getUserlist())
-				.beforechat(list)
-				.time(roomentity.getCreatedDate())
+		return Roomdata.builder().roomid(room.getId())
+				.roomname(room.getRoomname())
+				.createred(room.getCreatedDate())
+				.memberlist(memberlist)
+				.chatdata(chatdatas)
 				.build();
-		
-		return dto;
 		
 		
 		

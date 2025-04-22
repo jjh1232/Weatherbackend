@@ -24,6 +24,7 @@ import com.example.firstproject.Dto.MemberDto;
 import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.ChatDto.AdminroomdetailDto;
 import com.example.firstproject.Dto.ChatDto.roomlistresponseDto;
+import com.example.firstproject.Dto.ChatDto.Roomdata.Roomdata;
 import com.example.firstproject.Dto.Comment.CommentDto;
 import com.example.firstproject.Dto.Comment.Commentform;
 import com.example.firstproject.Dto.blockDto.Adminnoticedecleresponsedto;
@@ -243,7 +244,7 @@ public class admincontroller {
 	@GetMapping("/room/{roomid}")
 	public ResponseEntity roomdetail(@PathVariable Long roomid) throws IllegalAccessException {
 		System.out.println("채팅방디테일들어가기on");
-		AdminroomdetailDto dto=adminservice.roomdetail(roomid);
+		Roomdata dto=adminservice.roomdetail(roomid);
 		
 		
 		return ResponseEntity.ok(dto);

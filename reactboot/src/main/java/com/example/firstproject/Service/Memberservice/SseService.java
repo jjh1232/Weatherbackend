@@ -1,12 +1,18 @@
 package com.example.firstproject.Service.Memberservice;
 
+
 import java.io.IOException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import com.example.firstproject.Dto.userdataDto.NotificationDto;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.Notification;
 import com.example.firstproject.Repository.EmitterRepository;
@@ -29,6 +35,7 @@ public class SseService {
 		public SseEmitter SSEcon(Long userid) {
 			// TODO Auto-generated method stub
 			//새로운 SseEmitter만든다
+			System.out.println("에미터실행id:"+userid);
 			SseEmitter sseEmitter=new SseEmitter(360000000*100*60L); //타임아웃시간넣어줄수있음
 			
 			//유저아이디로 SseEmitter를저장한다
@@ -168,6 +175,22 @@ public class SseService {
 		        }, () -> System.out.println("No emitter found"));
 		        
 		}
+		}
+		public Page<NotificationDto> getusernotifi(MemberEntity member,int page) {
+			//페이지로 10개씩가져오자
+			Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION,"created_date"));
+			Page<Notification> notifi=notificationrepository.findByMemberId(member,pageable);
+			
+			Page<NotificationDto> dtolist=notifi.map(m->NotificationDto.builder()
+														.id(m.getId())
+														.message(m.getMessage())
+														.red(m.getCreatedDate())
+														.noticeid(m.getNoticeid())
+														.isread(m.isReading())
+														.build());
+			
+			return dtolist;
+			
 		}
 		/*
 		//댓글알림-게시글 작성자에게
