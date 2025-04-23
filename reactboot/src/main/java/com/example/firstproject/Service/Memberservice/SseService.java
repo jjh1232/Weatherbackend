@@ -176,11 +176,13 @@ public class SseService {
 		        
 		}
 		}
-		public Page<NotificationDto> getusernotifi(MemberEntity member,int page) {
+		public Page<NotificationDto> getusernotifi(Long memberid,int page) {
 			//페이지로 10개씩가져오자
-			Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION,"created_date"));
-			Page<Notification> notifi=notificationrepository.findByMemberId(member,pageable);
-			
+			System.out.println("서비스시작");
+			Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION,"createdDate"));
+			System.out.println("서비페이지리퀘스트");
+			Page<Notification> notifi=notificationrepository.findByMemberId(memberid,pageable);
+			System.out.println("서비스데이터가져오기");
 			Page<NotificationDto> dtolist=notifi.map(m->NotificationDto.builder()
 														.id(m.getId())
 														.message(m.getMessage())

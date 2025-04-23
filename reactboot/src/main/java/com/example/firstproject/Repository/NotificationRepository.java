@@ -12,7 +12,7 @@ import com.example.firstproject.Entity.Notification;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long>{
 
-	Page<Notification> findByMemberId(MemberEntity member, Pageable pageable);
+	Page<Notification> findByMemberId(Long memberid, Pageable pageable);
 
 	
 }

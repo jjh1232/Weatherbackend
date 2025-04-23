@@ -51,12 +51,13 @@ public class SSEController {
 	}
 	//노티피케이션도 에미터에서하자
 	@GetMapping("/notification")
-	public ResponseEntity usernotifi(Authentication authentication,@RequestParam("page") int page){
+	public ResponseEntity usernotifi(Authentication authentication,@RequestParam(name = "page", defaultValue = "1") int page){
 PrincipalDetails cipal=(PrincipalDetails) authentication.getPrincipal();
 		
 		MemberEntity member=cipal.getMember();
-		Page<NotificationDto> notilist=sseservice.getusernotifi(member, page);
-		
+		System.out.println("어디가문제임");
+		Page<NotificationDto> notilist=sseservice.getusernotifi(member.getId(), page);
+		System.out.println("어디가문제임1");
 		return ResponseEntity.ok(notilist);
 		
 		
