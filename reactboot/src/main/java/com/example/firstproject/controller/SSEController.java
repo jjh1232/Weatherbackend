@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import com.example.firstproject.Dto.userdataDto.NotifiResult;
 import com.example.firstproject.Dto.userdataDto.NotificationDto;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Repository.EmitterRepository;
@@ -56,11 +57,22 @@ PrincipalDetails cipal=(PrincipalDetails) authentication.getPrincipal();
 		
 		MemberEntity member=cipal.getMember();
 		System.out.println("어디가문제임");
-		Page<NotificationDto> notilist=sseservice.getusernotifi(member.getId(), page);
+		NotifiResult<NotificationDto> notilist=sseservice.getusernotifi(member.getId(), page);
 		System.out.println("어디가문제임1");
 		return ResponseEntity.ok(notilist);
 		
 		
+	}
+	
+	@GetMapping("/notificationcount")
+	public ResponseEntity notificount(Authentication authentication) {
+PrincipalDetails cipal=(PrincipalDetails) authentication.getPrincipal();
+		
+		MemberEntity member=cipal.getMember();
+		
+		Long count=sseservice.notificationcount(member.getId());
+		
+		return ResponseEntity.ok(count);
 	}
 	@GetMapping("/ssetest")
 	public void sse(Long id) {

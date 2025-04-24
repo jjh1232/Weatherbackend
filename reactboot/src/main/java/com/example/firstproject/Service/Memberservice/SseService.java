@@ -2,6 +2,7 @@ package com.example.firstproject.Service.Memberservice;
 
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import com.example.firstproject.Dto.userdataDto.NotifiResult;
 import com.example.firstproject.Dto.userdataDto.NotificationDto;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.Notification;
@@ -176,23 +178,33 @@ public class SseService {
 		        
 		}
 		}
-		public Page<NotificationDto> getusernotifi(Long memberid,int page) {
+		public NotifiResult<NotificationDto> getusernotifi(Long memberid,int page) {
 			//페이지로 10개씩가져오자
 			System.out.println("서비스시작");
 			Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION,"createdDate"));
 			System.out.println("서비페이지리퀘스트");
-			Page<Notification> notifi=notificationrepository.findByMemberId(memberid,pageable);
+			List<Notification> notifi=notificationrepository.findByMemberId(memberid,pageable);
 			System.out.println("서비스데이터가져오기");
-			Page<NotificationDto> dtolist=notifi.map(m->NotificationDto.builder()
+			//리스트는내장된 map메소드가페이지와다르게없다 스트림을사용
+			List<NotificationDto> dtolist=notifi.stream().map(m->NotificationDto.builder()
 														.id(m.getId())
 														.message(m.getMessage())
 														.red(m.getCreatedDate())
 														.noticeid(m.getNoticeid())
 														.isread(m.isReading())
-														.build());
+														.build())
+														.toList();
+			//페이지객체보다따로가더좋다네..
+			Long totalcount=notificationrepository.notificount(memberid);
+			int totalpages=(int) Math.ceil((double) totalcount/10);
+			return new NotifiResult<>(dtolist, page, totalpages, totalcount);
 			
-			return dtolist;
+		}
+		//카운트
+		public Long notificationcount(Long userid) {
 			
+			
+			return notificationrepository.notificount(userid);
 		}
 		/*
 		//댓글알림-게시글 작성자에게
