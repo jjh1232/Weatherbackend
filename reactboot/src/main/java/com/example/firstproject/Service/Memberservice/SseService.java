@@ -2,8 +2,11 @@ package com.example.firstproject.Service.Memberservice;
 
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -205,6 +208,14 @@ public class SseService {
 			
 			
 			return notificationrepository.notificount(userid);
+		}
+		
+		//모두읽기처리
+		@Transactional //트랜잭션필수라고함;벌크쿼리할떄
+		public void readallnotify(Long memberid) {
+			LocalDateTime current=LocalDateTime.now();
+			//시간 넣기 포맷방식떄매 이상해서 없앳음 필요없긴할듯
+			notificationrepository.notifireadall(memberid);
 		}
 		/*
 		//댓글알림-게시글 작성자에게

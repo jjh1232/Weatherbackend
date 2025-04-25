@@ -1,10 +1,12 @@
 package com.example.firstproject.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -21,4 +23,8 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 	@Query("select COUNT(n.id) FROM Notification n where n.member.id=:memberid")
 	Long notificount(Long memberid);
 	
+	@Modifying //쿼리상에서수정추가시꼭필요하다함
+	@Query("Update Notification n SET n.reading=true where n.member.id=:memberid AND "
+			+ "n.reading = false")//And n.createdDate <=:currenttime") 이거시간String으로저장되서 비효율적이라함
+	void notifireadall(Long memberid);
 }

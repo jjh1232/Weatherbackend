@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -73,6 +74,16 @@ PrincipalDetails cipal=(PrincipalDetails) authentication.getPrincipal();
 		Long count=sseservice.notificationcount(member.getId());
 		
 		return ResponseEntity.ok(count);
+	}
+	
+	@PostMapping("/notification/readall")
+	public void notifireadall(Authentication authenti) {
+PrincipalDetails cipal=(PrincipalDetails) authenti.getPrincipal();
+		
+		MemberEntity member=cipal.getMember();
+		System.out.println("리드올 on");
+		sseservice.readallnotify(member.getId());
+		
 	}
 	@GetMapping("/ssetest")
 	public void sse(Long id) {
