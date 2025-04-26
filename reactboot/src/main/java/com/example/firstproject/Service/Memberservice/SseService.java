@@ -72,7 +72,7 @@ public class SseService {
 				System.out.println("현재 해당유저는 접속중이지않습니다!");
 				 Notification notification=Notification.builder()
 	                		.noticeid(noticeid)
-	                		.message("회원님의 "+noticeid+"번글" +noticetitle +"에 새로운 댓글이 달렸습니다!")
+	                		.message(noticeid+"번글" +noticetitle +"에 새로운 댓글이 달렸습니다!")
 	                		.member(tomember)
 	                		.build();
 	                //db저장
@@ -112,11 +112,11 @@ public class SseService {
 	                		SseEmitter.event(). 
 	                		id(userId.toString())//해당이벤트의 아이디설정
 	                		.name("message").//해당이벤트의이름설정
-	                		data("회원님의 "+noticeid+"번글" +noticetitle +"에 새로운 댓글이 달렸습니다!"));//
+	                		data(noticeid+"번글" +noticetitle +"에 새로운 댓글이 달렸습니다!"));//
 	                
 	                Notification notification=Notification.builder()
 	                		.noticeid(noticeid)
-	                		.message("회원님의 "+noticeid+"번글" +noticetitle +"에 새로운 댓글이 달렸습니다!")
+	                		.message(noticeid+"번글" +noticetitle +"에 새로운 댓글이 달렸습니다!")
 	                		.member(tomember)
 	                		.build();
 	                //db저장
@@ -142,7 +142,7 @@ public class SseService {
 				System.out.println("현재 해당유저는 접속중이지않습니다!");
 				 Notification notification=Notification.builder()
 	                		.noticeid(noticeid)
-	                		.message("회원님이" +noticetitle +"에 작성한 댓글에 새로운 대댓글이 달렸습니다!")
+	                		.message(noticeid+"번글"+noticetitle +"에 작성한 댓글에 새로운 대댓글이 달렸습니다!")
 	                		.member(tomember)
 	                		.build();
 	                
@@ -158,11 +158,11 @@ public class SseService {
 		                		SseEmitter.event(). 
 		                		id(userid.toString())//해당이벤트의 아이디설정
 		                		.name("message").//해당이벤트의이름설정
-		                		data("회원님이" +noticetitle +"에 작성한 댓글에 새로운 대댓글이 달렸습니다!"));//
+		                		data(noticeid+"번글"+noticetitle +"에 작성한 댓글에 새로운 대댓글이 달렸습니다!"));//
 		                
 		                Notification notification=Notification.builder()
 		                		.noticeid(noticeid)
-		                		.message("회원님이" +noticetitle +"에 작성한 댓글에 새로운 대댓글이 달렸습니다!")
+		                		.message(noticeid+"번글"+noticetitle +"에 작성한 댓글에 새로운 대댓글이 달렸습니다!")
 		                		.member(tomember)
 		                		.build();
 		                

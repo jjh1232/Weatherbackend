@@ -17,7 +17,8 @@ public interface CommentRepository extends JpaRepository<CommentEntity,Long>{
 	
 	@Query(value="Select * from comment where notice_id =:noticenum",nativeQuery=true)
 	List<CommentEntity> findbynoticenum(@Param("noticenum") Long num);
-
+	
+	
 
 	Page<CommentEntity> findByUsernameContaining(Pageable page,String username);
 	

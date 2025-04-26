@@ -223,7 +223,14 @@ public class MainController {
 		
 		
 	}
-	
+	//코멘트 가져오기
+	@GetMapping("/open/commentshow")
+	public ResponseEntity<Page<CommentDto>> commentshow(@RequestParam Long noticeid,@RequestParam(defaultValue = "1") int page){
+		
+		Page<CommentDto> dto=noticeservice.showcomments(noticeid, page);
+		
+		return ResponseEntity.ok(dto);
+	}
 	//실제수정
 	@PutMapping("/noticeupdate/{num}")
 	public NoticeDto update(@PathVariable Long num,@Validated @RequestBody NoticeUpdate update) {

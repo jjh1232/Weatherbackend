@@ -240,6 +240,16 @@ public class NoticeHandlerImpl implements NoticeHandler{
 		Page<NoticeEntity> noticeEntity=noticerepository.findbyidall(userid,page);
 		return noticeEntity;
 	}
+
+
+
+	@Override
+	public Page<CommentEntity> showcomments(Long noticeid, Pageable pageable) {
+		// TODO Auto-generated method stub
+		Page<CommentEntity> comments=commentrepository.findByNoticeIdContaining(pageable, noticeid);
+		
+		return comments;
+	}
 	 
 
 }

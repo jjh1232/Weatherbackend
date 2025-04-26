@@ -64,4 +64,8 @@ public interface NoticeService {
 	public Page<NoticeDto> loginnoticeget(Long userid,int page);
 	
 	public Page<NoticeDto> loginnoticesearchget(Long userid,String option,String content,int page);
+
+
+	public Page<CommentDto> showcomments(Long noticeid,int page);
+
 }

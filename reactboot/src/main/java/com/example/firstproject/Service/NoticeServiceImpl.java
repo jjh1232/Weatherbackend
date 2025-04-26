@@ -22,6 +22,7 @@ import java.util.UUID;
 
 import javax.transaction.Transactional;
 
+import org.attoparser.ICommentHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
@@ -806,6 +807,27 @@ public class NoticeServiceImpl implements NoticeService {
 		System.out.println("리스트채로:"+(end2-start2/1000)+"초걸림");
 			*/
 		return null;
+	}
+
+	@Override
+	public Page<CommentDto> showcomments(Long noticeid,int page) {
+		// TODO Auto-generated method stub
+		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"created_date"));
+		Page<CommentEntity> entitylist=noticehandler.showcomments(noticeid, pageable);
+		Page<CommentDto> dtolist=entitylist.map((m)->CommentDto.builder()
+															.id(m.getId())
+															.noticenum(noticeid)//이거 Notice자체를가져올거같아서;
+															.depth(m.getDepth())
+															.cnum(m.getCnum())
+															.username(m.getUsername())
+															.nickname(m.getNickname())
+															.text(m.getText())
+															.redtime(m.getCreatedDate())
+															.userprofile(m.getMember().getProfileimg())
+															.build()
+																);
+				
+		return dtolist;
 	}
 	}
 	 
