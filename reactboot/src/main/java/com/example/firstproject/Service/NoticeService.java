@@ -67,5 +67,7 @@ public interface NoticeService {
 
 
 	public Page<CommentDto> showcomments(Long noticeid,int page);
+	
+
 
 }

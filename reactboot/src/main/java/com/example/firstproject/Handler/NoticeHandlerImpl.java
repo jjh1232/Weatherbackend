@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.NoticeDtointer;
+import com.example.firstproject.Dto.Comment.CommentDto;
+import com.example.firstproject.Dto.Comment.Testcom;
 import com.example.firstproject.Entity.CommentEntity;
 import com.example.firstproject.Entity.FavoriteEntity;
 import com.example.firstproject.Entity.MemberEntity;
@@ -246,10 +248,24 @@ public class NoticeHandlerImpl implements NoticeHandler{
 	@Override
 	public Page<CommentEntity> showcomments(Long noticeid, Pageable pageable) {
 		// TODO Auto-generated method stub
-		Page<CommentEntity> comments=commentrepository.findByNoticeIdContaining(pageable, noticeid);
+	Page<CommentEntity> comments=commentrepository.findByNoticeIdContaining(pageable, noticeid);
 		
+	
 		return comments;
 	}
+
+
+
+	@Override
+	public Page<CommentDto> showdirectc(Long noticeid, Pageable pageable) {
+		// TODO Auto-generated method stub
+		System.out.println("문제구간찾기핸들러시작");
+		//Page<Testcom> comments=commentrepository.showcomments(pageable);
+		Page<CommentDto> dto=commentrepository.showcomments(pageable,noticeid);
+		System.out.println("문제구간핸들러끝");
+		return dto;
+	}
+	
 	 
 
 }

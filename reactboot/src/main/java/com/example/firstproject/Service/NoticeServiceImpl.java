@@ -812,7 +812,9 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public Page<CommentDto> showcomments(Long noticeid,int page) {
 		// TODO Auto-generated method stub
-		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"created_date"));
+		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"createdDate"));
+		System.out.println("문제구간찾기");
+		/*
 		Page<CommentEntity> entitylist=noticehandler.showcomments(noticeid, pageable);
 		Page<CommentDto> dtolist=entitylist.map((m)->CommentDto.builder()
 															.id(m.getId())
@@ -826,7 +828,9 @@ public class NoticeServiceImpl implements NoticeService {
 															.userprofile(m.getMember().getProfileimg())
 															.build()
 																);
-				
+				*/
+		Page<CommentDto> dtolist=noticehandler.showdirectc(noticeid, pageable);
+		System.out.println("문제구간찾기디비까지꺼내옴");
 		return dtolist;
 	}
 	}

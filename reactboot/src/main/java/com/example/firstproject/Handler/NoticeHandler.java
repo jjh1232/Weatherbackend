@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.NoticeDtointer;
+import com.example.firstproject.Dto.Comment.CommentDto;
 import com.example.firstproject.Entity.CommentEntity;
 import com.example.firstproject.Entity.FavoriteEntity;
 import com.example.firstproject.Entity.MemberEntity;
@@ -55,4 +56,6 @@ public interface NoticeHandler {
 	public Page<NoticeEntity> findbyidall(Long userid,Pageable pageable);
 	
 	public Page<CommentEntity> showcomments(Long userid,Pageable pageable);
+	
+	public Page<CommentDto> showdirectc(Long noticeid,Pageable pageable);
 }
