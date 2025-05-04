@@ -188,6 +188,8 @@ public class NoticeServiceImpl implements NoticeService {
 			 			.sky(form.getSky())
 			 			.pty(form.getPty())
 			 			.rain(form.getRain())
+			 			.reh(form.getReh())
+			 			.wsd(form.getWsd())
 			 			.build();
 	 log.info(form.getFiles().toString());
 	 if(form.getFiles() != null) {
@@ -377,7 +379,7 @@ public class NoticeServiceImpl implements NoticeService {
 						Entity.getComments(),
 						Entity.getFiles(), 
 						Entity.getLikeuser().size(),
-						Entity.getTemp(),Entity.getSky(),Entity.getPty(),Entity.getRain()
+						Entity.getTemp(),Entity.getSky(),Entity.getPty(),Entity.getRain(),Entity.getReh(),Entity.getWsd()
 								);
 		
 		

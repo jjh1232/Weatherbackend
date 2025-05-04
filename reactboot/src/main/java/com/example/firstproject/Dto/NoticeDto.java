@@ -35,6 +35,8 @@ public class NoticeDto {
 	private String sky;
 	private String pty;
 	private String rain;
+	private String reh;
+	private String wsd;
 	private boolean likeusercheck;
 	private String red;
 	private String userprofile;
@@ -57,6 +59,8 @@ public class NoticeDto {
 		 sky=entity.getSky();
 		 pty=entity.getPty();
 		 rain=entity.getRain();
+		 reh=entity.getReh();
+		 wsd=entity.getWsd();
 		 userprofile=entity.getMember().getProfileimg();
 		 declaircount=entity.getDecles().size();
 		 detachfiles=entity.getFiles();

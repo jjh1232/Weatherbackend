@@ -12,8 +12,11 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.Cache;
 import javax.transaction.Transactional;
@@ -140,6 +143,52 @@ public class WeatherServiceimpl implements WeatherService{
 		}
 		System.out.println(weatherresponse.toString());
 		//Map<String,Object> info=new HashMap<>();
+		Set<String> validCategori=Set.of("SKY","PTY","RN1","T1H","REH","WSD");
+		List<WeatherDataDto> item= weatherresponse.getResponse().getBody().getItems().getItem().stream()
+												  .filter(data->validCategori.contains(data.getCategory()))
+												  .map(data->WeatherDataDto.builder()
+														  .category(data.getCategory())
+														  .value(data.getFcstValue())
+														  .date(data.getFcstDate())
+														  .time(data.getFcstTime())
+														  .build())
+												  .collect(Collectors.toList());
+												  
+		
+		//데이터를 맵으로 받으면 시간에따라 분배가피ㅕㄴ하다
+		Map<String,frontweather> weathermap=new LinkedHashMap<>();
+		
+		//데이터합치기
+		for(WeatherDataDto wea:item) {
+			String key=wea.getTime();
+			//맵의기능 키가 있으면 넣고 없으면 생성 2번째인자밸류를 키가 없을시 넣는다 있으면 아무것도안함
+			weathermap.putIfAbsent(key, new frontweather()); 
+			
+			//fw를끄낸다
+			frontweather fw=weathermap.get(key);
+			
+			switch (wea.getCategory()) {
+	        case "SKY" -> fw.setSKY(wea.getValue());
+	        case "PTY" -> fw.setPTY(wea.getValue());
+	        case "RN1" -> fw.setRN1(wea.getValue());
+	        case "REH" -> fw.setREH(wea.getValue());
+	        case "WSD" -> fw.setWSD(wea.getValue());
+	        case "T1H" -> {
+	            fw.setT1H(wea.getValue());
+	            fw.setDate(wea.getDate());
+	            fw.setTime(wea.getTime());
+	        }
+	    }
+			// 강수형태(PTY) 코드 : (초단기) 없음(0), 비(1), 비/눈(2), 눈(3), 빗방울(5), 빗방울눈날림(6), 눈날림(7) 
+			//RN! 1시간강수량
+			//- 하늘상태(SKY) 코드 : 맑음(1), 구름많음(3), 흐림(4)
+			//T1H 온도
+			//REH 습도
+			//WSD 풍속 
+		}
+		// 3. 결과 리스트로 변환 (시간순 정렬) 맵의 밸류 가들어감 여기선 객체기때문에 List로간다
+		List<frontweather> time = new ArrayList<>(weathermap.values());
+		/*간소화전 하드코딩..
 		List<WeatherDataDto> item=new ArrayList();
 		//String strnow=simpleformattime.format(currentdate);
 		for(int i=0;i<weatherresponse.getResponse().getBody().getItems().getItem().size();i++) {
@@ -148,12 +197,7 @@ public class WeatherServiceimpl implements WeatherService{
 					||weatherresponse.getResponse().getBody().getItems().getItem().get(i).getCategory().equals("REH")||weatherresponse.getResponse().getBody().getItems().getItem().get(i).getCategory().equals("WSD")
 					) {
 				
-				// 강수형태(PTY) 코드 : (초단기) 없음(0), 비(1), 비/눈(2), 눈(3), 빗방울(5), 빗방울눈날림(6), 눈날림(7) 
-				//RN! 1시간강수량
-				//- 하늘상태(SKY) 코드 : 맑음(1), 구름많음(3), 흐림(4)
-				//T1H 온도
-				//REH 습도
-				//WSD 풍속 
+				
 				String category=weatherresponse.getResponse().getBody().getItems().getItem().get(i).getCategory();
 				String value=weatherresponse.getResponse().getBody().getItems().getItem().get(i).getFcstValue();
 				String date=weatherresponse.getResponse().getBody().getItems().getItem().get(i).getFcstDate();
@@ -169,6 +213,7 @@ public class WeatherServiceimpl implements WeatherService{
 			}
 			
 		}
+		
 			//for문끝 여기서가공하는게나을듯 맵으로하는게나을듯?
 			List<frontweather> time=new ArrayList<>();
 			frontweather data1=new frontweather();
@@ -319,6 +364,8 @@ public class WeatherServiceimpl implements WeatherService{
 			time.add(data4);
 			time.add(data5);
 			time.add(data6);
+	
+		*/
 		System.out.println("날씨데이터정리끝"+time);
 		return time;
 	}
