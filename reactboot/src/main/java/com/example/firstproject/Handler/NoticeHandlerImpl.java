@@ -265,6 +265,15 @@ public class NoticeHandlerImpl implements NoticeHandler{
 		System.out.println("문제구간핸들러끝");
 		return dto;
 	}
+
+
+
+	@Override
+	public List<Long> favoritenoticeids(Long userid, List<Long> noticeids) {
+		// TODO Auto-generated method stub
+		List<Long> result=likerepository.findfavoriteids(userid,noticeids);
+		return result;
+	}
 	
 	 
 

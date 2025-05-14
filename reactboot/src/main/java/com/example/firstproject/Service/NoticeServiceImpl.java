@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -768,15 +770,21 @@ public class NoticeServiceImpl implements NoticeService {
 		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
 		Page<NoticeEntity> entitylist=noticehandler.read(pageable);
 		System.out.println("서비스시작");
-		/*
-		long start1=System.currentTimeMillis();
-		List<NoticeblockEntity> blocklist=blockhandler.getuserblock(userid);
-		long end1=System.currentTimeMillis();
-		*/
+		
+		//아이디추출
+		List<Long> noticeids=entitylist.getContent().stream()
+				.map(NoticeEntity::getNoticeid)
+				.collect(Collectors.toList());
+		
+		//위정보로 좋아요엔티티가져오기
+		List<Long> likenoticeids=noticehandler.favoritenoticeids(userid, noticeids);
+	
 		//이게 Long이돌아야하다보니 이렇게가져오는게나은듯
 		long start2=System.currentTimeMillis();
 		List<Long> blocklistid=blockhandler.getblocknoticenum(userid);
 		long end2=System.currentTimeMillis();
+		
+		//좋아요도똑같이하면될듯
 		
 		//System.out.println("리스트채로:"+(end1-start1/1000)+"초걸림");
 		System.out.println("리스트채로:"+(end2-start2/1000)+"초걸림");
@@ -785,7 +793,7 @@ public class NoticeServiceImpl implements NoticeService {
 			NoticeDto dto=new NoticeDto(m);
 			
 			dto.setIsblock(blocklistid.contains(m.getNoticeid()));
-			
+			dto.setLikeusercheck(likenoticeids.contains(m.getNoticeid()));
 			return dto;
 		});
 		return dtolist;

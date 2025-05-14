@@ -1,5 +1,6 @@
 package com.example.firstproject.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -23,5 +24,10 @@ public interface LikeRepository extends JpaRepository<FavoriteEntity,Long> {
 	
 	Page<FavoriteEntity> findByMember(MemberEntity member,Pageable pageable);
 	
+	//@Query(value = "select f.noticeid from FavoriteEntity f where f.member.id =:userid")
+	//public List<Long> userblocknoticeid(Long userid);
 	
+	//특정쿼리만 받으려면 jpa문으론힘듬 때문에 쿼리사용
+	@Query(value= "select f.notice.id from FavoriteEntity f where f.member.id=:userid and f.notice.id in :noticeids")
+	public List<Long> findfavoriteids(Long userid,List<Long>noticeids);
 }

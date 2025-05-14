@@ -52,6 +52,8 @@ public interface NoticeHandler {
 	public void favoritedelete(FavoriteEntity favorite);
 
 	public Page<FavoriteEntity> favoritenoticefind(MemberEntity member,Pageable pageable);
+	
+	public List<Long> favoritenoticeids(Long userid,List<Long> noticeids);
 
 	public Page<NoticeEntity> findbyidall(Long userid,Pageable pageable);
 	
