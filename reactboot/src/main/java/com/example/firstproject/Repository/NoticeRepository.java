@@ -77,4 +77,10 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 	Page<NoticeEntity> findbyidall(Long userid, Pageable page);
 	
 	Page<NoticeEntity> findByMember(MemberEntity member,Pageable page);
+	
+	//좋아요한게시글다이렉트 dto프로덕션이 젤좋은데 일단 fetch조인도사용해봄 이거 영속화해서 get시바로가져옴 근데 페이지객체랑쓰려면 
+	//카운트쿼리작성해야함 
+	@Query(value="select n from notice n JOIN FETCH n.member join n.likeuser f where f.member=:member",
+			countQuery="select count(n) from notice n join n.likeuser f where f.member=:member" )
+	Page<NoticeEntity> getfavoritenotice(MemberEntity member,Pageable page);
 }

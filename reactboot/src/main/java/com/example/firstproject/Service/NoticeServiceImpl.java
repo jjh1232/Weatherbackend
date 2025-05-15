@@ -111,7 +111,7 @@ public class NoticeServiceImpl implements NoticeService {
 	}
 
 	@Override
-	public Page<NoticeDto> search(String option, String content,int page) {
+	public Page<NoticeDto> search(Long loginid,String option, String content,int page) {
 		// TODO Auto-generated method stub
 		log.info("서비스시작"+option);
 		PageRequest pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
@@ -711,8 +711,31 @@ public class NoticeServiceImpl implements NoticeService {
 
 	//========================좋아요한 글만가져오기=================================
 	@Override
-	public  Map<String,Object> favoritenotice(MemberEntity member, Pageable pageable) {
+	public  Page<NoticeDto> favoritenotice(MemberEntity member, Pageable pageable) {
 		// TODO Auto-generated method stub
+		//좋아요엔티티를 구지 건드릴 필요가 없는듯? 조인으로 바로 가져오자
+		Page<NoticeEntity> favoritelist=noticehandler.getfavoritelist(member,pageable);
+		Page<NoticeDto> dtolist=favoritelist.map((m)->NoticeDto.builder()
+													.num(m.getNoticeid())
+													.username(m.getNoticeuser())
+													.nickname(m.getNoticenick())
+													.title(m.getTitle())
+													.text(m.getText())
+													.temp(m.getTemp())
+													.sky(m.getSky())
+													.pty(m.getPty())
+													.rain(m.getRain())
+													.reh(m.getReh())
+													.wsd(m.getWsd())
+													.likes(m.getLikeuser().size())
+													.likeusercheck(true)
+													.red(m.getRed())
+													.userprofile(m.getMember().getProfileimg())
+													.detachfiles(m.getFiles())
+													.build()
+					);
+		return dtolist;
+		/*
 		 	Page<FavoriteEntity> followlist=noticehandler.favoritenoticefind(member, pageable);
 		 	System.out.println("좋아요글서비스단어떻게적용되나보자");
 		 	
@@ -760,6 +783,7 @@ public class NoticeServiceImpl implements NoticeService {
 		 	data.put("totalpage", followlist.getTotalPages());
 		 	data.put("notice", pagedto);
 		return data;
+		*/
 	}
 
 	

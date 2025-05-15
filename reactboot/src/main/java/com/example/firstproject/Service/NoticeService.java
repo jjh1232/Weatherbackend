@@ -39,7 +39,7 @@ public interface NoticeService {
 	
 	public List<CommentDto> commentget(int num);
 	
-	public Page<NoticeDto> search(String option,String content,int page);
+	public Page<NoticeDto> search(Long loginid,String option,String content,int page);
 	
 	public void commentupdate(Long id,String email,String text);
 	
@@ -59,7 +59,7 @@ public interface NoticeService {
 	
 	public boolean noticelikecheck(MemberEntity member,Long noticeid);
 	
-	public  Map<String,Object> favoritenotice(MemberEntity member,Pageable pageable);
+	public  Page<NoticeDto> favoritenotice(MemberEntity member,Pageable pageable);
 	
 	public Page<NoticeDto> loginnoticeget(Long userid,int page);
 	

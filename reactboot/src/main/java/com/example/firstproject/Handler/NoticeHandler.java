@@ -60,4 +60,7 @@ public interface NoticeHandler {
 	public Page<CommentEntity> showcomments(Long userid,Pageable pageable);
 	
 	public Page<CommentDto> showdirectc(Long noticeid,Pageable pageable);
+	
+	//좋아요한게시글 가져오기
+	public Page<NoticeEntity> getfavoritelist(MemberEntity member,Pageable pageable);
 }

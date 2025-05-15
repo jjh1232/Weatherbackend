@@ -127,7 +127,7 @@ public class MainController {
 		log.info(option);
 		log.info(keyword);
 		log.info(String.valueOf(page));
-		Page<NoticeDto> Dto=noticeservice.search(option,keyword,page);
+		Page<NoticeDto> Dto=noticeservice.search(null,option,keyword,page);
 		//리퀘랑페이지똑같넹 ;
 		return Dto;
 		}
@@ -150,7 +150,7 @@ public class MainController {
 			
 			return dtolist;
 		}else {
-			//Page<NoticeDto> Dto=noticeservice.search(user.getMember().getId(),option,keyword,page);
+			Page<NoticeDto> Dto=noticeservice.search(user.getMember().getId(),option,keyword,page);
 			
 			return null;
 		}
@@ -161,9 +161,9 @@ public class MainController {
 	@GetMapping("/onlikenotice")
 	public ResponseEntity search(Authentication authentication,@RequestParam(defaultValue="1") int page){
 		PrincipalDetails principal=(PrincipalDetails) authentication.getPrincipal();
-		Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"createdDate"));
+		Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
 		System.out.println("들어온페이지:"+page);
-		Map<String,Object> dto=noticeservice.favoritenotice(principal.getMember(),pageable);
+		Page<NoticeDto> dto=noticeservice.favoritenotice(principal.getMember(),pageable);
 		
 		
 		

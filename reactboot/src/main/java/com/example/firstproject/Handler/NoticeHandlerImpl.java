@@ -274,6 +274,15 @@ public class NoticeHandlerImpl implements NoticeHandler{
 		List<Long> result=likerepository.findfavoriteids(userid,noticeids);
 		return result;
 	}
+
+
+	//좋아요글 다이렉트로가져오기
+	@Override
+	public Page<NoticeEntity> getfavoritelist(MemberEntity member, Pageable pageable) {
+		// TODO Auto-generated method stub
+		Page<NoticeEntity> result=noticerepository.getfavoritenotice(member, pageable);
+		return result;
+	}
 	
 	 
 
