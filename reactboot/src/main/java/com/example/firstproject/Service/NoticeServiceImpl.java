@@ -12,12 +12,15 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -44,6 +47,7 @@ import com.example.firstproject.Dto.Detachupdateform;
 import com.example.firstproject.Dto.MemberDto;
 import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.NoticeDtointer;
+import com.example.firstproject.Dto.NoticeImageDto;
 import com.example.firstproject.Dto.NoticeUpdate;
 import com.example.firstproject.Dto.Noticeform;
 import com.example.firstproject.Dto.datachfiledto;
@@ -117,7 +121,50 @@ public class NoticeServiceImpl implements NoticeService {
 		PageRequest pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
 		//페이지객체옵션
 		
+		Page<NoticeEntity> entitypage;
+		switch (option) {
+		case "titletext":
+			entitypage=noticehandler.searchtitletext(content,pageable);
+			//Page<NoticeDto> dtlist=entitypage.map(m-> new NoticeDto(m));
+			break;
+		case "title":
+         
+            entitypage = noticehandler.searchtitle(content, pageable);
+            break;
+        case "text":
+        
+            entitypage = noticehandler.searchtext(content, pageable);
+            break;
+        default:
+       
+            entitypage = noticehandler.searchname(content, pageable);
+            break;
 		
+		}
+		// 2. 로그인 여부에 따라 block/like 리스트 준비 셋이더빠르다함 
+		 Set<Long> blockNoticeIds = new HashSet<>();
+		    Set<Long> likeNoticeIds = new HashSet<>();
+
+	    if (loginid != null) {
+	    	//노티스아이디추출
+	        List<Long> noticeIds = entitypage.getContent().stream()
+	            .map(NoticeEntity::getNoticeid)
+	            .collect(Collectors.toList());
+
+	        // 차단/좋아요 정보 조회 (Set으로 변환해 contains 성능 향상)
+	        //재할당없이 데이터추가
+	        blockNoticeIds.addAll(blockhandler.getblocknoticenum(loginid));
+	        likeNoticeIds.addAll(noticehandler.favoritenoticeids(loginid, noticeIds));
+	    }
+	    
+	    //반환
+	    return entitypage.map(entity -> {
+	    	NoticeDto dto=new NoticeDto(entity);
+	    	dto.setIsblock(blockNoticeIds.contains(entity.getNoticeid()));
+	    	dto.setLikeusercheck(likeNoticeIds.contains(entity.getNoticeid()));
+	    	return dto;
+	    });
+	    /*
 		if (option.equals("titletext")) {
 			log.info("타이틀+텍스트서비스");
 			String option1="title";
@@ -152,7 +199,7 @@ public class NoticeServiceImpl implements NoticeService {
 			return dtlist;
 		}
 			
-		
+		*/
 		
 	}
 
@@ -866,6 +913,16 @@ public class NoticeServiceImpl implements NoticeService {
 		Page<CommentDto> dtolist=noticehandler.showdirectc(noticeid, pageable);
 		System.out.println("문제구간찾기디비까지꺼내옴");
 		return dtolist;
+	}
+
+	@Override
+	public Page<NoticeImageDto> getimagelist(int page) {
+		// TODO Auto-generated method stub
+		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
+		Page<NoticeImageDto> dto=noticehandler.getImagelist(pageable);
+		
+		
+		return dto;
 	}
 	}
 	 

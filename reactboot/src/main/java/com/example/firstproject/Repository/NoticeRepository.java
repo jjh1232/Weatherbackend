@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.NoticeDtointer;
+import com.example.firstproject.Dto.NoticeImageDto;
 import com.example.firstproject.Dto.noticeDao;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
@@ -83,4 +84,19 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 	@Query(value="select n from notice n JOIN FETCH n.member join n.likeuser f where f.member=:member",
 			countQuery="select count(n) from notice n join n.likeuser f where f.member=:member" )
 	Page<NoticeEntity> getfavoritenotice(MemberEntity member,Pageable page);
+
+	//이미지 만 데려오는 코드 
+	@Query(value="select new com.example.firstproject.Dto.NoticeImageDto("
+			+"n.id,n.title,m.username,m.nickname,m.profileimg,d.path,n.red) "
+			+ "from notice n "
+			+ "join n.member m "
+			+ "join n.files d "
+			+ "where d.id=("
+			+ "select min(d2.id) from detachfile d2 where d2.notice = n"
+			+ ")"
+			)
+	Page<NoticeImageDto> findimagelist(Pageable page);
+
+	
+
 }

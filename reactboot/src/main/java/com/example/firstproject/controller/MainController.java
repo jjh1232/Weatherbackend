@@ -35,6 +35,7 @@ import org.springframework.web.util.UriUtils;
 
 import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.NoticeDtointer;
+import com.example.firstproject.Dto.NoticeImageDto;
 import com.example.firstproject.Dto.NoticeUpdate;
 import com.example.firstproject.Dto.Noticeform;
 import com.example.firstproject.Dto.detachVo;
@@ -152,7 +153,7 @@ public class MainController {
 		}else {
 			Page<NoticeDto> Dto=noticeservice.search(user.getMember().getId(),option,keyword,page);
 			
-			return null;
+			return Dto;
 		}
 
 	}
@@ -394,5 +395,13 @@ public class MainController {
 		Map<String,Object> data=memberservice.userpagedate(username, page);
 		
 		return ResponseEntity.ok(data);
+	}
+	@GetMapping("/open/notice/imagelist")
+	public ResponseEntity getimagelist(@RequestParam(required = false,defaultValue = "1") int page) {
+		
+		System.out.println("페이지:"+page);
+		Page<NoticeImageDto> dto=noticeservice.getimagelist(page);
+		
+		return ResponseEntity.ok(dto);
 	}
 }

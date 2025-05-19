@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.NoticeDtointer;
+import com.example.firstproject.Dto.NoticeImageDto;
 import com.example.firstproject.Dto.Comment.CommentDto;
 import com.example.firstproject.Dto.Comment.Testcom;
 import com.example.firstproject.Entity.CommentEntity;
@@ -281,6 +282,16 @@ public class NoticeHandlerImpl implements NoticeHandler{
 	public Page<NoticeEntity> getfavoritelist(MemberEntity member, Pageable pageable) {
 		// TODO Auto-generated method stub
 		Page<NoticeEntity> result=noticerepository.getfavoritenotice(member, pageable);
+		return result;
+	}
+
+
+
+	@Override
+	public Page<NoticeImageDto> getImagelist(Pageable page) {
+		// TODO Auto-generated method stub
+		Page<NoticeImageDto> result=noticerepository.findimagelist(page);
+		
 		return result;
 	}
 	

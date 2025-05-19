@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.NoticeDtointer;
+import com.example.firstproject.Dto.NoticeImageDto;
 import com.example.firstproject.Dto.Comment.CommentDto;
 import com.example.firstproject.Entity.CommentEntity;
 import com.example.firstproject.Entity.FavoriteEntity;
@@ -63,4 +64,9 @@ public interface NoticeHandler {
 	
 	//좋아요한게시글 가져오기
 	public Page<NoticeEntity> getfavoritelist(MemberEntity member,Pageable pageable);
+
+
+	//이미지게시판
+	public Page<NoticeImageDto> getImagelist(Pageable page);
+	
 }
