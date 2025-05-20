@@ -67,6 +67,6 @@ public interface NoticeHandler {
 
 
 	//이미지게시판
-	public Page<NoticeImageDto> getImagelist(Pageable page);
+	public Page<Object[]> getImagelist(Pageable page);
 	
 }

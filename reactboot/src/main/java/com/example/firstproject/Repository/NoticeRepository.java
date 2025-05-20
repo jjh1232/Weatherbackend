@@ -86,8 +86,11 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 	Page<NoticeEntity> getfavoritenotice(MemberEntity member,Pageable page);
 
 	//이미지 만 데려오는 코드 
+	/* jpql은 select절에 서브쿼리를못사용해서 불편
 	@Query(value="select new com.example.firstproject.Dto.NoticeImageDto("
-			+"n.id,n.title,m.username,m.nickname,m.profileimg,d.path,n.red) "
+			+"n.id,n.title,m.username,m.nickname,m.profileimg,d.path,n.red, "
+			+ "(select count(f) from detachfile f where f.notice =n) "
+			+ ") "
 			+ "from notice n "
 			+ "join n.member m "
 			+ "join n.files d "
@@ -96,7 +99,16 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 			+ ")"
 			)
 	Page<NoticeImageDto> findimagelist(Pageable page);
-
-	
+*/
+		//카운트는 *든 id든 null이아닌행만가져오기때문에 인덱스만 있으면성능차이x
+	@Query(value="select n.id,n.title,m.username,m.nickname,m.profileimg,d.path,n.red, "
+			+ "(select count(*) from detachfiles f where f.notice_id=n.id) AS file_count "
+			+ "from notice n "
+			+ "join member m on n.member_id =m.id "
+			+ "join detachfiles d on n.id =d.notice_id "
+			+ "where d.id= (select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id)",
+			countQuery = "select count(*) from notice n",
+			nativeQuery = true)
+	Page<Object[]> findimagelist(Pageable page);
 
 }

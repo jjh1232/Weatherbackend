@@ -288,9 +288,9 @@ public class NoticeHandlerImpl implements NoticeHandler{
 
 
 	@Override
-	public Page<NoticeImageDto> getImagelist(Pageable page) {
+	public Page<Object[]> getImagelist(Pageable page) {
 		// TODO Auto-generated method stub
-		Page<NoticeImageDto> result=noticerepository.findimagelist(page);
+		Page<Object[]> result=noticerepository.findimagelist(page);
 		
 		return result;
 	}

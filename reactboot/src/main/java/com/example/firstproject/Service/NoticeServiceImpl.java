@@ -2,6 +2,7 @@ package com.example.firstproject.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.MalformedURLException;
 
 import java.nio.charset.StandardCharsets;
@@ -919,8 +920,18 @@ public class NoticeServiceImpl implements NoticeService {
 	public Page<NoticeImageDto> getimagelist(int page) {
 		// TODO Auto-generated method stub
 		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
-		Page<NoticeImageDto> dto=noticehandler.getImagelist(pageable);
-		
+		Page<Object[]> object=noticehandler.getImagelist(pageable);
+		Page<NoticeImageDto> dto=object.map(obj->NoticeImageDto.builder()
+								.id(((Number) obj[0]).longValue())
+								.title((String) obj[1])
+								.username((String) obj[2])
+								.nickname((String) obj[3])
+								.userprofile((String) obj[4])
+								.mainimage((String) obj[5])
+								.red((String) obj[6].toString())
+								.imagenum(((BigInteger) obj[7]).longValue())
+								.build());
+				
 		
 		return dto;
 	}
