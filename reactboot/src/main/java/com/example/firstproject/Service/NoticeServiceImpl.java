@@ -68,6 +68,7 @@ import com.example.firstproject.Handler.MemberHandler;
 import com.example.firstproject.Handler.NoticeHandler;
 import com.example.firstproject.Repository.DetachfileRepository;
 import com.example.firstproject.Service.Memberservice.SseService;
+import com.mysql.cj.result.LongValueFactory;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -917,12 +918,30 @@ public class NoticeServiceImpl implements NoticeService {
 	}
 
 	@Override
-	public Page<NoticeImageDto> getimagelist(int page) {
+	public Page<NoticeImageDto> getimagelist(Long userid,int page) {
 		// TODO Auto-generated method stub
 		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
 		Page<Object[]> object=noticehandler.getImagelist(pageable);
-		Page<NoticeImageDto> dto=object.map(obj->NoticeImageDto.builder()
-								.id(((Number) obj[0]).longValue())
+		
+		//아이디추출
+		List<Long> noticeids=object.getContent().stream()
+				.map(obj -> ((Number) obj[0]).longValue())
+				.collect(Collectors.toList());
+		
+		//위정보로 좋아요엔티티가져오기
+				List<Long> likenoticeids=(userid !=null)
+						? noticehandler.favoritenoticeids(userid, noticeids)
+						:Collections.emptyList();
+				
+				Set<Long> likedset=new HashSet<>(likenoticeids);
+				
+		Page<NoticeImageDto> dto=object.map(obj->
+								{
+								Long id=((Number) obj[0]).longValue();
+								boolean liked=userid != null && likedset.contains(id);
+								System.out.println(userid+"번유저의"+id+"번글 좋아요여부:"+liked);
+								return NoticeImageDto.builder()
+								.id(id)
 								.title((String) obj[1])
 								.username((String) obj[2])
 								.nickname((String) obj[3])
@@ -930,8 +949,11 @@ public class NoticeServiceImpl implements NoticeService {
 								.mainimage((String) obj[5])
 								.red((String) obj[6].toString())
 								.imagenum(((BigInteger) obj[7]).longValue())
-								.build());
+								.likely(liked)
+								.build();
+								});
 				
+	
 		
 		return dto;
 	}

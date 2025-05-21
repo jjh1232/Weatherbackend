@@ -397,10 +397,16 @@ public class MainController {
 		return ResponseEntity.ok(data);
 	}
 	@GetMapping("/open/notice/imagelist")
-	public ResponseEntity getimagelist(@RequestParam(required = false,defaultValue = "1") int page) {
+	public ResponseEntity getimagelist(@RequestParam(required = false,defaultValue = "1") int page,Authentication authentication) {
 		
 		System.out.println("페이지:"+page);
-		Page<NoticeImageDto> dto=noticeservice.getimagelist(page);
+		Long userid=null;
+		//인증안된유저도 막는게 후자 프린시펄디테일즈타입인지 인증안되면 그냥스트링으로 본다함
+		if(authentication != null&&authentication.getPrincipal() instanceof PrincipalDetails) {
+			PrincipalDetails member=(PrincipalDetails) authentication.getPrincipal();
+			userid=member.getMember().getId();
+		}
+		Page<NoticeImageDto> dto=noticeservice.getimagelist(userid,page);
 		
 		return ResponseEntity.ok(dto);
 	}

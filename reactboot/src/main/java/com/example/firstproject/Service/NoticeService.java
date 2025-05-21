@@ -69,7 +69,7 @@ public interface NoticeService {
 
 	public Page<CommentDto> showcomments(Long noticeid,int page);
 	
-	public Page<NoticeImageDto> getimagelist(int page);
+	public Page<NoticeImageDto> getimagelist(Long userid,int page);
 	
 
 }

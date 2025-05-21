@@ -24,4 +24,5 @@ public class NoticeImageDto {
 	private String mainimage;	
 	private String red;
 	private long imagenum;
+	private boolean likely;
 }
