@@ -939,7 +939,7 @@ public class NoticeServiceImpl implements NoticeService {
 								{
 								Long id=((Number) obj[0]).longValue();
 								boolean liked=userid != null && likedset.contains(id);
-								System.out.println(userid+"번유저의"+id+"번글 좋아요여부:"+liked);
+								
 								return NoticeImageDto.builder()
 								.id(id)
 								.title((String) obj[1])
@@ -949,6 +949,7 @@ public class NoticeServiceImpl implements NoticeService {
 								.mainimage((String) obj[5])
 								.red((String) obj[6].toString())
 								.imagenum(((BigInteger) obj[7]).longValue())
+								.likes(((BigInteger) obj[8]).intValue())
 								.likely(liked)
 								.build();
 								});

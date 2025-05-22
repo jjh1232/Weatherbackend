@@ -23,6 +23,7 @@ public class NoticeImageDto {
 	private String userprofile;
 	private String mainimage;	
 	private String red;
-	private long imagenum;
+	private Long imagenum;
+	private int likes;
 	private boolean likely;
 }

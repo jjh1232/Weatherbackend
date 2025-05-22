@@ -59,6 +59,7 @@ public class securityconfig {
 	//웹시큐리티는 http시큐리티의 상위에 있고 이것의 ignoring은 필터체인을 걸리진않지만 각종공격에취약해짐
 	//httpsecurity에서 permit은 인증처리결과를 무시하는것이지 필터체인의적용은 된다 
 	//따라서 websecurity는 보안과 전혀상관없는 로그인과 공개페이지등에만 이용하는게 좋다
+	/* 두필터로넘기면되긴한다하는데
 	@Bean 
 	public WebSecurityCustomizer webSecurityCustomizaer() { //2.7버전이상엔선 웹도해야함
 		return (web)->web.ignoring().antMatchers("/open/**");
@@ -68,7 +69,7 @@ public class securityconfig {
 		//https://velog.io/@ksiisk99/SpringSecurity1
 		
 	}
-
+*/
 	//스프링 부트 시큐리트 cors설정
 	//스프링 부트 시큐리트 cors설정
 	@Bean

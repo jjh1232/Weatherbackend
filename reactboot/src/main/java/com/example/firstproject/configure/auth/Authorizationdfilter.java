@@ -69,13 +69,50 @@ public class Authorizationdfilter extends BasicAuthenticationFilter{
 			chain.doFilter(request, response);
 		}
 		else {
+	
 		String jwtheader=request.getHeader("Authorization");
 		//String refreshheader=request.getHeader("Refreshtoken");
 		
+		
 		System.out.println("jwtheader: "+jwtheader);
 		System.out.println("===========================================");
+	if(request.getServletPath().startsWith("/open/")) {
+			//open경로===============================================================================
+		 if (jwtheader != null && jwtheader.startsWith("Bearer ")) {
+		        // 로그인 유저: 토큰 검증
+		        String jwttoken = jwtheader.replace("Bearer ", "");
+		        if (jwtservice.checktokenvalid(jwttoken)) {
+		            // 인증 정보 세팅
+		            String username = jwtservice.gettokenclaim(jwttoken);
+		            Optional<MemberEntity> opentity = repository.findByUsername(username);
+		            if (opentity.isPresent()) {
+		                MemberEntity entity = opentity.get();
+		                PrincipalDetails principal = new PrincipalDetails(entity);
+		                Authentication authentication = new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
+		                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+		                // 토큰 재발급 등 부가 로직
+		                String Accesstoken = jwtservice.createtoken(principal);
+		                String Refreshtoken = jwtservice.createrefreshtoken();
+		                jwtservice.Setrefreshtoken(entity.getUsername(), Refreshtoken);
+		                response.addHeader("Authorization", Accesstoken);
+		                response.addHeader("Refreshtoken", Refreshtoken);
+		            }
+		        }
+		        // 토큰이 잘못됐으면 그냥 비회원으로 통과시킬지, 에러 응답을 줄지는 정책에 따라 결정
+		        // 여기서는 에러 응답을 주는 게 일반적
+		        else {
+		            tokenExceptionhandler(response, "엑세스토큰만료");
+		            return;
+		        }
+		    }
+		    // 비로그인 유저: 그냥 통과
+		    chain.doFilter(request, response);
+		    return;
+		}
 		
-		
+	
+	//open아닌경로
 		if(jwtheader==null || !jwtheader.startsWith("Bearer ")) {
 			System.out.println("잘못된토큰이거나토큰이없습니다");
 			//여기 jwt에러 

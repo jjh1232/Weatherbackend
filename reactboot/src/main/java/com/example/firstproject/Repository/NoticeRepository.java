@@ -102,12 +102,14 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 */
 		//카운트는 *든 id든 null이아닌행만가져오기때문에 인덱스만 있으면성능차이x
 	@Query(value="select n.id,n.title,m.username,m.nickname,m.profileimg,d.path,n.red, "
-			+ "(select count(*) from detachfiles f where f.notice_id=n.id) AS file_count "
+			+ "(select count(*) from detachfiles f where f.notice_id=n.id) AS file_count, "
+			+ "(select count(*) from favorite_entity l where l.noticeid=n.id) AS like_count "
 			+ "from notice n "
 			+ "join member m on n.member_id =m.id "
 			+ "join detachfiles d on n.id =d.notice_id "
 			+ "where d.id= (select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id)",
-			countQuery = "select count(*) from notice n",
+			countQuery = "select count(*) from notice n join detachfiles d on n.id=d.notice_id "
+					+ "where d.id=(select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id)",
 			nativeQuery = true)
 	Page<Object[]> findimagelist(Pageable page);
 
