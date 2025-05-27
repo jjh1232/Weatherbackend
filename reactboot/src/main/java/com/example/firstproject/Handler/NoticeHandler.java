@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.example.firstproject.Dto.NoticeDetailDto;
 import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.NoticeDtointer;
 import com.example.firstproject.Dto.NoticeImageDto;
@@ -30,7 +31,7 @@ public interface NoticeHandler {
 	
 	Optional<NoticeEntity> findbyId(Long num);
 	
-	NoticeEntity detail(Long num);
+	NoticeDetailDto detail(Long num);
 
 	public void commentcreate(CommentEntity entity);
 	
@@ -68,5 +69,8 @@ public interface NoticeHandler {
 
 	//이미지게시판
 	public Page<Object[]> getImagelist(Pageable page);
+	
+	public List<detachfile> getPrevimage(Long noticeid);
+	
 	
 }

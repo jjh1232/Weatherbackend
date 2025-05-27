@@ -106,5 +106,11 @@ public class Blockhandler {
 	public void deletenoticedecle(NoticedecleEntity entity) {
 		declerepository.delete(entity);
 	}
+	//블록카운트로 블록여부 확인
+	public boolean userblockcheck(Long userid,Long noticeid) {
+		boolean check=blockrepository.isblockcheck(userid,noticeid);
+		
+		return check;
+	}
 	
 }

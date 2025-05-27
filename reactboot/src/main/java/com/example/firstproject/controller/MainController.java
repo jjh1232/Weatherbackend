@@ -42,6 +42,7 @@ import com.example.firstproject.Dto.detachVo;
 import com.example.firstproject.Dto.noticeDao;
 import com.example.firstproject.Dto.Comment.CommentDto;
 import com.example.firstproject.Dto.Comment.Commentform;
+import com.example.firstproject.Dto.Previewimage.PreviewimageDto;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
 import com.example.firstproject.Repository.MemberRepository;
@@ -407,6 +408,18 @@ public class MainController {
 			userid=member.getMember().getId();
 		}
 		Page<NoticeImageDto> dto=noticeservice.getimagelist(userid,page);
+		
+		return ResponseEntity.ok(dto);
+	}
+	//노티스 이미지 미리보기 ==========
+	@GetMapping("/open/noticeimagepreview/{noticeid}")
+	public ResponseEntity<?> getpreviewimage(@PathVariable Long noticeid,Authentication authentication){
+		Long userid=null;
+		if(authentication != null&&authentication.getPrincipal() instanceof PrincipalDetails) {
+			PrincipalDetails member=(PrincipalDetails) authentication.getPrincipal();
+			userid=member.getMember().getId();
+		}
+		List<PreviewimageDto> dto=noticeservice.getPreviewimage(userid,noticeid);
 		
 		return ResponseEntity.ok(dto);
 	}

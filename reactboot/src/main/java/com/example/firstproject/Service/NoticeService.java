@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.firstproject.Dto.MemberDto;
+import com.example.firstproject.Dto.NoticeDetailDto;
 import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.NoticeDtointer;
 import com.example.firstproject.Dto.NoticeImageDto;
@@ -18,6 +19,7 @@ import com.example.firstproject.Dto.Noticeform;
 import com.example.firstproject.Dto.detachVo;
 import com.example.firstproject.Dto.Comment.CommentDto;
 import com.example.firstproject.Dto.Comment.Commentform;
+import com.example.firstproject.Dto.Previewimage.PreviewimageDto;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
 
@@ -34,7 +36,7 @@ public interface NoticeService {
 	
 	public NoticeDto noticeupdate(Long num,NoticeUpdate update);
 	
-	public NoticeDto detail(Long num);
+	public NoticeDetailDto detail(Long num);
 	
 	public void Commentcreate(Commentform form);
 	
@@ -70,6 +72,8 @@ public interface NoticeService {
 	public Page<CommentDto> showcomments(Long noticeid,int page);
 	
 	public Page<NoticeImageDto> getimagelist(Long userid,int page);
+	
+	public List<PreviewimageDto> getPreviewimage(Long userid,Long noticeid);
 	
 
 }

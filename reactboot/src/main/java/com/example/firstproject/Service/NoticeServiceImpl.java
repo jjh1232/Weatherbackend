@@ -46,6 +46,7 @@ import org.springframework.web.util.UriUtils;
 
 import com.example.firstproject.Dto.Detachupdateform;
 import com.example.firstproject.Dto.MemberDto;
+import com.example.firstproject.Dto.NoticeDetailDto;
 import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.NoticeDtointer;
 import com.example.firstproject.Dto.NoticeImageDto;
@@ -56,6 +57,7 @@ import com.example.firstproject.Dto.detachVo;
 import com.example.firstproject.Dto.removetestDto;
 import com.example.firstproject.Dto.Comment.CommentDto;
 import com.example.firstproject.Dto.Comment.Commentform;
+import com.example.firstproject.Dto.Previewimage.PreviewimageDto;
 import com.example.firstproject.Entity.CommentEntity;
 import com.example.firstproject.Entity.FavoriteEntity;
 import com.example.firstproject.Entity.MemberEntity;
@@ -67,6 +69,7 @@ import com.example.firstproject.Handler.Blockhandler;
 import com.example.firstproject.Handler.MemberHandler;
 import com.example.firstproject.Handler.NoticeHandler;
 import com.example.firstproject.Repository.DetachfileRepository;
+import com.example.firstproject.Repository.LikeRepository;
 import com.example.firstproject.Service.Memberservice.SseService;
 import com.mysql.cj.result.LongValueFactory;
 
@@ -92,6 +95,8 @@ public class NoticeServiceImpl implements NoticeService {
 	private final SseService sseservice;
 	
 	private final Blockhandler blockhandler;
+	
+	
 	@Override
 	public Page<NoticeDto> read(Pageable page) {
 		System.out.println("게시판리드서비스");
@@ -415,24 +420,23 @@ public class NoticeServiceImpl implements NoticeService {
 
 	//게시판디테일===================================================
 	@Override
-	public NoticeDto detail(Long num) {
+	public NoticeDetailDto detail(Long noticeid,Long userid) {
+		//게시글 일부가져오기
+		NoticeDetailDto dto=noticehandler.detail(noticeid);
+		//커멘트는따로
+		//List<CommentEntity> comments=noticehandler.showcomments(num);
 		
-		NoticeEntity Entity=noticehandler.detail(num);
+		if(userid!=null) {
+			//카운트가져오기
+			//boolean liked=
+			
+			boolean blocked=blockhandler.userblockcheck(userid, noticeid);
+			
+		}
 		
-		System.out.println("코멘트:"+Entity.getComments());
-		NoticeDto dto=Entity.toDto
-						(Entity.getNoticeid(),
-						Entity.getNoticeuser(),
-						Entity.getNoticenick(),
-						Entity.getTitle(), 
-						Entity.getText(),
-						Entity.getRed(),
-						Entity.getComments(),
-						Entity.getFiles(), 
-						Entity.getLikeuser().size(),
-						Entity.getTemp(),Entity.getSky(),Entity.getPty(),Entity.getRain(),Entity.getReh(),Entity.getWsd()
-								);
+		//List<Detachfile> images=
 		
+	
 		
 		
 		// TODO Auto-generated method stub
@@ -955,6 +959,24 @@ public class NoticeServiceImpl implements NoticeService {
 								});
 				
 	
+		
+		return dto;
+	}
+
+	@Override
+	public List<PreviewimageDto> getPreviewimage(Long userid, Long noticeid) {
+		// TODO Auto-generated method stub
+		//유저아이디는받을필요없었겠다..
+		List<detachfile> entity=noticehandler.getPrevimage(noticeid);
+		
+		List<PreviewimageDto> dto=entity.stream().map((en)-> PreviewimageDto.builder()
+															.id(en.getId())
+															.filename(en.getFilename())
+															.path(en.getPath())
+															.build()
+															)
+				.collect(Collectors.toList());
+			
 		
 		return dto;
 	}

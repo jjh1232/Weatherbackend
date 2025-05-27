@@ -26,5 +26,8 @@ public interface NoticeblockRepository extends JpaRepository<NoticeblockEntity, 
 	@Query(value="select b from NoticeblockEntity b where b.member.id =:memberid and noticeid=:noticeid")
 	public Optional<NoticeblockEntity> findbymemberidandnoticeid(Long memberid,Long noticeid);
 
+	
+	@Query(value="select b from NoticeblockEntity b where b.member.id =:memberid and noticeid=:noticeid")
+	public boolean isblockcheck(Long memberid,Long noticeid);
 
 }

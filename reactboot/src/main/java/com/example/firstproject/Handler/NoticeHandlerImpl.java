@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.example.firstproject.Dto.NoticeDetailDto;
 import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.NoticeDtointer;
 import com.example.firstproject.Dto.NoticeImageDto;
@@ -100,8 +101,8 @@ public class NoticeHandlerImpl implements NoticeHandler{
 
 
 	@Override
-	public NoticeEntity detail(Long num) {
-		NoticeEntity Entity =noticerepository.getById(num);
+	public NoticeDetailDto detail(Long num) {
+		NoticeDetailDto Entity =noticerepository.findbyid(num);
 		
 		return Entity;
 	}
@@ -292,6 +293,15 @@ public class NoticeHandlerImpl implements NoticeHandler{
 		// TODO Auto-generated method stub
 		Page<Object[]> result=noticerepository.findimagelist(page);
 		
+		return result;
+	}
+
+
+
+	@Override
+	public List<detachfile> getPrevimage(Long noticeid) {
+		// TODO Auto-generated method stub
+		List<detachfile> result=detachrepo.findByNotice_Noticeid(noticeid);
 		return result;
 	}
 	

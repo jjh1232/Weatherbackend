@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.example.firstproject.Dto.NoticeDetailDto;
 import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.NoticeDtointer;
 import com.example.firstproject.Dto.NoticeImageDto;
@@ -113,4 +114,9 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 			nativeQuery = true)
 	Page<Object[]> findimagelist(Pageable page);
 
+	@Query(value="select n.id,m.username,m.nickname,n.title,n.text,"
+			+ "n.temp,n.sky,n.pty,n.rain,n.reh,n.wsd,n.red,m.username"
+			+ "from notice n join n.member m "
+			+ "where n.id=:noticeid")
+	NoticeDetailDto findbyid(Long noticeid);
 }
