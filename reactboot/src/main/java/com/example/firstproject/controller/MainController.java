@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriUtils;
 
+import com.example.firstproject.Dto.NoticeDetailDto;
 import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.NoticeDtointer;
 import com.example.firstproject.Dto.NoticeImageDto;
@@ -184,18 +185,29 @@ public class MainController {
 	}
 	//=============디테일
 	@GetMapping("/open/noticedetail/{num}")
-	public NoticeDto noticedetail(@PathVariable Long num) {
+	public NoticeDetailDto noticedetail(@PathVariable Long num,Authentication authentication) {
 		log.info("글들");
-		NoticeDto Dto =noticeservice.detail(num);
+		
+		PrincipalDetails user=null;
+		Long userid=null;
+		if(authentication !=null && authentication.isAuthenticated()) {
+			user=(PrincipalDetails) authentication.getPrincipal();
+			userid=user.getMember().getId();
+		}
+		
+		NoticeDetailDto Dto =noticeservice.detail(num,userid);
 		System.out.println(Dto);
 		return Dto;
+		
 	}
+
 	//=====================수정검사==========================================
 	@GetMapping("/noticeupdate/{num}")
-	public NoticeDto noticeupdatedetail(@PathVariable Long num,Authentication authentication) throws Exception {
+	public NoticeDetailDto noticeupdatedetail(@PathVariable Long num,Authentication authentication) throws Exception {
 		PrincipalDetails principal=(PrincipalDetails) authentication.getPrincipal();
 		String username=principal.getUsername();
-		NoticeDto dto=noticeservice.detail(num);
+		Long userid=principal.getMember().getId();
+		NoticeDetailDto dto=noticeservice.detail(num,userid);
 		if(username.equals(dto.getUsername())) {
 			log.info("유저가일치합니다!");
 			return dto;
@@ -205,7 +217,7 @@ public class MainController {
 			throw new Exception("아이디불일치");
 		}
 		
-		
+
 	}
 	
 	//=======================삭제===============================
@@ -213,7 +225,8 @@ public class MainController {
 	public void delete(@PathVariable Long num,Authentication authentication) throws Exception {
 		PrincipalDetails principal=(PrincipalDetails) authentication.getPrincipal();
 		String username=principal.getUsername();
-		NoticeDto dto=noticeservice.detail(num);
+		Long userid=principal.getMember().getId();
+		NoticeDetailDto dto=noticeservice.detail(num,userid);
 		if(username.equals(dto.getUsername())) {
 			log.info("유저가일치합니다!");
 			noticeservice.delete(num);

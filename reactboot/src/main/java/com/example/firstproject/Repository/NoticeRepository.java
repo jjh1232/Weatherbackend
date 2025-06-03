@@ -114,8 +114,8 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 			nativeQuery = true)
 	Page<Object[]> findimagelist(Pageable page);
 
-	@Query(value="select n.id,m.username,m.nickname,n.title,n.text,"
-			+ "n.temp,n.sky,n.pty,n.rain,n.reh,n.wsd,n.red,m.username"
+	@Query(value="select new com.example.firstproject.Dto.NoticeDetailDto(n.id,m.username,m.nickname,n.title,n.text,"
+			+ "n.temp,n.sky,n.pty,n.rain,n.reh,n.wsd,n.red,m.profileimg) "
 			+ "from notice n join n.member m "
 			+ "where n.id=:noticeid")
 	NoticeDetailDto findbyid(Long noticeid);

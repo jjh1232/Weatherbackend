@@ -3,6 +3,7 @@ package com.example.firstproject.Service.Blockservice;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.data.domain.Page;
@@ -160,4 +161,15 @@ public class Blockservice {
 		handler.deletenoticedecle(entity);
 	}
 	
+	//정보까지 가져오기
+	public Optional<NoticeblockEntity> getblock(Long memberid,Long noticeid) throws IllegalAccessException {
+		Optional<NoticeblockEntity> entity=handler.blockfindbyuseridandnoticeid(memberid, noticeid);
+	
+		return entity;
+	}
+	public Optional<NoticedecleEntity> getdecle(Long memberid,Long noticeid) throws IllegalAccessException {
+		Optional<NoticedecleEntity> entity=handler.declefindbyuseridandnoticeid(memberid, noticeid);
+	
+		return entity;
+	}
 }

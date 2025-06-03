@@ -105,6 +105,7 @@ public class NoticeHandlerImpl implements NoticeHandler{
 		NoticeDetailDto Entity =noticerepository.findbyid(num);
 		
 		return Entity;
+	
 	}
 
 

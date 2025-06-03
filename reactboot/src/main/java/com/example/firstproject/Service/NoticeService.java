@@ -36,7 +36,7 @@ public interface NoticeService {
 	
 	public NoticeDto noticeupdate(Long num,NoticeUpdate update);
 	
-	public NoticeDetailDto detail(Long num);
+	public NoticeDetailDto detail(Long noticeid,Long userid);
 	
 	public void Commentcreate(Commentform form);
 	
@@ -74,6 +74,8 @@ public interface NoticeService {
 	public Page<NoticeImageDto> getimagelist(Long userid,int page);
 	
 	public List<PreviewimageDto> getPreviewimage(Long userid,Long noticeid);
+
+	//NoticeDetailDto detail(Long noticeid, Long userid);
 	
 
 }

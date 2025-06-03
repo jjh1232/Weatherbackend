@@ -424,16 +424,22 @@ public class NoticeServiceImpl implements NoticeService {
 		//게시글 일부가져오기
 		NoticeDetailDto dto=noticehandler.detail(noticeid);
 		//커멘트는따로
-		//List<CommentEntity> comments=noticehandler.showcomments(num);
+		//List<CommentEntity> comments=noticehandler.showcomments(noticeid);
 		
 		if(userid!=null) {
 			//카운트가져오기
 			//boolean liked=
 			
 			boolean blocked=blockhandler.userblockcheck(userid, noticeid);
+			dto.setIsblock(blocked);
+			
+		//	boolean decled=blockhandler.noticedeclecheck(userid, noticeid);
+			
+			return dto;
 			
 		}
 		
+	
 		//List<Detachfile> images=
 		
 	
@@ -980,6 +986,8 @@ public class NoticeServiceImpl implements NoticeService {
 		
 		return dto;
 	}
+
+	
 	}
 	 
 	
