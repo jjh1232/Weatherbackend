@@ -237,4 +237,9 @@ public class SseService {
 	    }
 	    }
 	    */
+		public void deleteemiter(Long userid) {
+			System.out.println("로그아웃에미터유저삭제:"+userid);
+			
+			emitterRepository.delete(userid);
+		}
 }

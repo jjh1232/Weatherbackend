@@ -109,5 +109,19 @@ PrincipalDetails cipal=(PrincipalDetails) authenti.getPrincipal();
 		emitterrepo.getemitteruser();
 	}
 	
+	//로그아웃시 백엔드처리가 사실 sse뿐이라여기나둠
+	@GetMapping("/memberlogout")
+	public ResponseEntity<?> memberlogout(Authentication authentication) {
+		System.out.println("멤버로그아웃시작");
+		PrincipalDetails prin=(PrincipalDetails) authentication.getPrincipal();
+		Long userid=prin.getMember().getId();
+		
+		sseservice.deleteemiter(userid);
+		
+		
+		return ResponseEntity.ok(userid+"에미터삭제");
+		
+		
+	}
 	
 }

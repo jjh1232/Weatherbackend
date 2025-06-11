@@ -223,10 +223,12 @@ public class MainController {
 	//=======================삭제===============================
 	@DeleteMapping("/noticedelete/{num}")
 	public void delete(@PathVariable Long num,Authentication authentication) throws Exception {
+		log.info("게시글삭제");
 		PrincipalDetails principal=(PrincipalDetails) authentication.getPrincipal();
 		String username=principal.getUsername();
 		Long userid=principal.getMember().getId();
 		NoticeDetailDto dto=noticeservice.detail(num,userid);
+		
 		if(username.equals(dto.getUsername())) {
 			log.info("유저가일치합니다!");
 			noticeservice.delete(num);

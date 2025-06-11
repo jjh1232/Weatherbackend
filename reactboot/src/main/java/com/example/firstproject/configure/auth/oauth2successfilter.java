@@ -2,6 +2,7 @@ package com.example.firstproject.configure.auth;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.stream.Collectors;
 
@@ -19,6 +20,7 @@ import com.example.firstproject.Entity.LoginHistory;
 import com.example.firstproject.Service.JwtService;
 import com.example.firstproject.Service.Memberservice.HistoryService;
 import com.example.firstproject.configure.PrincipalDetails;
+import com.nimbusds.jose.util.StandardCharset;
 
 import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
@@ -90,8 +92,11 @@ public class oauth2successfilter implements AuthenticationSuccessHandler{
 	     historyservice.saveLoginlog(history);
 	     System.out.println("리다이렉트체크:"+request.getHeaders("Referer"));
 	    
-	    
-	     response.sendRedirect("http://localhost:3001/main");
+	    System.out.println("이전패스로하기위해체크:"+request.getParameter("state"));
+	    String prevPath = request.getParameter("state");
+	    String decode=URLDecoder.decode(prevPath,StandardCharset.UTF_8.name());
+	    System.out.println("디코드값:"+decode);
+	     response.sendRedirect("http://localhost:3001/oauthsuccess");
 	}
 
 }
