@@ -519,7 +519,10 @@ public class NoticeServiceImpl implements NoticeService {
 		}
 		else {
 			List<CommentDto> dtolist = new ArrayList();
-			for(CommentEntity a:findlist) {CommentDto dto = a.toDto(a.getId(),
+			
+			for(CommentEntity a:findlist) {
+				
+				CommentDto dto = a.toDto(a.getId(),
 					a.getDepth(),
 					a.getCnum(),
 					a.getUsername(),
@@ -561,9 +564,25 @@ public class NoticeServiceImpl implements NoticeService {
 
 
 	@Override
+	@Transactional
 	public void commentdelete(Long id) {
 		// TODO Auto-generated method 
-		noticehandler.deletecomment(id);
+		//이거 대댓글이 있으니까 확인후 완전삭제할지 그냥할지
+		log.info("딜리트메소드서비스시작");
+		boolean childis=noticehandler.childparuntcount(id);
+		log.info("대댓글여부찾기성공");
+		if(childis) {
+			//자식있으면 isdelete만바꾸자
+			log.info("딜리트엔티티가져오기");
+			CommentEntity entity=noticehandler.deletecommentget(id).orElseThrow(()->new IllegalAccessError());
+			log.info("딜리트메소드가져오기성공");
+			entity.setIsdelete(true);
+			
+		}else {
+			//뭐연습용으로 완전삭제
+			noticehandler.deletecomment(id);
+		}
+		
 		
 	}
 

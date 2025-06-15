@@ -72,5 +72,7 @@ public interface NoticeHandler {
 	
 	public List<detachfile> getPrevimage(Long noticeid);
 	
+	public boolean childparuntcount(Long commentid);
 	
+	public Optional<CommentEntity>  deletecommentget(Long commentid);
 }

@@ -33,11 +33,17 @@ public interface CommentRepository extends JpaRepository<CommentEntity,Long>{
 	@Query(value = "SELECT new com.example.firstproject.Dto.Comment.CommentDto" +
 		       "(c.id,n.id,"
 		       + "c.depth,c.cnum,"
-		       + "m.username,m.nickname,"
-		       + "c.text,c.createdDate,m.profileimg) " +   //연관객체도  
+		       + "m.username,m.nickname, "
+		       + "CASE WHEN c.isdelete = true THEN '삭제된 댓글입니다' ELSE c.text END, "
+		       + "c.createdDate,m.profileimg) " +   //연관객체도  
 		       "FROM CommentEntity c JOIN c.notice n "
 		       + "JOIN c.member m "
 		       + "where n.id=:noticeid")
 	Page<CommentDto> showcomments(Pageable pageable,Long noticeid);//,Long noticeid);
+
+	
+	//long countBycnum(Long commentid);
+	//존재여부만확인
+	boolean existsByCnum(Long cnum);
 	
 }

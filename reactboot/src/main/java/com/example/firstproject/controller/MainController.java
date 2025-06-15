@@ -314,6 +314,7 @@ public class MainController {
 	@DeleteMapping("/commentdelete/{id}")
 	public void commentdelete(@PathVariable Long id) {
 		System.out.println("댓글삭제!");
+		
 		noticeservice.commentdelete(id);
 	}
 

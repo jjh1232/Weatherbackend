@@ -22,14 +22,14 @@ public class CommentDto {
 	private Long id;
 	private Long noticenum;
 	private int depth;
-	private int cnum;
+	private Long cnum;
 	private String username;
 	private String nickname;
 	private String text;
 	private String redtime;
 	private String userprofile;
 	
-	public CommentEntity toEntity(Long id,int depth,int cnum,String username,String name,
+	public CommentEntity toEntity(Long id,int depth,Long cnum,String username,String name,
 			String text) {
 		return CommentEntity.builder()
 				.id(id)

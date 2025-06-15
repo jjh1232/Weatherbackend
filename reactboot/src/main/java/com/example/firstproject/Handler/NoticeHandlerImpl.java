@@ -305,6 +305,26 @@ public class NoticeHandlerImpl implements NoticeHandler{
 		List<detachfile> result=detachrepo.findByNotice_Noticeid(noticeid);
 		return result;
 	}
+
+
+
+	//대댓글이있을시 완적삭제가아니라 삭제만 추가
+	@Override
+	public boolean childparuntcount(Long commentid) {
+		// TODO Auto-generated method stub
+		//long count=commentrepository.countBycnum(commentid);
+		boolean result=commentrepository.existsByCnum(commentid);
+		return result;
+	}
+
+
+
+	@Override
+	public Optional<CommentEntity> deletecommentget(Long commentid) {
+		// TODO Auto-generated method stub
+		Optional<CommentEntity> entity=commentrepository.findById(commentid);
+		return entity;
+	}
 	
 	 
 

@@ -51,7 +51,7 @@ public class CommentEntity extends BaseTime{
 	
 	
 	@Column
-	private int cnum;
+	private Long cnum;
 	
 	@Column(nullable = false)
 	private String username;
@@ -77,9 +77,12 @@ public class CommentEntity extends BaseTime{
 	@JsonIgnore
 	private MemberEntity member;
 	
+	//두가지다 false로 설정
+	@Column(nullable=false,columnDefinition = "boolean default false")
+	private boolean isdelete=false;
 	
 	
-	public CommentDto toDto(Long id,int depth,int cnum,String username,String nickname,
+	public CommentDto toDto(Long id,int depth,Long cnum,String username,String nickname,
 			String text,String redtime,String userprofile) {
 		return CommentDto.builder()
 				.id(id)
