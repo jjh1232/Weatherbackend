@@ -33,6 +33,7 @@ public interface MemberService {
 	
 	public Optional<MemberEntity> findemail(String username);
 
+	public MemberEntity findbyid(Long userid);
 
 	public String deletecodesend(String username);
 	

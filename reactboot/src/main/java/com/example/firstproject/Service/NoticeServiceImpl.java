@@ -924,7 +924,7 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public Page<CommentDto> showcomments(Long noticeid,int page) {
 		// TODO Auto-generated method stub
-		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"createdDate"));
+		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.ASC,"createdDate"));
 		System.out.println("문제구간찾기");
 		/*
 		Page<CommentEntity> entitylist=noticehandler.showcomments(noticeid, pageable);

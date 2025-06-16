@@ -442,6 +442,16 @@ public class MemberServiceImpl implements MemberService{
 	}
 
 
+
+
+	@Override
+	public MemberEntity findbyid(Long userid) {
+		// TODO Auto-generated method stub
+		MemberEntity member=handler.findbyid(userid).orElseThrow(()->new IllegalAccessError());
+		return member;
+	}
+
+
    
 	
 	}

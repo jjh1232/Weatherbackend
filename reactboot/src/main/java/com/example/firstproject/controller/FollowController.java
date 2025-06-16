@@ -48,6 +48,45 @@ public class FollowController {
 		
 		return ResponseEntity.ok().build();
 	}
+	//이거 아이디로 하기
+	@PostMapping("/follow/{followid}")
+	public ResponseEntity followid(Authentication authentication,@PathVariable Long followid) throws Exception {
+		log.info("인증유저겟네임:"+authentication.getName());
+		
+		MemberEntity frommember=memberservice.findemail(authentication.getName()).orElseThrow();		
+		
+		MemberEntity tomember=memberservice.findbyid(followid);
+		
+		followservice.follow(frommember,tomember);
+		
+		return ResponseEntity.ok().build();
+	}
+	//팔로우취소
+	
+	@DeleteMapping("/followdelete/{friendname}")
+	public ResponseEntity deletefollow(Authentication authentication,@PathVariable String friendname) {
+		log.info("팔로우삭제");
+		MemberEntity frommember=memberservice.findemail(authentication.getName()).orElseThrow();		
+		
+		MemberEntity tomember=memberservice.findemail(friendname).orElseThrow();
+		
+		followservice.followdelete(frommember, tomember);
+		
+		return ResponseEntity.ok("팔로우해제");
+		
+	}
+	@DeleteMapping("/follow/delete/{followid}")
+	public ResponseEntity deletefollow(Authentication authentication,@PathVariable Long followid) {
+		log.info("팔로우삭제");
+		MemberEntity frommember=memberservice.findemail(authentication.getName()).orElseThrow();		
+		
+		MemberEntity tomember=memberservice.findbyid(followid);
+		
+		followservice.followdelete(frommember, tomember);
+		
+		return ResponseEntity.ok("팔로우해제");
+		
+	}
 	
 	//팔로잉조회
 	@GetMapping("/followlist")
@@ -79,20 +118,7 @@ public class FollowController {
 		List<FollowDto> nicklist=followservice.followerfind(member.getMember().getId());
 				return ResponseEntity.ok(nicklist);
 	}
-	//팔로우취소
-	
-	@DeleteMapping("/followdelete/{friendname}")
-	public ResponseEntity deletefollow(Authentication authentication,@PathVariable String friendname) {
-		log.info("팔로우삭제");
-		MemberEntity frommember=memberservice.findemail(authentication.getName()).orElseThrow();		
-		
-		MemberEntity tomember=memberservice.findemail(friendname).orElseThrow();
-		
-		followservice.followdelete(frommember, tomember);
-		
-		return null;
-		
-	}
+
 	
 	@GetMapping("/open/usersearch")
 	@Logoutano 
@@ -121,6 +147,19 @@ public class FollowController {
 		
 		return ResponseEntity.ok().body(followcheck);
 	}
+	//위는 파인드바이써야해서 별로같아서 유저아이디 내리고 그걸로하게수정
+	@GetMapping("/followchecktwo/{followid}")
+	public ResponseEntity followchecktwo(Authentication authentication,@PathVariable Long followid) {
+		PrincipalDetails my=(PrincipalDetails) authentication.getPrincipal();
+		Long myid=my.getid();
+		
+		boolean followcheck=followservice.flowchecktwo(myid, followid);
+		
+		return ResponseEntity.ok().body(followcheck);
+		
+		
+	}
+	
 	
 		//팔로우 즐겨찾기 기능!
 	@GetMapping("/favoritefollow/{friendname}")

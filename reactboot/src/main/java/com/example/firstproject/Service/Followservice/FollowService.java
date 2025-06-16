@@ -107,6 +107,18 @@ public class FollowService {
 				return false;
 			}
 		}
+	//유저가 팔로우 했는지 안했는지여부찾기 유저클릭시 체크용 하나
+	public boolean flowchecktwo(Long myid,Long commentid) {
+		if(followhandler.checkfollow(myid, commentid).isPresent()) {
+			//존재할경우트로 
+			log.info("이미 팔로우한 계정입니다!");
+			return true;
+		}
+		else {
+				log.info("팔로우안되있는게쩡");
+				return false;
+			}
+		}
 	
 	
 		//삭제

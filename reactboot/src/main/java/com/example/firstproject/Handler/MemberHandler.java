@@ -6,7 +6,10 @@ import java.util.Optional;
 import com.example.firstproject.Entity.MemberEntity;
 
 public interface MemberHandler {
-
+	
+	public Optional<MemberEntity> findbyid(Long userid);
+	
+	
 	public MemberEntity membercreate(MemberEntity entity);
 
 	public Long emailcheck(String email);

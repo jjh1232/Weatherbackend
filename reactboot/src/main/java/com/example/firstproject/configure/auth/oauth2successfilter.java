@@ -63,6 +63,7 @@ public class oauth2successfilter implements AuthenticationSuccessHandler{
 	    //json형태로 쿠키에 여러값의 유저인포저장!
 			JSONObject json= new JSONObject();
 			
+			json.put("userid",principal.getid());
 			json.put("username",principal.getUsername());
 		
 			json.put("nickname",principal.getMember().getNickname());

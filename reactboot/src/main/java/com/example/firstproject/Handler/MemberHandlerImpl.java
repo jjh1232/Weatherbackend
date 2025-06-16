@@ -73,6 +73,13 @@ public class MemberHandlerImpl implements MemberHandler{
 		List<MemberEntity> list=memberrepository.findByNicknameContaining(keyword);
 		return list;
 	}
+
+	@Override
+	public Optional<MemberEntity> findbyid(Long userid) {
+		// TODO Auto-generated method stub
+		Optional<MemberEntity> member=memberrepository.findById(userid);
+		return member;
+	}
 	
 	
 

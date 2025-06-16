@@ -31,7 +31,7 @@ public interface CommentRepository extends JpaRepository<CommentEntity,Long>{
 	
 	//fetch조인은 다가져와서 별로고 직접매핑으로필요한것만 클래스명으로 작성해야함
 	@Query(value = "SELECT new com.example.firstproject.Dto.Comment.CommentDto" +
-		       "(c.id,n.id,"
+		       "(c.id,m.id,n.id,"
 		       + "c.depth,c.cnum,"
 		       + "m.username,m.nickname, "
 		       + "CASE WHEN c.isdelete = true THEN '삭제된 댓글입니다' ELSE c.text END, "

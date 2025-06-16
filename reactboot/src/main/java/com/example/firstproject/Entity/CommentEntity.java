@@ -82,6 +82,7 @@ public class CommentEntity extends BaseTime{
 	private boolean isdelete=false;
 	
 	
+	
 	public CommentDto toDto(Long id,int depth,Long cnum,String username,String nickname,
 			String text,String redtime,String userprofile) {
 		return CommentDto.builder()
