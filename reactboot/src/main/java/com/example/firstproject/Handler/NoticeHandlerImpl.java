@@ -325,6 +325,15 @@ public class NoticeHandlerImpl implements NoticeHandler{
 		Optional<CommentEntity> entity=commentrepository.findById(commentid);
 		return entity;
 	}
+
+
+
+	@Override
+	public List<CommentEntity> childcomments(Long noticeid,List<Long> parentid) {
+		// TODO Auto-generated method stub
+		List<CommentEntity> childs=commentrepository.findChildComments(noticeid, parentid);
+		return childs;
+	}
 	
 	 
 

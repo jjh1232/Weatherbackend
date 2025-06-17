@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -926,24 +927,75 @@ public class NoticeServiceImpl implements NoticeService {
 		// TODO Auto-generated method stub
 		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.ASC,"createdDate"));
 		System.out.println("문제구간찾기");
-		/*
-		Page<CommentEntity> entitylist=noticehandler.showcomments(noticeid, pageable);
-		Page<CommentDto> dtolist=entitylist.map((m)->CommentDto.builder()
-															.id(m.getId())
-															.noticenum(noticeid)//이거 Notice자체를가져올거같아서;
-															.depth(m.getDepth())
-															.cnum(m.getCnum())
-															.username(m.getUsername())
-															.nickname(m.getNickname())
-															.text(m.getText())
-															.redtime(m.getCreatedDate())
-															.userprofile(m.getMember().getProfileimg())
-															.build()
-																);
-				*/
+	
 		Page<CommentDto> dtolist=noticehandler.showdirectc(noticeid, pageable);
+		//자식찾기위한로직
+		List<Long> parentids=dtolist.stream().map(CommentDto::getId).collect(Collectors.toList());
+		
+		//페이징객체안의내용이 불변객체라 뭐 안붙여진다해서 새로 복사해야함;
+		//새로만들어야하는게 dto프로덕션으로 가져올떈 child값이 null이되버림
+		List<CommentDto> parentList = dtolist.getContent().stream()
+			    .map(dto -> {
+			        // 복사 생성자나 builder로 새 객체 생성
+			        return CommentDto.builder()
+			            .id(dto.getId())
+			            .cid(dto.getCid())
+			            .noticenum(dto.getNoticenum())
+			            .depth(dto.getDepth())
+			            .cnum(dto.getCnum())
+			            .username(dto.getUsername())
+			            .nickname(dto.getNickname())
+			            .text(dto.getText())
+			            .redtime(dto.getRedtime())
+			            .userprofile(dto.getUserprofile())
+			            .isdelete(dto.isIsdelete())
+			            .build();
+			    })
+			    .collect(Collectors.toList());
+		
+		List<CommentEntity> childentitys=noticehandler.childcomments(noticeid, parentids);
+		
+		List <CommentDto> childdtos=childentitys.stream().map(child ->
+				CommentDto.builder()
+				.id(child.getId())
+				.cid(child.getMember().getId())
+				.noticenum(child.getNotice().getNoticeid())
+				.depth(child.getDepth())
+				.cnum(child.getCnum())
+				.username(child.getMember().getUsername())
+				.nickname(child.getMember().getNickname())
+				.text(child.isIsdelete()?"삭제된댓글입니다":child.getText())
+				.redtime(child.getCreatedDate())
+				.userprofile(child.getMember().getProfileimg())
+				.isdelete(child.isIsdelete())
+				.build()
+				).collect(Collectors.toList());
+		//부모id로 부모dto저장
+		//FUNCTION클래스에 identity는 자기자신 자바8에추가된거라고함 ;
+		//기존에 저기대신 commentdto -> commentdto 랑똑같음 
+		Map<Long, CommentDto> parrentmap=parentList.stream()
+				.collect(Collectors.toMap(CommentDto::getId,Function.identity()));
+	
+		
+		//자식댓글을 부모에붙이기
+		for (CommentDto child:childdtos) {
+			//cnum이부모아이디임
+			
+			Long parentId=child.getCnum();
+			
+			CommentDto parent=parrentmap.get(parentId);
+			
+			if(parent !=null) {
+				
+				parent.getChilds().add(child);
+			}
+			
+		}
+		
 		System.out.println("문제구간찾기디비까지꺼내옴");
-		return dtolist;
+		//return dtolist;
+		//새페이지객체생성
+		return new PageImpl<>(parentList,dtolist.getPageable(),dtolist.getTotalElements());
 	}
 
 	@Override

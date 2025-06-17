@@ -75,4 +75,6 @@ public interface NoticeHandler {
 	public boolean childparuntcount(Long commentid);
 	
 	public Optional<CommentEntity>  deletecommentget(Long commentid);
+	
+	public List<CommentEntity> childcomments(Long noticeid,List<Long> parentid);
 }
