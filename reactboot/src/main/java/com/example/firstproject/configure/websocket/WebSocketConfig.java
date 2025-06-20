@@ -2,6 +2,7 @@ package com.example.firstproject.configure.websocket;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
@@ -11,6 +12,7 @@ import com.example.firstproject.Handler.Websocket.ChatHandler;
 
 import lombok.RequiredArgsConstructor;
 
+@Profile("!test")
 @RequiredArgsConstructor
 @EnableWebSocket
 @Configuration

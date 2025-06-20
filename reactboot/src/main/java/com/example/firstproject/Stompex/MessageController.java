@@ -1,5 +1,6 @@
 package com.example.firstproject.Stompex;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
+@Profile("!test")
 public class MessageController {
 
 	//두개다 비슷한거같은데 ..

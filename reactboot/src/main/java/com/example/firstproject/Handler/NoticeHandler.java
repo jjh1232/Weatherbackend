@@ -77,4 +77,6 @@ public interface NoticeHandler {
 	public Optional<CommentEntity>  deletecommentget(Long commentid);
 	
 	public List<CommentEntity> childcomments(Long noticeid,List<Long> parentid);
+
+	long likecounts(Long noticeid);
 }

@@ -30,4 +30,7 @@ public interface LikeRepository extends JpaRepository<FavoriteEntity,Long> {
 	//특정쿼리만 받으려면 jpa문으론힘듬 때문에 쿼리사용
 	@Query(value= "select f.notice.id from FavoriteEntity f where f.member.id=:userid and f.notice.id in :noticeids")
 	public List<Long> findfavoriteids(Long userid,List<Long>noticeids);
+
+	//noticeid를 noticeid로한탓에..
+	long countByNoticeNoticeid(Long noticeid);
 }

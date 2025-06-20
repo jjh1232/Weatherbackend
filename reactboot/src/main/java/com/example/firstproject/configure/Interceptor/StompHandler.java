@@ -1,6 +1,7 @@
 package com.example.firstproject.configure.Interceptor;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -23,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Configuration //필요하면 @Order로 우선순위 설정 컴포넌트박앗는데아니길래 
 @Slf4j
+@Profile("!test")
 public class StompHandler implements ChannelInterceptor{ //채널인섭셉터 인터페이스 
 
 	//채널인터셉터가 편하다 jwt인증에는

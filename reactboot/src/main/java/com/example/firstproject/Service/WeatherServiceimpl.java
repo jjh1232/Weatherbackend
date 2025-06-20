@@ -22,6 +22,7 @@ import javax.persistence.Cache;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -63,6 +64,7 @@ public class WeatherServiceimpl implements WeatherService{
 	
 	
 	@Autowired
+	@Qualifier("redisCachemanager")
 	private CacheManager cachemanager;
 	
 

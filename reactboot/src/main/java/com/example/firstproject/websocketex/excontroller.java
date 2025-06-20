@@ -12,10 +12,12 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 //@ServerEndpoint(value="/open/chatex/{username}")
 //@Component
+@Profile("!test")
 public class excontroller {
 
 	

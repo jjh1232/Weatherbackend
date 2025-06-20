@@ -194,7 +194,7 @@ public class NoticeHandlerImpl implements NoticeHandler{
 	}
 
 
-
+	//좋아요여부확인 각유저
 	@Override
 	public Optional<FavoriteEntity>  findbynoticeanduser(MemberEntity member, NoticeEntity notice) {
 		// TODO Auto-generated method stub
@@ -207,7 +207,13 @@ public class NoticeHandlerImpl implements NoticeHandler{
 
 
 
-	
+	//좋아요갯수확인 테스트용
+	@Override
+	public long likecounts(Long noticeid) {
+		long count=likerepository.countByNoticeNoticeid(noticeid);
+		
+		return count;
+	}
 
 
 

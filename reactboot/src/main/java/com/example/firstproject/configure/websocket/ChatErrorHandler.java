@@ -1,5 +1,6 @@
 package com.example.firstproject.configure.websocket;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.StompSubProtocolErrorHandler;
@@ -8,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
+@Profile("!test")
 public class ChatErrorHandler extends StompSubProtocolErrorHandler{
 
 	//에러핸들러 

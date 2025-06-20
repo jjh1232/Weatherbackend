@@ -31,6 +31,7 @@ import javax.transaction.Transactional;
 
 import org.attoparser.ICommentHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -81,10 +82,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @Transactional
+
 public class NoticeServiceImpl implements NoticeService {
 
 	@Autowired
 	private NoticeHandler noticehandler;
+	
 	
 	@Autowired
 	private SimpMessageSendingOperations operations;

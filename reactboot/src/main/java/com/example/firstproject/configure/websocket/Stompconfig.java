@@ -1,6 +1,7 @@
 package com.example.firstproject.configure.websocket;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -12,6 +13,7 @@ import com.example.firstproject.configure.Interceptor.Stompinterceptor;
 
 import lombok.RequiredArgsConstructor;
 
+@Profile("!test")
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSocketMessageBroker//웹소캣의 메세지브로커기능을 활성화하는 어노테이션 이를통해 메시지핸들링과 브로커구성이가능해짐

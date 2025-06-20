@@ -1,5 +1,6 @@
 package com.example.firstproject.controller;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -23,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-
+@Profile("!test")
 public class StompController { 
 
 	private final SimpMessageSendingOperations template;
