@@ -243,8 +243,8 @@ public class MainController {
 	//코멘트 가져오기
 	@GetMapping("/open/commentshow")
 	public ResponseEntity<Page<CommentDto>> commentshow(@RequestParam Long noticeid,@RequestParam(defaultValue = "1") int page){
-		
-		Page<CommentDto> dto=noticeservice.showcomments(noticeid, page);
+		System.out.println("페이지:"+page);
+;		Page<CommentDto> dto=noticeservice.showcomments(noticeid, page);
 		
 		return ResponseEntity.ok(dto);
 	}

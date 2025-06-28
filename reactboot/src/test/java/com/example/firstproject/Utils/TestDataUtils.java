@@ -1,5 +1,7 @@
 package com.example.firstproject.Utils;
 
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+
 import com.example.firstproject.Entity.Address;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
@@ -21,6 +23,7 @@ public class TestDataUtils {
 				.homeaddress(new Address("서울특별시  종로구  청운효자동","60","127"))
 				.build();
 		
+		System.out.println("트랜잭션 활성화: " + TransactionSynchronizationManager.isActualTransactionActive());
 		return memberrepository.save(member);
 		
 	}

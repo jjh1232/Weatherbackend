@@ -21,6 +21,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 import com.example.firstproject.Entity.FavoriteEntity;
@@ -50,6 +52,9 @@ public class LikeTest {
 	@Autowired
 	private MemberRepository memberrepo;
 	
+	//트랜잭션템플릿
+	@Autowired
+	private TransactionTemplate trtem;
 	//레디스 db 테스트에선 목빈으로 레디스사용시 또 여기연결해서빈등록해서문제생김
 	  @MockBean(name = "redisConnectionFactory")
 	    private RedisConnectionFactory redisConnectionFactory;
@@ -77,12 +82,19 @@ public class LikeTest {
 	    System.out.println("ServerEndpointExporter 빈: " + context.getBeanNamesForType(ServerEndpointExporter.class));
 	}
 	
-	@Test
+	//트랜잭션테스트
+
+	public void checktransaction() {
+		boolean txActive = TransactionSynchronizationManager.isActualTransactionActive();
+		System.out.println("트랜잭션"+txActive);
+	}
+	//@Test
 	public void increaselikenum() throws InterruptedException {
 		
 		 System.out.println("좋아요증가테스트!");
 		Long noticeid=115L; //이게비어있네지금
 		int userCount=100;
+		//테스트에서 여러스레드풀을만들어줌
 		ExecutorService executorservice=Executors.newFixedThreadPool(userCount);
 		
 		CountDownLatch startlatch = new CountDownLatch(1);
@@ -91,14 +103,22 @@ public class LikeTest {
 		 System.out.println("노티스생성");
 		for (int i=0;i<userCount;i++) {
 			Long userid=i+100L;
+			//정의된 스레드에 작업을 할당함
 			executorservice.submit(()->{
 				try {
 					
 					readyLatch.countDown(); //준비완료
 					startlatch.await() ; //시작신호대기
-					MemberEntity member=TestDataUtils.createTestuser(memberrepo, userid);
-					FavoriteEntity entity=new FavoriteEntity(userid, member,notice);
-					handler.favoritesave(entity);
+					//이거 스레드풀안에서하면 외부 트랜잭션으로돌아서 해당클래스내부에 트랜잭션을걸든 트랜잭션템플릿주입하든
+					//해서 이걸로실행해야함
+					trtem.executeWithoutResult(status->{
+						//System.out.println("트랜잭션 활성화: " + TransactionSynchronizationManager.isActualTransactionActive());
+						MemberEntity member=TestDataUtils.createTestuser(memberrepo, userid);
+						FavoriteEntity entity=new FavoriteEntity(userid, member,notice);
+						handler.favoritesave(entity);
+						throw new RuntimeException("강제 롤백 테스트");
+					});
+					
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
