@@ -47,7 +47,7 @@ public class StompController {
 	//@Sendto("주소") //이걸로리턴으로 보낼수도있다고함
 	public void sendMessage(@DestinationVariable Long roomid,stompchatDto messageDto ) throws IllegalAccessException { //만든 챗메세지 dto와 @Header등으로 헤더정보나 메세지를 가져옴
 		log.info("해당챗방룸아이디 :"+roomid);
-		
+		log.info("챗룸데이터:"+messageDto.getMessage());
 		
 		//@PathVariable ("userid") String userid
 		MeseageDto dto=chatservice.chatsave(roomid,messageDto);

@@ -1,5 +1,7 @@
 package com.example.firstproject.Handler;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import com.example.firstproject.Entity.FavoriteEntity;
@@ -18,10 +20,14 @@ public class NoticeLikehandler {
 		return null;
 		
 	}
-	public FavoriteEntity favoritecheck() {
+	public 	Optional<FavoriteEntity> favoritecheck(Long userid,Long noticeid) {
 		
-		return null;
+		Optional<FavoriteEntity> entity=likerepo.findByNoticeNoticeidAndMemberId(noticeid, userid);
+		return entity;
 	}
 	
+	public void deleteFavoritenotice(FavoriteEntity entity) {
+		likerepo.delete(entity);
+	}
 	
 }

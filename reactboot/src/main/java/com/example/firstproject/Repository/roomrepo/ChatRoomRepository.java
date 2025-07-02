@@ -43,4 +43,14 @@ public interface ChatRoomRepository extends JpaRepository<Room, Long> {
 		       "JOIN FETCH c.member cm " +
 		       "WHERE r.id = :roomid")
 	Room findbyroomdata(@Param("roomid") Long roomid);
+	
+	//위의코드는 페치조인떄매 컬렉션을 페치조인으로쓰면 카디널프로덕트가 일어나서 중복메세지가 나옴
+	//2개를가져옴 그래서 따로따로 가져오게수정 이게더 비용적으로도좋음
+	@Query("SELECT DISTINCT r FROM Room r "
+			+ "JOIN FETCH r.userlist ul "
+			+ "JOIN FETCH ul.member m "
+			+ "WHERE r.id =:roomid")
+	Room Roomdetailinfo(@Param("roomid") Long roomid);
+	
+	
 }

@@ -35,6 +35,7 @@ public class NoticeDetailDto {
 	private boolean isblock =false;
 	private int likes;
 	private boolean likeusercheck;
+	private long views;
 	//생성자를 따로만들어야한다함
 	public NoticeDetailDto(
 		    long id,
@@ -49,7 +50,8 @@ public class NoticeDetailDto {
 		    String reh,
 		    String wsd,
 		    String red,
-		    String userprofile
+		    String userprofile,
+		    long views
 		) {
 		    this.id = id;
 		    this.username = username;

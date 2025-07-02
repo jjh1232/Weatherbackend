@@ -221,7 +221,7 @@ public class NoticeServiceImpl implements NoticeService {
 	   List<NoticeDto> dtlist=new ArrayList();
 	  for(NoticeEntity a:entity) { NoticeDto dto =a.toDto(a.getNoticeid(),a.getNoticeuser(),
 	  a.getNoticenick(),a.getTitle(),a.getText(),a.getRed(),a.getLikeuser().size()
-	  ,a.getTemp(),a.getSky(),a.getPty(),a.getRain()
+	  ,a.getTemp(),a.getSky(),a.getPty(),a.getRain(),a.getViews()
 			  );
 	  dtlist.add(dto); }
 	  
@@ -415,7 +415,7 @@ public class NoticeServiceImpl implements NoticeService {
 		NoticeDto dto =Entity.toDto(Entity.getNoticeid(),Entity.getNoticeuser(),
 				  Entity.getNoticenick(),Entity.getTitle(),Entity.getText(),Entity.getRed()
 				,Entity.getLikeuser().size(),
-				Entity.getTemp(),Entity.getSky(),Entity.getPty(),Entity.getRain()
+				Entity.getTemp(),Entity.getSky(),Entity.getPty(),Entity.getRain(),Entity.getViews()
 				);;
 				  
 				  return dto;
@@ -793,10 +793,19 @@ public class NoticeServiceImpl implements NoticeService {
 
 	//========================좋아요한 글만가져오기=================================
 	@Override
-	public  Page<NoticeDto> favoritenotice(MemberEntity member, Pageable pageable) {
+	public  Page<NoticeDto> favoritenotice(MemberEntity member, Pageable pageable,String option,String keyword) {
 		// TODO Auto-generated method stub
 		//좋아요엔티티를 구지 건드릴 필요가 없는듯? 조인으로 바로 가져오자
-		Page<NoticeEntity> favoritelist=noticehandler.getfavoritelist(member,pageable);
+		Page<NoticeEntity> favoritelist;
+		
+		if(keyword==null || keyword.isBlank()) {
+			favoritelist=noticehandler.getfavoritelist(member,pageable);
+		}
+		else {
+			favoritelist = noticehandler.favoritenoticesearch(member, pageable, option, keyword);
+		}
+		
+		
 		Page<NoticeDto> dtolist=favoritelist.map((m)->NoticeDto.builder()
 													.num(m.getNoticeid())
 													.username(m.getNoticeuser())
@@ -814,6 +823,7 @@ public class NoticeServiceImpl implements NoticeService {
 													.red(m.getRed())
 													.userprofile(m.getMember().getProfileimg())
 													.detachfiles(m.getFiles())
+													.views(m.getViews())
 													.build()
 					);
 		return dtolist;
@@ -1002,11 +1012,21 @@ public class NoticeServiceImpl implements NoticeService {
 	}
 
 	@Override
-	public Page<NoticeImageDto> getimagelist(Long userid,int page) {
+	public Page<NoticeImageDto> getimagelist(Long userid,int page,String option,String keyword) {
 		// TODO Auto-generated method stub
 		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
-		Page<Object[]> object=noticehandler.getImagelist(pageable);
+		Page<Object[]> object;
+
+	
 		
+		if(keyword==null || keyword.isBlank()) {
+			System.out.println("기본");
+			object=noticehandler.getImagelist(pageable);
+		}
+		else {
+			System.out.println("검");
+			object=noticehandler.getsearchImagelist(pageable, option, keyword);
+		}
 		//아이디추출
 		List<Long> noticeids=object.getContent().stream()
 				.map(obj -> ((Number) obj[0]).longValue())
@@ -1018,12 +1038,16 @@ public class NoticeServiceImpl implements NoticeService {
 						:Collections.emptyList();
 				
 				Set<Long> likedset=new HashSet<>(likenoticeids);
-				
+				List<Long> blocklistid=(userid != null)
+						? blockhandler.getuserblocknotices(userid,noticeids)
+						: Collections.emptyList();
+				//블록목록가져오기
+				Set<Long> blockset=new HashSet<>(blocklistid);	
 		Page<NoticeImageDto> dto=object.map(obj->
 								{
 								Long id=((Number) obj[0]).longValue();
 								boolean liked=userid != null && likedset.contains(id);
-								
+								boolean blockcheck=userid !=null &&blockset.contains(id);
 								return NoticeImageDto.builder()
 								.id(id)
 								.title((String) obj[1])
@@ -1035,6 +1059,8 @@ public class NoticeServiceImpl implements NoticeService {
 								.imagenum(((BigInteger) obj[7]).longValue())
 								.likes(((BigInteger) obj[8]).intValue())
 								.likely(liked)
+								.blockcheck(blockcheck)
+								.views(((BigInteger) obj[9]).longValue())
 								.build();
 								});
 				

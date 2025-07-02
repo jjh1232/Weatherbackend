@@ -607,7 +607,7 @@ NoticeEntity Entity=adminhandler.noticedetail(noticeid);
 						Entity.getComments(),
 						Entity.getFiles(), 
 						Entity.getLikeuser().size(),
-						Entity.getTemp(),Entity.getSky(),Entity.getPty(),Entity.getRain(),Entity.getReh(),Entity.getWsd()
+						Entity.getTemp(),Entity.getSky(),Entity.getPty(),Entity.getRain(),Entity.getReh(),Entity.getWsd(),Entity.getViews()
 								);
 		
 		

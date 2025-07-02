@@ -19,8 +19,11 @@ import com.example.firstproject.Entity.NoticeEntity;
 public interface LikeRepository extends JpaRepository<FavoriteEntity,Long> {
 
 	
-	
+	//엔티티가져와야해서비효율적인듯?
 	Optional<FavoriteEntity> findByNoticeAndMember(NoticeEntity notice,MemberEntity member);
+	
+	
+	Optional<FavoriteEntity> findByNoticeNoticeidAndMemberId(Long noticeId, Long memberId);
 	
 	Page<FavoriteEntity> findByMember(MemberEntity member,Pageable pageable);
 	

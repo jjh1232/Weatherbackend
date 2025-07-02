@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -81,11 +82,31 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 	Page<NoticeEntity> findByMember(MemberEntity member,Pageable page);
 	
 	//좋아요한게시글다이렉트 dto프로덕션이 젤좋은데 일단 fetch조인도사용해봄 이거 영속화해서 get시바로가져옴 근데 페이지객체랑쓰려면 
-	//카운트쿼리작성해야함 
+	//카운트쿼리작성해야함 페치조인사용시 오류가많아서
 	@Query(value="select n from notice n JOIN FETCH n.member join n.likeuser f where f.member=:member",
 			countQuery="select count(n) from notice n join n.likeuser f where f.member=:member" )
 	Page<NoticeEntity> getfavoritenotice(MemberEntity member,Pageable page);
-
+	//검색메소드
+	@Query(value="select n from notice n JOIN FETCH n.member join n.likeuser f where f.member=:member "
+			+ "and (n.title like %:keyword%)",
+			countQuery="select count(n) from notice n join n.likeuser f where f.member = :member and (n.title like %:keyword%)" )	
+	Page<NoticeEntity> searchtitlefavoritenotice(MemberEntity member,Pageable page,@Param("keyword") String keyword);
+	
+	
+	@Query(value="select n from notice n JOIN FETCH n.member join n.likeuser f where f.member=:member "
+			+ "and (n.text like %:keyword%)",
+			countQuery="select count(n) from notice n join n.likeuser f where f.member=:member and (n.text like %:keyword%)" )
+	Page<NoticeEntity> searchtextfavoritenotice(MemberEntity member,Pageable page,@Param("keyword") String keyword);
+	
+	@Query(value="select n from notice n JOIN FETCH n.member join n.likeuser f where f.member=:member "
+			+ "and (n.title like %:keyword% or n.text like %:keyword%)",
+			countQuery="select count(n) from notice n join n.likeuser f where f.member=:member and (n.title like %:keyword% or n.text like %:keyword%)" )
+	Page<NoticeEntity> searchtitletextfavoritenotice(MemberEntity member,Pageable page,@Param("keyword") String keyword);
+	
+	@Query(value="select n from notice n JOIN FETCH n.member join n.likeuser f where f.member=:member "
+			+ "and (n.noticenick like %:keyword%)",
+			countQuery="select count(n) from notice n join n.likeuser f where f.member=:member and (n.noticenick like %:keyword%)" )
+	Page<NoticeEntity> searchnicknamefavoritenotice(MemberEntity member,Pageable page,@Param("keyword") String keyword);
 	//이미지 만 데려오는 코드 
 	/* jpql은 select절에 서브쿼리를못사용해서 불편
 	@Query(value="select new com.example.firstproject.Dto.NoticeImageDto("
@@ -101,10 +122,18 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 			)
 	Page<NoticeImageDto> findimagelist(Pageable page);
 */
+	
+	@Query(value="select new com.example.firstproject.Dto.NoticeDetailDto(n.id,m.username,m.nickname,n.title,n.text,"
+			+ "n.temp,n.sky,n.pty,n.rain,n.reh,n.wsd,n.red,m.profileimg,n.views) "
+			+ "from notice n join n.member m "
+			+ "where n.id=:noticeid")
+	NoticeDetailDto findbyid(Long noticeid);
+	
 		//카운트는 *든 id든 null이아닌행만가져오기때문에 인덱스만 있으면성능차이x
+	//이거 카운트쿼리가 똑같이하면 성능이안좋아서 간단하게 작성했음 join이딱히필요없어서
 	@Query(value="select n.id,n.title,m.username,m.nickname,m.profileimg,d.path,n.red, "
 			+ "(select count(*) from detachfiles f where f.notice_id=n.id) AS file_count, "
-			+ "(select count(*) from favorite_entity l where l.noticeid=n.id) AS like_count "
+			+ "(select count(*) from favorite_entity l where l.noticeid=n.id) AS like_count,n.views "
 			+ "from notice n "
 			+ "join member m on n.member_id =m.id "
 			+ "join detachfiles d on n.id =d.notice_id "
@@ -113,10 +142,70 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 					+ "where d.id=(select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id)",
 			nativeQuery = true)
 	Page<Object[]> findimagelist(Pageable page);
+	
+	//제목검색
+	@Query(value="select n.id,n.title,m.username,m.nickname,m.profileimg,d.path,n.red, "
+			+ "(select count(*) from detachfiles f where f.notice_id=n.id) AS file_count, "
+			+ "(select count(*) from favorite_entity l where l.noticeid=n.id) AS like_count,n.views "
+			+ "from notice n "
+			+ "join member m on n.member_id =m.id "
+			+ "join detachfiles d on n.id =d.notice_id "
+			+ "where d.id= (select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
+			+ "and n.title like %:keyword%",
+			countQuery = "select count(*) from notice n join detachfiles d on n.id=d.notice_id "
+					+ "where d.id=(select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
+					+ "and n.title like %:keyword%",
+			nativeQuery = true)
+	Page<Object[]> findtitleimagelist(Pageable page,String keyword);
+	
+	@Query(value="select n.id,n.title,m.username,m.nickname,m.profileimg,d.path,n.red, "
+			+ "(select count(*) from detachfiles f where f.notice_id=n.id) AS file_count, "
+			+ "(select count(*) from favorite_entity l where l.noticeid=n.id) AS like_count,n.views "
+			+ "from notice n "
+			+ "join member m on n.member_id =m.id "
+			+ "join detachfiles d on n.id =d.notice_id "
+			+ "where d.id= (select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
+			+ "and n.text like %:keyword%",
+			countQuery = "select count(*) from notice n join detachfiles d on n.id=d.notice_id "
+					+ "where d.id=(select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
+					+ "and n.text like %:keyword%",
+			nativeQuery = true)
+	Page<Object[]> findtextimagelist(Pageable page,String keyword);
+	
+	@Query(value="select n.id,n.title,m.username,m.nickname,m.profileimg,d.path,n.red, "
+			+ "(select count(*) from detachfiles f where f.notice_id=n.id) AS file_count, "
+			+ "(select count(*) from favorite_entity l where l.noticeid=n.id) AS like_count,n.views "
+			+ "from notice n "
+			+ "join member m on n.member_id =m.id "
+			+ "join detachfiles d on n.id =d.notice_id "
+			+ "where d.id= (select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
+			+ "and n.noticenick like %:keyword%",
+			countQuery = "select count(*) from notice n join detachfiles d on n.id=d.notice_id "
+					+ "where d.id=(select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
+					+ "and n.noticenick like %:keyword%",
+			nativeQuery = true)
+	Page<Object[]> findnicknameimagelist(Pageable page,String keyword);
+	
+	@Query(value="select n.id,n.title,m.username,m.nickname,m.profileimg,d.path,n.red, "
+			+ "(select count(*) from detachfiles f where f.notice_id=n.id) AS file_count, "
+			+ "(select count(*) from favorite_entity l where l.noticeid=n.id) AS like_count,n.views "
+			+ "from notice n "
+			+ "join member m on n.member_id =m.id "
+			+ "join detachfiles d on n.id =d.notice_id "
+			+ "where d.id= (select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
+			+ "and n.title like %:keyword% or n.text like %:keyword%",
+			countQuery = "select count(*) from notice n join detachfiles d on n.id=d.notice_id "
+					+ "where d.id=(select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
+					+ "and n.title like %:keyword% or n.text like %:keyword%",
+			nativeQuery = true)
+	Page<Object[]> findtitletextimagelist(Pageable page,String keyword);
+	
+	//조회수증가 로직
+	//기본적으로 select쿼리만 작동되기때문에 modifying으로 update나insertdelete인걸인지시켜야함
+	//보통 제공되는 delete같은걸써서 몰랐음
+	@Modifying
+	@Query("Update notice n SET n.views =:views where n.noticeid=:noticeid")
+	void updateviewcount(Long noticeid,Long views);
 
-	@Query(value="select new com.example.firstproject.Dto.NoticeDetailDto(n.id,m.username,m.nickname,n.title,n.text,"
-			+ "n.temp,n.sky,n.pty,n.rain,n.reh,n.wsd,n.red,m.profileimg) "
-			+ "from notice n join n.member m "
-			+ "where n.id=:noticeid")
-	NoticeDetailDto findbyid(Long noticeid);
+	
 }

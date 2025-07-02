@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.firstproject.Dto.blockDto.NoticeblockDto;
 import com.example.firstproject.Dto.blockDto.NoticedecleDto;
+import com.example.firstproject.Entity.FavoriteEntity;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
 import com.example.firstproject.Entity.block.NoticeblockEntity;
@@ -21,6 +22,7 @@ import com.example.firstproject.Entity.block.NoticedecleEntity;
 import com.example.firstproject.Entity.block.BlockEnum.NoticeblockEnum;
 import com.example.firstproject.Handler.Blockhandler;
 import com.example.firstproject.Handler.NoticeHandler;
+import com.example.firstproject.Handler.NoticeLikehandler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +36,7 @@ public class Blockservice {
 	
 	private final NoticeHandler noticehandler;
 	
-	
+	private final NoticeLikehandler likehandler;
 	
 	public void noticeblock(MemberEntity member,NoticeblockDto dto) {
 		
@@ -78,6 +80,20 @@ public class Blockservice {
 			}
 			
 		}
+		//좋아여여부 체크
+		Optional<FavoriteEntity> likecheckentity=likehandler.favoritecheck(member.getId(), dto.getNoticeid());
+		/* 구시대래
+		if(likecheckentity.isPresent()) {
+			likehandler.deleteFavoritenotice(likecheckentity.get());
+		}
+		*/
+		//신시대
+		likecheckentity.ifPresent(favoriteentity->{
+			likehandler.deleteFavoritenotice(favoriteentity);
+		});
+		//더신시대
+		//likehandler.favoritecheck(member.getId(), dto.getNoticeid()).ifPresent(likehandler::deleteFavoritenotice);
+		
 		NoticeblockEntity entity=NoticeblockEntity.builder().member(member)
 				.noticeid(dto.getNoticeid())			
 				.reason(blockreason)

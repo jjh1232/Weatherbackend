@@ -294,7 +294,27 @@ public class NoticeHandlerImpl implements NoticeHandler{
 	}
 
 
-
+	//좋아요 서치인데 여기다만들자너무많다
+	@Override
+	public Page<NoticeEntity> favoritenoticesearch(MemberEntity member, Pageable pageable, String option,
+			String keyword) {
+		// TODO Auto-generated method stub
+		switch (option) {
+		case "title": 			
+			return noticerepository.searchtitlefavoritenotice(member, pageable, keyword);
+		case "text":
+			return noticerepository.searchtextfavoritenotice(member, pageable, keyword);
+		case "titletext":
+			return noticerepository.searchtitletextfavoritenotice(member, pageable, keyword);
+		case "name":
+			return noticerepository.searchnicknamefavoritenotice(member, pageable, keyword);
+	    default:
+            // 예외를 던지거나, 빈 결과를 반환
+            throw new IllegalArgumentException("검색 옵션이 잘못되었습니다: " + option);
+		
+			}
+	}
+	//이미지리스트기본
 	@Override
 	public Page<Object[]> getImagelist(Pageable page) {
 		// TODO Auto-generated method stub
@@ -304,6 +324,25 @@ public class NoticeHandlerImpl implements NoticeHandler{
 	}
 
 
+	@Override
+	public Page<Object[]> getsearchImagelist(Pageable page, String option, String keyword) {
+		// TODO Auto-generated method stub
+		switch (option) {
+		case "title": 			
+			return noticerepository.findtitleimagelist(page, keyword);
+		case "text":
+			return noticerepository.findtextimagelist( page, keyword);
+		case "titletext":
+			return noticerepository.findtitletextimagelist( page, keyword);
+		case "name":
+			return noticerepository.findnicknameimagelist(page, keyword);
+	    default:
+            // 예외를 던지거나, 빈 결과를 반환
+            throw new IllegalArgumentException("검색 옵션이 잘못되었습니다: " + option);
+		
+			}
+	}
+	
 
 	@Override
 	public List<detachfile> getPrevimage(Long noticeid) {
@@ -340,6 +379,14 @@ public class NoticeHandlerImpl implements NoticeHandler{
 		List<CommentEntity> childs=commentrepository.findChildComments(noticeid, parentid);
 		return childs;
 	}
+
+
+
+
+
+
+
+
 	
 	 
 

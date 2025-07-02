@@ -24,6 +24,9 @@ public class NoticeImageDto {
 	private String mainimage;	
 	private String red;
 	private Long imagenum;
+	
 	private int likes;
 	private boolean likely;
+	private boolean blockcheck;
+	private long views;
 }

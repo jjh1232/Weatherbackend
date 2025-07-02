@@ -45,6 +45,7 @@ public class NoticeDto {
 	private int declaircount;
 	private List<detachfile> detachfiles;
 	private boolean isblock;
+	private long views;
 	
 	public NoticeDto(NoticeEntity entity) {
 		 num=entity.getNoticeid();
@@ -64,6 +65,7 @@ public class NoticeDto {
 		 userprofile=entity.getMember().getProfileimg();
 		 declaircount=entity.getDecles().size();
 		 detachfiles=entity.getFiles();
+		 views=entity.getViews();
 	}
 	
 }

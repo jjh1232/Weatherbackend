@@ -108,6 +108,10 @@ public class NoticeEntity {
 	@OneToMany(mappedBy="notice",fetch=FetchType.LAZY,cascade = CascadeType.ALL)
 	private List<NoticedecleEntity> decles;
 	
+	//조회수
+	@Column(nullable= false)
+	private long views;
+	
 	public void addcomments(CommentEntity comment) {
 		comments.add(comment);
 	}
@@ -127,7 +131,7 @@ public class NoticeEntity {
 			,String title, String text,String red,
 			List<CommentEntity> comments,
 			List<detachfile> detachfiles
-			,int likes,String temp,String sky,String pty,String rain,String reh,String wsd) {
+			,int likes,String temp,String sky,String pty,String rain,String reh,String wsd,long views) {
 		return NoticeDto.builder()
 				.num(num)
 				.username(username)
@@ -144,13 +148,13 @@ public class NoticeEntity {
 				.rain(rain)
 				.reh(reh)
 				.wsd(wsd)
-				
+				.views(views)
 				.build();
 	}
 	
 	public NoticeDto toDto(Long num,String username,String nickname
 			,String title, String text,String red
-			,int likes,String temp,String sky,String pty,String rain) {
+			,int likes,String temp,String sky,String pty,String rain,long views) {
 		return NoticeDto.builder()
 				.num(num)
 				.username(username)
@@ -163,6 +167,7 @@ public class NoticeEntity {
 				.sky(sky)
 				.pty(pty)
 				.rain(rain)
+				.views(views)
 				.build();
 	}
 }

@@ -86,6 +86,7 @@ public class WeatherServiceimpl implements WeatherService{
 
 
 	@Override   //콘피그에서만든캐쉬매니저네임
+	//value값이 사실상 구분자 :: 이런거
 	@Cacheable(value = "getweather",key="#reg1+#reg2+#reg3",unless = "#result==null")
 	public List<frontweather> getweatherdata(String reg1, String reg2, String reg3,String gridx,String gridy) throws URISyntaxException, UnsupportedEncodingException {
 		// TODO Auto-generated method stub
@@ -406,6 +407,8 @@ public class WeatherServiceimpl implements WeatherService{
 	}
 	//캐시삭제
 	@Scheduled(fixedDelay = 1000*60*59)//59분마다삭제 //웨더못찾음..
+	//엔트리가 구분자 모두지운다는설정 만약 특정키만할려면 key도설정
+	//invocation은 예외시삭제안함 기본값 메소드실행후 삭제 true시 메소드실행전삭제
 	@CacheEvict(value = "getweather",beforeInvocation = false,allEntries = true) 
 	//키값넣으면 특정 키값도 삭제가능
 	public void cashwetherdelete() {

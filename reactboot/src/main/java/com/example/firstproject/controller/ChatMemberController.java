@@ -24,7 +24,9 @@ import com.example.firstproject.Dto.ChatDto.ChatRoomDto;
 import com.example.firstproject.Dto.ChatDto.RoomlistDto;
 import com.example.firstproject.Dto.ChatDto.Roomuseradd;
 import com.example.firstproject.Dto.ChatDto.roomlistresponseDto;
+import com.example.firstproject.Dto.ChatDto.Roomdata.MeseageDto;
 import com.example.firstproject.Dto.ChatDto.Roomdata.Roomdata;
+import com.example.firstproject.Dto.ChatDto.Roomdata.Roominfo;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.StompRoom.MemberRoom;
 import com.example.firstproject.Entity.StompRoom.Room;
@@ -229,5 +231,32 @@ public class ChatMemberController {
 		
 		return ResponseEntity.ok().body(dto);
 	}
+	//채팅방 정보 가져오기
+	@GetMapping("/chatroomdata/info/{roomid}")
+	public ResponseEntity<Roominfo> chatroomdetailinfo(@PathVariable Long roomid){
+		log.info("채팅방정보가져오기");
+		
+		long start2=System.currentTimeMillis();
+		Roominfo roominfo=chatservice.roominfoget(roomid);
+		long end2=System.currentTimeMillis();
+		long res2=end2-start2;
+		System.out.println("기존시간2:"+res2);
+		return ResponseEntity.ok(roominfo);
+	}
+	
+	
+	//채팅방 채팅 가져오기 
+	@GetMapping("/chatroomdata/chatdata/{roomid}")
+	public ResponseEntity<List<MeseageDto>> chatroomdetailchatdata(@PathVariable Long roomid){
+		log.info("채팅가져오기");
+		
+		long start2=System.currentTimeMillis();
+		List<MeseageDto> newdata=chatservice.chatdataget(roomid);
+		long end2=System.currentTimeMillis();
+		long res2=end2-start2;
+		System.out.println("기존시간2:"+res2);
+		return ResponseEntity.ok(newdata);
+	}
+	
 	
 }

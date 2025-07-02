@@ -62,7 +62,7 @@ public interface NoticeService {
 	
 	public boolean noticelikecheck(MemberEntity member,Long noticeid);
 	
-	public  Page<NoticeDto> favoritenotice(MemberEntity member,Pageable pageable);
+	public  Page<NoticeDto> favoritenotice(MemberEntity member,Pageable pageable,String option,String keyword);
 	
 	public Page<NoticeDto> loginnoticeget(Long userid,int page);
 	
@@ -71,7 +71,7 @@ public interface NoticeService {
 
 	public Page<CommentDto> showcomments(Long noticeid,int page);
 	
-	public Page<NoticeImageDto> getimagelist(Long userid,int page);
+	public Page<NoticeImageDto> getimagelist(Long userid,int page,String option,String keyword);
 	
 	public List<PreviewimageDto> getPreviewimage(Long userid,Long noticeid);
 

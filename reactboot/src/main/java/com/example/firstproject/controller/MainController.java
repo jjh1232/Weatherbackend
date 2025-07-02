@@ -51,11 +51,14 @@ import com.example.firstproject.Repository.NoticeRepository;
 import com.example.firstproject.Service.NoticeService;
 import com.example.firstproject.Service.Memberservice.MemberService;
 import com.example.firstproject.configure.PrincipalDetails;
+import com.example.firstproject.tools.NoticeViewtools;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 //@CrossOrigin(origins ="*",exposedHeaders = "*")
 @RestController
+@RequiredArgsConstructor
 @Slf4j
 public class MainController {
 
@@ -66,6 +69,8 @@ public class MainController {
 	
 	@Autowired
 	private MemberService memberservice;
+	
+	private final NoticeViewtools noticeviewservice;
 	
 	
 	
@@ -162,11 +167,14 @@ public class MainController {
 	
 	//=====================================일단 좋아요 목록가져오는컨트롤러 ============================================
 	@GetMapping("/onlikenotice")
-	public ResponseEntity search(Authentication authentication,@RequestParam(defaultValue="1") int page){
+	public ResponseEntity searchliked(Authentication authentication,
+			@RequestParam(required = false,defaultValue="title") String option,
+			@RequestParam(required = false,defaultValue="") String keyword,
+			@RequestParam(defaultValue="1") int page){
 		PrincipalDetails principal=(PrincipalDetails) authentication.getPrincipal();
 		Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
 		System.out.println("들어온페이지:"+page);
-		Page<NoticeDto> dto=noticeservice.favoritenotice(principal.getMember(),pageable);
+		Page<NoticeDto> dto=noticeservice.favoritenotice(principal.getMember(),pageable,option,keyword);
 		
 		
 		
@@ -197,6 +205,8 @@ public class MainController {
 		
 		NoticeDetailDto Dto =noticeservice.detail(num,userid);
 		System.out.println(Dto);
+		//조회수증가
+		noticeviewservice.increaseviewcount(Dto.getId());
 		return Dto;
 		
 	}
@@ -414,16 +424,19 @@ public class MainController {
 		return ResponseEntity.ok(data);
 	}
 	@GetMapping("/open/notice/imagelist")
-	public ResponseEntity getimagelist(@RequestParam(required = false,defaultValue = "1") int page,Authentication authentication) {
-		
+	public ResponseEntity getimagelist(@RequestParam(required = false,defaultValue="title") String option,
+			@RequestParam(required = false,defaultValue="") String keyword,
+			@RequestParam(defaultValue="1") int page,Authentication authentication) {
+		//필터자체는 걸려서 로그인시 인가를하는거고 로그인안해도 넘어옴 시큐리티설정하면
 		System.out.println("페이지:"+page);
+		System.out.println("페이지:"+keyword);
 		Long userid=null;
 		//인증안된유저도 막는게 후자 프린시펄디테일즈타입인지 인증안되면 그냥스트링으로 본다함
 		if(authentication != null&&authentication.getPrincipal() instanceof PrincipalDetails) {
 			PrincipalDetails member=(PrincipalDetails) authentication.getPrincipal();
 			userid=member.getMember().getId();
 		}
-		Page<NoticeImageDto> dto=noticeservice.getimagelist(userid,page);
+		Page<NoticeImageDto> dto=noticeservice.getimagelist(userid,page,option,keyword);
 		
 		return ResponseEntity.ok(dto);
 	}

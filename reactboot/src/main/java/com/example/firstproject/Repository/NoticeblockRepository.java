@@ -22,7 +22,7 @@ public interface NoticeblockRepository extends JpaRepository<NoticeblockEntity, 
 	
 	
 	//유저블록 가져오기 
-	
+	//s
 	@Query(value="select b from NoticeblockEntity b where b.member.id =:memberid and noticeid=:noticeid")
 	public Optional<NoticeblockEntity> findbymemberidandnoticeid(Long memberid,Long noticeid);
 
@@ -30,4 +30,9 @@ public interface NoticeblockRepository extends JpaRepository<NoticeblockEntity, 
 	@Query(value="select b from NoticeblockEntity b where b.member.id =:memberid and noticeid=:noticeid")
 	public boolean isblockcheck(Long memberid,Long noticeid);
 
+	//블록목록가져오기 효율적으로 로그인유저와 가져온노티스아이디로
+	//노티스아이디들로 블록여부가져오기 효율적
+	@Query(value="select b.noticeid from NoticeblockEntity b where b.member.id=:userid and b.noticeid in :noticeids")
+	public List<Long> findblocknoticeids(Long userid,List<Long> noticeids);
+	
 }

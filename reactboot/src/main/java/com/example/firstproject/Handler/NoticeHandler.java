@@ -66,9 +66,13 @@ public interface NoticeHandler {
 	//좋아요한게시글 가져오기
 	public Page<NoticeEntity> getfavoritelist(MemberEntity member,Pageable pageable);
 
+	//좋아요게시글서치
+	public Page<NoticeEntity> favoritenoticesearch(MemberEntity member,Pageable pageable,String option,String keyword);
 
 	//이미지게시판
 	public Page<Object[]> getImagelist(Pageable page);
+	//이미지서치
+	public Page<Object[]> getsearchImagelist(Pageable page,String option,String keyword);
 	
 	public List<detachfile> getPrevimage(Long noticeid);
 	

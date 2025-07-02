@@ -29,6 +29,7 @@ import com.example.firstproject.Dto.ChatDto.stompchatDto;
 import com.example.firstproject.Dto.ChatDto.Roomdata.EzmemberDto;
 import com.example.firstproject.Dto.ChatDto.Roomdata.MeseageDto;
 import com.example.firstproject.Dto.ChatDto.Roomdata.Roomdata;
+import com.example.firstproject.Dto.ChatDto.Roomdata.Roominfo;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.StompRoom.MemberRoom;
 import com.example.firstproject.Entity.StompRoom.Room;
@@ -129,7 +130,13 @@ public class ChatService {
 		@Scheduled(fixedDelay=5000)//5초마다 이거 로직더수정할수있을거같음
 		//1분마다 체크해서 보내기 저장딜레이를줄이자
 		public void checkmessage() {
+			
+			/* 대용량아니면사실.. 이건필요할때 따로생성
 			if(messagequeue.size()>=Quad_SIZE) {
+				batchSavemessage();
+			}
+			*/
+			if(!messagequeue.isEmpty()) {
 				batchSavemessage();
 			}
 		
@@ -137,11 +144,12 @@ public class ChatService {
 		
 		
 		public void batchSavemessage() {
-			System.out.println("배치세이브잘되나");
+			
 			List<chatmessage> messagesave=new ArrayList<>();
 			chatmessage message;
 			while((message= messagequeue.poll())!=null&&messagesave.size()<BATCH_SIZE) {
 				//꺼냇는데 널이아니거나 사이즈가배치보다 작을경우
+				
 				messagesave.add(message);
 			}
 			if(!messagesave.isEmpty()) {
@@ -262,42 +270,7 @@ public class ChatService {
 		return room;
 	}
 	
-	public Roomdata Roomdataget(Long roomid) {
-		Room room=roomrepo.findbyroomdata(roomid);
-		//멤버데이터가져오기
-		List<EzmemberDto> memberlist=room.getUserlist().stream()
-				.map(ul-> EzmemberDto.builder()
-						.userid(ul.getMember().getId())
-						.email(ul.getMember().getUsername())
-						.nickname(ul.getMember().getNickname())
-						.profileurl(ul.getMember().getProfileimg())
-						.build()
-						
-						
-						).collect(Collectors.toList());
-		
-		List<MeseageDto> chatdatas=room.getChatdata().stream().map(
-				c->MeseageDto.builder().id(c.getId())
-				.messagetype(c.getMessageType())
-				.message(c.getMessage())
-				.red(c.getCreatedDate())
-				.sender(EzmemberDto.builder()
-						.userid(c.getMember().getId())
-						.email(c.getMember().getUsername())
-						.nickname(c.getMember().getNickname())
-						.profileurl(c.getMember().getProfileimg())
-						.build())
-				.build()
-				)
-				.collect(Collectors.toList());
-		
-		return Roomdata.builder().roomid(room.getId())
-				.roomname(room.getRoomname())
-				.createred(room.getCreatedDate())
-				.memberlist(memberlist)
-				.chatdata(chatdatas)
-				.build();
-	}
+
 	//룸에서 유저 나가기
 	//@Transactional
 	public void roomuserexit(Room room,MemberEntity member) {
@@ -467,4 +440,89 @@ public class ChatService {
 				  }).collect(Collectors.toList());
 			  
 	}
+	
+	//이거 컬렉션형을 fetchjoin으로 두번가져오면 카디널뭐였더라 그거 실행됨 
+	//dto프로덕션쓰거나해얗나ㅡㄴ데 룸데이터도 같이 가져오는거 손해같아서 수정
+	public Roomdata Roomdataget(Long roomid) {
+		Room room=roomrepo.findbyroomdata(roomid);
+		//멤버데이터가져오기
+		List<EzmemberDto> memberlist=room.getUserlist().stream()
+				.map(ul-> EzmemberDto.builder()
+						.userid(ul.getMember().getId())
+						.email(ul.getMember().getUsername())
+						.nickname(ul.getMember().getNickname())
+						.profileurl(ul.getMember().getProfileimg())
+						.build()
+						
+						
+						).collect(Collectors.toList());
+		
+		List<MeseageDto> chatdatas=room.getChatdata().stream().map(
+				c->MeseageDto.builder().id(c.getId())
+				.messagetype(c.getMessageType())
+				.message(c.getMessage())
+				.red(c.getCreatedDate())
+				.sender(EzmemberDto.builder()
+						.userid(c.getMember().getId())
+						.email(c.getMember().getUsername())
+						.nickname(c.getMember().getNickname())
+						.profileurl(c.getMember().getProfileimg())
+						.build())
+				.build()
+				)
+				.collect(Collectors.toList());
+		//중복확인 -> 중복댐fetchjoin문제
+		System.out.println("챗데이터중복확인");
+		room.getChatdata().forEach(c -> System.out.println(c.getId() + " / " + c.getMessage()));
+		return Roomdata.builder().roomid(room.getId())
+				.roomname(room.getRoomname())
+				.createred(room.getCreatedDate())
+				.memberlist(memberlist)
+				.chatdata(chatdatas)
+				.build();
+	}
+	
+	//위의 구조에서 수정
+	//룸데이터인포
+	public Roominfo roominfoget(Long roomid) {
+		Room room =roomrepo.Roomdetailinfo(roomid);
+		//필요한 정보만 가져오는게나은거같아스
+		List<EzmemberDto> memberlist=room.getUserlist().stream()
+				.map(ul-> EzmemberDto.builder()
+						.userid(ul.getMember().getId())
+						.email(ul.getMember().getUsername())
+						.nickname(ul.getMember().getNickname())
+						.profileurl(ul.getMember().getProfileimg())
+						.build()
+						
+						
+						).collect(Collectors.toList());
+		return Roominfo.builder().roomid(room.getId())
+				.roomname(room.getRoomname())
+				.createred(room.getCreatedDate())
+				.memberlist(memberlist)
+				
+				.build();
+	}
+	//채팅가져오기
+	public List<MeseageDto> chatdataget(Long roomid){
+		List<chatmessage> messagelist=messagerepo.Roomdetailchatget(roomid);
+		List<MeseageDto> chatdatas=messagelist.stream().map(
+				c->MeseageDto.builder().id(c.getId())
+				.messagetype(c.getMessageType())
+				.message(c.getMessage())
+				.red(c.getCreatedDate())
+				.sender(EzmemberDto.builder()
+						.userid(c.getMember().getId())
+						.email(c.getMember().getUsername())
+						.nickname(c.getMember().getNickname())
+						.profileurl(c.getMember().getProfileimg())
+						.build())
+				.build()
+				)
+				.collect(Collectors.toList());
+		
+		 return chatdatas;
+	}
+	
 }

@@ -75,6 +75,11 @@ public class Blockhandler {
 		return blocks;
 		
 	}
+	//유저와 가져온 노티스들 블록여부
+	public List<Long> getuserblocknotices(Long userid,List<Long> noticeids){
+		List<Long> blockids=blockrepository.findblocknoticeids(userid, noticeids);
+		return blockids;
+	}
 	//유저블록테스트 2
 	
 	public List<Long> getblocknoticenum(Long userid){
