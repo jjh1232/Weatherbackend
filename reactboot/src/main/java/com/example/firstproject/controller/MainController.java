@@ -392,7 +392,8 @@ public class MainController {
 	}
 	
 	//==================================게시글좋아요기능 =================================
-	@GetMapping("/noticelike/{noticeid}")
+	//둘다임 
+	@PostMapping("/noticelike/{noticeid}")
 	public ResponseEntity<Object> likenotice(@PathVariable Long noticeid,Authentication authentication ) {
 		PrincipalDetails detailes=(PrincipalDetails) authentication.getPrincipal();
 		//MemberEntity member=detailes.getMember();

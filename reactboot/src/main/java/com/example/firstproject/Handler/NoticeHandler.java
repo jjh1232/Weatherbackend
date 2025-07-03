@@ -69,6 +69,9 @@ public interface NoticeHandler {
 	//좋아요게시글서치
 	public Page<NoticeEntity> favoritenoticesearch(MemberEntity member,Pageable pageable,String option,String keyword);
 
+	//좋아요여부 id로
+	public boolean Likenoticecheck(Long userid,Long noticeid);
+	
 	//이미지게시판
 	public Page<Object[]> getImagelist(Pageable page);
 	//이미지서치

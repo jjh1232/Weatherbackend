@@ -33,9 +33,10 @@ public class NoticeDetailDto {
 	
 	private List<detachfile> detachfiles;
 	private boolean isblock =false;
-	private int likes;
-	private boolean likeusercheck;
+
+	private boolean likeusercheck=false;
 	private long views;
+	private long likes;
 	//생성자를 따로만들어야한다함
 	public NoticeDetailDto(
 		    long id,
@@ -51,7 +52,8 @@ public class NoticeDetailDto {
 		    String wsd,
 		    String red,
 		    String userprofile,
-		    long views
+		    long views,
+		    long likes
 		) {
 		    this.id = id;
 		    this.username = username;
@@ -66,5 +68,7 @@ public class NoticeDetailDto {
 		    this.wsd = wsd;
 		    this.red = red;
 		    this.userprofile = userprofile;
+		    this.views=views;
+		    this.likes=likes;
 		}
 }

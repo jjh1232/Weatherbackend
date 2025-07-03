@@ -36,4 +36,7 @@ public interface LikeRepository extends JpaRepository<FavoriteEntity,Long> {
 
 	//noticeid를 noticeid로한탓에..
 	long countByNoticeNoticeid(Long noticeid);
+	
+	@Query(value="select count(1) > 0 from FavoriteEntity f where f.member.id=:userid and f.notice.id =:noticeid")
+	public boolean Likecheck(Long userid,Long noticeid);
 }

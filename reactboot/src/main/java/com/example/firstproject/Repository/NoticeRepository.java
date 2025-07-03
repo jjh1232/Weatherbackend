@@ -124,7 +124,8 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 */
 	
 	@Query(value="select new com.example.firstproject.Dto.NoticeDetailDto(n.id,m.username,m.nickname,n.title,n.text,"
-			+ "n.temp,n.sky,n.pty,n.rain,n.reh,n.wsd,n.red,m.profileimg,n.views) "
+			+ "n.temp,n.sky,n.pty,n.rain,n.reh,n.wsd,n.red,m.profileimg,n.views,"
+			+ "(select count(1) from FavoriteEntity f where f.notice =n)) "
 			+ "from notice n join n.member m "
 			+ "where n.id=:noticeid")
 	NoticeDetailDto findbyid(Long noticeid);

@@ -381,6 +381,16 @@ public class NoticeHandlerImpl implements NoticeHandler{
 	}
 
 
+//좋아요체크
+	@Override
+	public boolean Likenoticecheck(Long userid, Long noticeid) {
+		// TODO Auto-generated method stub
+		
+		boolean check=likerepository.Likecheck(userid, noticeid);
+		return check;
+	}
+
+
 
 
 

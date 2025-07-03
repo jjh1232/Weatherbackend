@@ -432,10 +432,10 @@ public class NoticeServiceImpl implements NoticeService {
 		
 		if(userid!=null) {
 			//카운트가져오기
-			//boolean liked=
-			
+			boolean liked=noticehandler.Likenoticecheck(userid, noticeid);	
 			boolean blocked=blockhandler.userblockcheck(userid, noticeid);
 			dto.setIsblock(blocked);
+			dto.setLikeusercheck(liked);
 			
 		//	boolean decled=blockhandler.noticedeclecheck(userid, noticeid);
 			
@@ -772,12 +772,12 @@ public class NoticeServiceImpl implements NoticeService {
 					.build();
 			noticehandler.favoritesave(likes);
 			//int likesnum=notice.getLikeuser().size()+1;
-			return ResponseEntity.ok("좋아요");
+			return ResponseEntity.ok(true);
 		}else {
 			//좋아요누른적있음
 			noticehandler.favoritedelete(found.get());
 			//int likesnum=notice.getLikeuser().size()-1;
-			return ResponseEntity.ok("좋아요해제");
+			return ResponseEntity.ok(false);
 		}
 		
 	}
