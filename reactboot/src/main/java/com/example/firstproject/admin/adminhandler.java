@@ -93,10 +93,10 @@ public class adminhandler {
 	public Page<NoticeEntity> searchtitle(String text,Pageable pageable) {
 		// TODO Auto-generated method stub
 		
-		Page<NoticeEntity> result=noticerepo.searchtitle(text,pageable);
+		//Page<NoticeEntity> result=noticerepo.searchtitle(text,pageable);
 		
 		
-		return result;
+		return null;
 	}
 
 
@@ -104,18 +104,18 @@ public class adminhandler {
 	
 	public Page<NoticeEntity> searchtitletext(String text,Pageable pageable) {
 		
-		Page<NoticeEntity> result=noticerepo.searchtitletext(text,pageable);
-		return result;
+		//Page<NoticeEntity> result=noticerepo.searchtitletext(text,pageable);
+		return null;
 	}
 
 
 
 	
 	public Page<NoticeEntity> searchtext(String text,Pageable pageable) {
-			Page<NoticeEntity> result=noticerepo.searchtext(text,pageable);
+		//	Page<NoticeEntity> result=noticerepo.searchtext(text,pageable);
 			
 		
-		return result;
+		return null;// result;
 	}
 
 
@@ -125,10 +125,10 @@ public class adminhandler {
 	}
 
 	public Page<NoticeEntity> searchname(String text,Pageable pageable) {
-			Page<NoticeEntity> result=noticerepo.searchname(text,pageable);
+			//Page<NoticeEntity> result=noticerepo.searchname(text,pageable);
 		
 		
-		return result;
+			return null;
 	}
 	//==============================검색핸들러=====================================
 	

@@ -41,6 +41,7 @@ public class NoticeViewtools {
 		Set<String> keys=redisTemplate.keys("viewcount:*");
 		for(String key : keys) {
 			Long noticeid=extractnoticeid(key);
+			
 			Long viewcount =Long.valueOf(redisTemplate.opsForValue().get(key));
 			//저장로직
 			noticerepo.updateviewcount(noticeid,viewcount);

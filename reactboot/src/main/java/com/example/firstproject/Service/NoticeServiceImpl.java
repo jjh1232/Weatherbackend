@@ -54,6 +54,7 @@ import com.example.firstproject.Dto.NoticeDtointer;
 import com.example.firstproject.Dto.NoticeImageDto;
 import com.example.firstproject.Dto.NoticeUpdate;
 import com.example.firstproject.Dto.Noticeform;
+import com.example.firstproject.Dto.TwitformnoticeDto;
 import com.example.firstproject.Dto.datachfiledto;
 import com.example.firstproject.Dto.detachVo;
 import com.example.firstproject.Dto.removetestDto;
@@ -102,27 +103,36 @@ public class NoticeServiceImpl implements NoticeService {
 	
 	
 	@Override
-	public Page<NoticeDto> read(Pageable page) {
+	public Page<TwitformnoticeDto> read(Long userid,String option,String keyword,int page) {
 		System.out.println("게시판리드서비스");
-		Page<NoticeEntity> entity = noticehandler.read(page);
-		
-		/*
-		Page<NoticeDto> dtlist =entity.map
-				(m->m.toDto(m.getNoticeid(),
-						m.getNoticeuser(),m.getNoticenick(), m.getTitle()
-						,m.getText(),m.getRed()
-						,m.getLikeuser().size()
-						,m.getTemp(),m.getSky(),m.getPty(),m.getRain()
-						,m.getMember().getProfileimg()
-						)
-						
-						);
-		*/
-		Page<NoticeDto> dtlist=entity.map(m-> new NoticeDto(m));
-		//Page<NoticeDto> dtlist=entity.map(m-> new NoticeDto());//페이지맵핑dto로
-		
-		// TODO Auto-generated method stub
-		return dtlist;
+		PageRequest pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
+		if(keyword !=null&& !keyword.isBlank()) {
+			//검색
+			if(userid !=null) {
+				//로그인+검색
+				System.out.println("로그인검색");
+				return noticehandler.searchtwitform(userid, option, keyword, pageable);
+			}else {
+				//로그인 +비검색
+				System.out.println("비로그인검색");
+				return noticehandler.searchtwitform(userid, option, keyword, pageable);
+			}
+		}
+		else {
+			//비검색
+			if(userid!=null) {
+				//로그인 비검색
+				System.out.println("로그인비검색");
+				return noticehandler.twitformnoticelist(userid, pageable);
+			}
+			else {
+				//비로그인 비검색
+				System.out.println("비로그인비검색");
+				return noticehandler.twitformnoticelist(userid, pageable);
+			}
+			
+		}
+
 	}
 
 	@Override
@@ -135,20 +145,20 @@ public class NoticeServiceImpl implements NoticeService {
 		Page<NoticeEntity> entitypage;
 		switch (option) {
 		case "titletext":
-			entitypage=noticehandler.searchtitletext(content,pageable);
+			//entitypage=noticehandler.searchtitletext(content,pageable);
 			//Page<NoticeDto> dtlist=entitypage.map(m-> new NoticeDto(m));
 			break;
 		case "title":
          
-            entitypage = noticehandler.searchtitle(content, pageable);
+            //entitypage = noticehandler.searchtitle(content, pageable);
             break;
         case "text":
         
-            entitypage = noticehandler.searchtext(content, pageable);
+            //entitypage = noticehandler.searchtext(content, pageable);
             break;
         default:
        
-            entitypage = noticehandler.searchname(content, pageable);
+            //entitypage = noticehandler.searchname(content, pageable);
             break;
 		
 		}
@@ -158,23 +168,23 @@ public class NoticeServiceImpl implements NoticeService {
 
 	    if (loginid != null) {
 	    	//노티스아이디추출
-	        List<Long> noticeIds = entitypage.getContent().stream()
-	            .map(NoticeEntity::getNoticeid)
-	            .collect(Collectors.toList());
+	       // List<Long> noticeIds = entitypage.getContent().stream()
+	       //    .map(NoticeEntity::getNoticeid)
+	        //    .collect(Collectors.toList());
 
 	        // 차단/좋아요 정보 조회 (Set으로 변환해 contains 성능 향상)
 	        //재할당없이 데이터추가
-	        blockNoticeIds.addAll(blockhandler.getblocknoticenum(loginid));
-	        likeNoticeIds.addAll(noticehandler.favoritenoticeids(loginid, noticeIds));
+	      //  blockNoticeIds.addAll(blockhandler.getblocknoticenum(loginid));
+	      //  likeNoticeIds.addAll(noticehandler.favoritenoticeids(loginid, noticeIds));
 	    }
 	    
 	    //반환
-	    return entitypage.map(entity -> {
-	    	NoticeDto dto=new NoticeDto(entity);
-	    	dto.setIsblock(blockNoticeIds.contains(entity.getNoticeid()));
-	    	dto.setLikeusercheck(likeNoticeIds.contains(entity.getNoticeid()));
-	    	return dto;
-	    });
+	//    return entitypage.map(entity -> {
+	 //   	NoticeDto dto=new NoticeDto(entity);
+	  //  	dto.setIsblock(blockNoticeIds.contains(entity.getNoticeid()));
+	   // 	dto.setLikeusercheck(likeNoticeIds.contains(entity.getNoticeid()));
+	   // 	return dto;
+	    //});
 	    /*
 		if (option.equals("titletext")) {
 			log.info("타이틀+텍스트서비스");
@@ -211,7 +221,7 @@ public class NoticeServiceImpl implements NoticeService {
 		}
 			
 		*/
-		
+		return null;
 	}
 
 	  
@@ -435,6 +445,7 @@ public class NoticeServiceImpl implements NoticeService {
 			boolean liked=noticehandler.Likenoticecheck(userid, noticeid);	
 			boolean blocked=blockhandler.userblockcheck(userid, noticeid);
 			dto.setIsblock(blocked);
+			System.out.println("좋아요여부:"+liked);
 			dto.setLikeusercheck(liked);
 			
 		//	boolean decled=blockhandler.noticedeclecheck(userid, noticeid);
@@ -883,6 +894,7 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public Page<NoticeDto> loginnoticeget(Long userid,int page) {
 		// TODO Auto-generated method stub
+		/*
 		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
 		Page<NoticeEntity> entitylist=noticehandler.read(pageable);
 		System.out.println("서비스시작");
@@ -912,7 +924,8 @@ public class NoticeServiceImpl implements NoticeService {
 			dto.setLikeusercheck(likenoticeids.contains(m.getNoticeid()));
 			return dto;
 		});
-		return dtolist;
+		*/
+		return null;
 	}
 
 	@Override
@@ -1024,7 +1037,7 @@ public class NoticeServiceImpl implements NoticeService {
 			object=noticehandler.getImagelist(pageable);
 		}
 		else {
-			System.out.println("검");
+			System.out.println("검색");
 			object=noticehandler.getsearchImagelist(pageable, option, keyword);
 		}
 		//아이디추출

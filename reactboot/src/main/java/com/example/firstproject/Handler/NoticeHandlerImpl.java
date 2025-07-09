@@ -14,6 +14,7 @@ import com.example.firstproject.Dto.NoticeDetailDto;
 import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.NoticeDtointer;
 import com.example.firstproject.Dto.NoticeImageDto;
+import com.example.firstproject.Dto.TwitformnoticeDto;
 import com.example.firstproject.Dto.Comment.CommentDto;
 import com.example.firstproject.Dto.Comment.Testcom;
 import com.example.firstproject.Entity.CommentEntity;
@@ -44,13 +45,38 @@ public class NoticeHandlerImpl implements NoticeHandler{
 	
 	private final LikeRepository likerepository;
 		
-	@Override
-	public Page<NoticeEntity> read(Pageable page) {
-		System.out.println("페이지핸들러");
-		Page<NoticeEntity> entity=noticerepository.findAll(page);
-		
+	//페이지
 	
-		return entity;
+	
+	@Override
+	public Page<TwitformnoticeDto> twitformnoticelist(Long userid, Pageable page) {
+		// TODO Auto-generated method stub
+		Page<TwitformnoticeDto> dto =noticerepository.twitnoticelist(userid, page);
+		return dto;
+	}
+	
+	@Override
+	public Page<TwitformnoticeDto> searchtwitform(Long userid,String option,String keyword,Pageable page) {
+		switch (option) {
+		case "title": 			
+			System.out.println("타이틀검색");
+			return noticerepository.searchtitle(keyword, userid,page);
+		case "text":
+			System.out.println("텍스트검색");
+			return noticerepository.searchtext(keyword, userid, page);
+		case "titletext":
+			System.out.println("제목+내용검색");
+			return noticerepository.searchtitletext(keyword, userid, page);
+		case "name":
+			System.out.println("닉네임검색");
+			return noticerepository.searchname(keyword, userid, page);
+	    default:
+            // 예외를 던지거나, 빈 결과를 반환
+            throw new IllegalArgumentException("검색 옵션이 잘못되었습니다: " + option);
+		
+			}
+	
+		
 	}
 
 
@@ -128,44 +154,7 @@ public class NoticeHandlerImpl implements NoticeHandler{
 
 
 
-	@Override
-	public Page<NoticeEntity> searchtitle(String text,Pageable pageable) {
-		// TODO Auto-generated method stub
-		log.info("핸들러입갤");
-		Page<NoticeEntity> result=noticerepository.searchtitle(text,pageable);
-		
-		log.info(result.toString());
-		return result;
-	}
-
-
-
-	@Override
-	public Page<NoticeEntity> searchtitletext(String text,Pageable pageable) {
-		
-		Page<NoticeEntity> result=noticerepository.searchtitletext(text,pageable);
-		return result;
-	}
-
-
-
-	@Override
-	public Page<NoticeEntity> searchtext(String text,Pageable pageable) {
-			Page<NoticeEntity> result=noticerepository.searchtext(text,pageable);
-			
-		
-		return result;
-	}
-
-
-
-	@Override
-	public Page<NoticeEntity> searchname(String text,Pageable pageable) {
-			Page<NoticeEntity> result=noticerepository.searchname(text,pageable);
-		
-		
-		return result;
-	}
+	
 
 
 
@@ -389,6 +378,15 @@ public class NoticeHandlerImpl implements NoticeHandler{
 		boolean check=likerepository.Likecheck(userid, noticeid);
 		return check;
 	}
+
+
+
+
+
+
+
+
+
 
 
 

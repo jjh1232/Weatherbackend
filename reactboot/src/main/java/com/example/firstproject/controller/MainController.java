@@ -39,6 +39,7 @@ import com.example.firstproject.Dto.NoticeDtointer;
 import com.example.firstproject.Dto.NoticeImageDto;
 import com.example.firstproject.Dto.NoticeUpdate;
 import com.example.firstproject.Dto.Noticeform;
+import com.example.firstproject.Dto.TwitformnoticeDto;
 import com.example.firstproject.Dto.detachVo;
 import com.example.firstproject.Dto.noticeDao;
 import com.example.firstproject.Dto.Comment.CommentDto;
@@ -104,12 +105,26 @@ public class MainController {
 	}
 	
 	//이거 지금 안씀 여기서 데이터정리하는게 나은거같아서
-	@GetMapping("/open/notice")
-	public Page<NoticeDto> notice(@RequestParam(value="page",required =false,defaultValue="1") int page) {
+	@GetMapping("/open/twitformnoticelist")
+	public Page<TwitformnoticeDto> notice(
+			@RequestParam(required = false,defaultValue="title") String option,
+			@RequestParam(required = false,defaultValue="") String keyword,
+			@RequestParam(defaultValue="1") int page,
+			Authentication authentication
+			) {
 		System.out.println("페이지"+page);
-		//List<NoticeDto> notice = new ArrayList<NoticeDto>();
-		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
-		Page<NoticeDto> notice=noticeservice.read(pageable);
+		
+
+		PrincipalDetails user=null;
+		Long userid=null;
+		if(authentication !=null && authentication.isAuthenticated()) {
+			System.out.println("유저로그인됨");
+			user=(PrincipalDetails) authentication.getPrincipal();
+			userid=user.getMember().getId();
+		}
+		
+		
+		Page<TwitformnoticeDto> notice=noticeservice.read(userid,option,keyword,page);
 		
 		
 		return notice;
@@ -127,8 +142,8 @@ public class MainController {
 		if(keyword.equals("")) {
 			log.info("키워드널 검색어가아님");	
 			Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
-			Page<NoticeDto> Dto=noticeservice.read(pageable);
-			return Dto;
+			//Page<NoticeDto> Dto=noticeservice.read(pageable);
+			return null;
 		}else {
 			log.info("검색임 ");	
 			log.info("페이지"+page);
@@ -195,10 +210,11 @@ public class MainController {
 	@GetMapping("/open/noticedetail/{num}")
 	public NoticeDetailDto noticedetail(@PathVariable Long num,Authentication authentication) {
 		log.info("글들");
-		
+	
 		PrincipalDetails user=null;
 		Long userid=null;
 		if(authentication !=null && authentication.isAuthenticated()) {
+			System.out.println("유저로그인됨");
 			user=(PrincipalDetails) authentication.getPrincipal();
 			userid=user.getMember().getId();
 		}

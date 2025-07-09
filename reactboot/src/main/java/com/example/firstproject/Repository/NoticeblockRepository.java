@@ -27,7 +27,7 @@ public interface NoticeblockRepository extends JpaRepository<NoticeblockEntity, 
 	public Optional<NoticeblockEntity> findbymemberidandnoticeid(Long memberid,Long noticeid);
 
 	
-	@Query(value="select b from NoticeblockEntity b where b.member.id =:memberid and noticeid=:noticeid")
+	@Query(value="select count(b)>0 from NoticeblockEntity b where b.member.id =:memberid and noticeid=:noticeid")
 	public boolean isblockcheck(Long memberid,Long noticeid);
 
 	//블록목록가져오기 효율적으로 로그인유저와 가져온노티스아이디로

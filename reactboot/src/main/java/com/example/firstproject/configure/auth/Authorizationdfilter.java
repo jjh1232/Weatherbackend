@@ -78,8 +78,10 @@ public class Authorizationdfilter extends BasicAuthenticationFilter{
 		System.out.println("===========================================");
 	if(request.getServletPath().startsWith("/open/")) {
 			//open경로===============================================================================
-		 if (jwtheader != null && jwtheader.startsWith("Bearer ")) {
+		
+		if (jwtheader != null && jwtheader.startsWith("Bearer ")) {
 		        // 로그인 유저: 토큰 검증
+			System.out.println("오픈된경로이지만 유저헤더가있음");
 		        String jwttoken = jwtheader.replace("Bearer ", "");
 		        if (jwtservice.checktokenvalid(jwttoken)) {
 		            // 인증 정보 세팅
@@ -107,6 +109,7 @@ public class Authorizationdfilter extends BasicAuthenticationFilter{
 		        }
 		    }
 		    // 비로그인 유저: 그냥 통과
+	//	System.out.println("open이고비로그인유저");
 		    chain.doFilter(request, response);
 		    return;
 		}

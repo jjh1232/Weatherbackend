@@ -16,6 +16,7 @@ import com.example.firstproject.Dto.NoticeDtointer;
 import com.example.firstproject.Dto.NoticeImageDto;
 import com.example.firstproject.Dto.NoticeUpdate;
 import com.example.firstproject.Dto.Noticeform;
+import com.example.firstproject.Dto.TwitformnoticeDto;
 import com.example.firstproject.Dto.detachVo;
 import com.example.firstproject.Dto.Comment.CommentDto;
 import com.example.firstproject.Dto.Comment.Commentform;
@@ -25,8 +26,8 @@ import com.example.firstproject.Entity.NoticeEntity;
 
 public interface NoticeService {
 
-	
-	public Page<NoticeDto> read(Pageable page);
+	//게시판가져오기
+	public Page<TwitformnoticeDto> read(Long userid,String option,String keywordm,int page);
 	
 	public List<NoticeDto> readfd(int page);
 	

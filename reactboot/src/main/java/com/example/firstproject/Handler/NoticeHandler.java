@@ -10,6 +10,7 @@ import com.example.firstproject.Dto.NoticeDetailDto;
 import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.NoticeDtointer;
 import com.example.firstproject.Dto.NoticeImageDto;
+import com.example.firstproject.Dto.TwitformnoticeDto;
 import com.example.firstproject.Dto.Comment.CommentDto;
 import com.example.firstproject.Entity.CommentEntity;
 import com.example.firstproject.Entity.FavoriteEntity;
@@ -19,8 +20,11 @@ import com.example.firstproject.Entity.detachfile;
 
 public interface NoticeHandler {
 	
-	Page<NoticeEntity> read(Pageable page);
+	Page<TwitformnoticeDto> twitformnoticelist(Long userid,Pageable page);
+	
+	Page<TwitformnoticeDto> searchtwitform(Long userid,String option,String keyword,Pageable page);
 
+	
 	List<NoticeEntity> readfd(int page);
 	
 	void create(NoticeEntity entity);
@@ -37,11 +41,7 @@ public interface NoticeHandler {
 	
 	List<CommentEntity> commentget(Long num);
 	
-	Page<NoticeEntity> searchtitle(String text,Pageable page);
-	Page<NoticeEntity> searchtext(String text,Pageable page);
-	Page<NoticeEntity> searchname(String text,Pageable page);
-	
-	Page<NoticeEntity> searchtitletext(String text,Pageable page);
+
 	
 	public Optional<CommentEntity> findcomment(Long id);
 	
