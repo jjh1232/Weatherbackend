@@ -2,6 +2,7 @@ package com.example.firstproject.controller;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -32,14 +33,31 @@ public class StompController {
 	//db에저장하자
 	private final ChatService chatservice;
 	
+	private final RedisTemplate<String, Object> redistemplate;
+	
 	@EventListener//이벤트가 밠생할시 실행되는 메서드 이걸로 강한결합을 분리할수있음
 	public void handlwebsocketconnect(SessionConnectEvent event) {
 		System.out.println("세션생성");
 	}
+	//연결해제시 
 	@EventListener
 	public void handlesocketdisco(SessionDisconnectEvent event) {
+		
 		StompHeaderAccessor accesor=StompHeaderAccessor.wrap(event.getMessage());
-		System.out.println("연결종료");
+		String sessionid=accesor.getSessionId();
+		String userkey="stomp:sessiontouser:"+sessionid;
+		Long userid=(Long) redistemplate.opsForValue().get(userkey);
+		if(userid !=null) {
+			redistemplate.opsForSet().remove("stomp:useridtosession:"+userid, sessionid);
+			redistemplate.delete(userkey);//유저키삭제
+			if(redistemplate.opsForSet().size("stomp:useridtosession:"+userid)==0) {
+				redistemplate.delete("stomp:useridtosession:"+userid);
+			}
+		}else {
+			System.out.println("해당id못찾음:"+sessionid);
+		}
+		System.out.println("연결종료 id:"+sessionid);
+		
 	}
 	//메세지발행
 	@NoLogging

@@ -31,6 +31,7 @@ public class Stompinterceptor implements HandshakeInterceptor{
 	public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler,
 			Exception exception) {
 		System.out.println("핸드쉐이크완료인터셉터on");
+		
 		// TODO Auto-generated method stub
 		
 	}
