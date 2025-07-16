@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.firstproject.Dto.ChatDto.ChatResponseDto;
 import com.example.firstproject.Dto.ChatDto.ChatRoomDto;
+import com.example.firstproject.Dto.ChatDto.ChatdataDto;
 import com.example.firstproject.Dto.ChatDto.RoomlistDto;
 import com.example.firstproject.Dto.ChatDto.Roomuseradd;
 import com.example.firstproject.Dto.ChatDto.roomlistresponseDto;
@@ -247,11 +248,11 @@ public class ChatMemberController {
 	
 	//채팅방 채팅 가져오기 
 	@GetMapping("/chatroomdata/chatdata/{roomid}")
-	public ResponseEntity<List<MeseageDto>> chatroomdetailchatdata(@PathVariable Long roomid){
+	public ResponseEntity<ChatdataDto> chatroomdetailchatdata(@PathVariable Long roomid,Authentication authenticcation){
 		log.info("채팅가져오기");
-		
+		PrincipalDetails details=(PrincipalDetails) authenticcation.getPrincipal();
 		long start2=System.currentTimeMillis();
-		List<MeseageDto> newdata=chatservice.chatdataget(roomid);
+		ChatdataDto newdata=chatservice.chatdataget(roomid,details.getid());
 		long end2=System.currentTimeMillis();
 		long res2=end2-start2;
 		System.out.println("기존시간2:"+res2);

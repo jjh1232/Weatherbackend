@@ -1,25 +1,20 @@
 package com.example.firstproject.Dto.ChatDto.Roomdata;
 
-import com.example.firstproject.Entity.MemberEntity;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+@Builder
 @Getter
 @Setter
+@RequiredArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor
-@Builder
-public class MeseageDto {
+public class EzRoomDto {
 
-	private Long chatid;
 	private Long roomid;
-	private String messagetype;
-	private String message;
-	private String red;
-	private EzmemberDto sender;
 	
+	private String roomname;
 }

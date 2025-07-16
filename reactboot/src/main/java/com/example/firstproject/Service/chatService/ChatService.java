@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.TimeUnit;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
@@ -23,9 +25,11 @@ import org.springframework.stereotype.Service;
 import com.example.firstproject.Dto.MemberDto;
 import com.example.firstproject.Dto.MessageDto;
 import com.example.firstproject.Dto.ChatDto.ChatResponseDto;
+import com.example.firstproject.Dto.ChatDto.ChatdataDto;
 import com.example.firstproject.Dto.ChatDto.RoomlistDto;
 import com.example.firstproject.Dto.ChatDto.roomlistresponseDto;
 import com.example.firstproject.Dto.ChatDto.stompchatDto;
+import com.example.firstproject.Dto.ChatDto.Roomdata.EzRoomDto;
 import com.example.firstproject.Dto.ChatDto.Roomdata.EzmemberDto;
 import com.example.firstproject.Dto.ChatDto.Roomdata.MeseageDto;
 import com.example.firstproject.Dto.ChatDto.Roomdata.Roomdata;
@@ -34,10 +38,13 @@ import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.StompRoom.MemberRoom;
 import com.example.firstproject.Entity.StompRoom.Room;
 import com.example.firstproject.Entity.StompRoom.chatmessage;
+import com.example.firstproject.Entity.UserChatrecord.LastReadId;
+import com.example.firstproject.Entity.UserChatrecord.chatrecord;
 import com.example.firstproject.Handler.MemberHandler;
 import com.example.firstproject.Repository.MemberRepository;
 import com.example.firstproject.Repository.roomrepo.ChatMessageRepository;
 import com.example.firstproject.Repository.roomrepo.ChatRoomRepository;
+import com.example.firstproject.Repository.roomrepo.LastchatreadRepository;
 import com.example.firstproject.Repository.roomrepo.MemberRoomRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -55,6 +62,16 @@ public class ChatService {
 	private final MemberRepository memberrepo;
 	
 	private final MemberRoomRepository memberroomrepo;
+	
+	private final LastchatreadRepository chatreadrepo;
+	
+	@Qualifier("redisTemplateString")
+	private final RedisTemplate<String, String> Stringredistemplate;
+	
+	//오브젝트용
+	@Qualifier("ObjectredisTemplate")
+	private final RedisTemplate<String, Object> redistemplate;
+	
 	
 	@Transactional
 	public Long createChatroom(String roomname,List<String> memberlist) {
@@ -160,55 +177,67 @@ public class ChatService {
 	//=======================================================================================
 	//챗데이터 db에저장  배치처리로 할까 생각했는데 멤버엔티티를 불러와야하는시점에서 배치는별로 레디스로 처리해보자
 	//프론트에서 dto정보만 받으면 되긴하니까 연습용으로 배치도 가능할듯함
-		private final RedisTemplate<String, Object> redistemplate;
 		
-		private static final String keypre="member::";
+		
+		private static final String keypre="memberentity:";
+		private static final String roomkeypre="chatroomentity:";
 	@Transactional
 	public MeseageDto chatsave(Long roomid,stompchatDto mdto) throws IllegalAccessException {
 		log.info("디비저장서비스");
 		//레디스캐시에서먼저조회 근데 본체는 연관관계떄매 저장이 어려움 때문에 Ez멤버로
-		String rediskey=keypre+mdto.getSender().getEmail();
-		EzmemberDto member=(EzmemberDto) redistemplate.opsForValue().get(rediskey);
+		String memberkey=keypre+mdto.getSender().getEmail();//유저아이디는안보냄
+		String roomkey=roomkeypre+roomid;
+		EzmemberDto member=(EzmemberDto) redistemplate.opsForValue().get(memberkey);
+		EzRoomDto room=(EzRoomDto) redistemplate.opsForValue().get(roomkey);
 		if(member ==null) {
 			System.out.println("캐시에없어");
-		MemberEntity memberentity=memberrepo.findByUsername(mdto.getSender().getEmail()).orElseThrow(()->new IllegalAccessException("회원없음"));
-	
+		MemberEntity memberEntity=memberrepo.findByUsername(mdto.getSender().getEmail()).orElseThrow(()->new IllegalAccessException("회원없음"));
 		member=EzmemberDto.builder()
-				.email(memberentity.getUsername())
-				.nickname(memberentity.getNickname())
-				.profileurl(memberentity.getProfileimg())
-				.userid(memberentity.getId())
+				.email(memberEntity.getUsername())
+				.nickname(memberEntity.getNickname())
+				.profileurl(memberEntity.getProfileimg())
+				.userid(memberEntity.getId())
 				.build();
+		
 		}
-		else {
-			System.out.println("캐시에있어"+member);
+		if (room ==null) {
+			Room roomEntity=roomrepo.findById(roomid).orElseThrow();
+			room = EzRoomDto.builder().roomid(roomEntity.getId())
+					.roomname(roomEntity.getRoomname())
+					.build();
 		}
+		
 		//레디스저장 키와 멤버값 시간두개인듯?
-		redistemplate.opsForValue().set(rediskey, member,1800,TimeUnit.SECONDS);
+		redistemplate.opsForValue().set(memberkey, member,1800,TimeUnit.SECONDS);
 		/*이후 레디스업데이트로직도 참고
 		 // 캐시 무효화
         String redisKey = KEY_PREFIX + mdto.getEmail();
         redisTemplate.delete(redisKey);
 		*/
-		Room room=roomrepo.findById(roomid).orElseThrow();
-	
-		//프록시객체가져오기 실제로셀렉트안가져옴
-		MemberEntity froxy=memberrepo.getReferenceById(member.getUserid());
 		
+		redistemplate.opsForValue().set(roomkey, room,1800,TimeUnit.SECONDS);
+		
+		//프록시객체가져오기 실제로셀렉트안가져옴	
+		//실제db는아이디값만저장되니까 
+		MemberEntity froxymember=memberrepo.getReferenceById(member.getUserid());
+		Room froxyroom=roomrepo.getReferenceById(room.getRoomid());
 		chatmessage save=chatmessage.builder()
-				.member(froxy)
+				.member(froxymember)
 				.sender(member.getNickname())
 				.MessageType(mdto.getMessageType())
 				.message(mdto.getMessage())
-				.room(room)
+				.room(froxyroom)
 				
 				.build();
 		
+		
 		//jpa가 save시에 영속성컨텍스트에 날짜가생겨서 batch를사용하려면 직접설정
 		save.setCreatedDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd/HH:mm:ss")));
-	
+		messagerepo.save(save);
 		
 		MeseageDto dto=MeseageDto.builder()
+				.chatid(save.getId())
+				.roomid(room.getRoomid())
 				.message(save.getMessage())
 				.messagetype(save.getMessageType())
 				.red(save.getCreatedDate())
@@ -220,12 +249,15 @@ public class ChatService {
 						)
 				.build();
 				
+		
 		//메세지큐로해보자
 		//messagerepo.save(save);
+		/* 메세지큐에적재후 인데 이거 실시간갱신하려면 id값이 필요해서그냥바로 세이브
 		messagequeue.offer(save); 
 		  if (messagequeue.size() >= BATCH_SIZE) {
 			  batchSavemessage();
 	        }
+	        */
 		//메세지큐에저장
 		/*
 		ChatResponseDto dto=ChatResponseDto.builder()
@@ -443,6 +475,8 @@ public class ChatService {
 	
 	//이거 컬렉션형을 fetchjoin으로 두번가져오면 카디널뭐였더라 그거 실행됨 
 	//dto프로덕션쓰거나해얗나ㅡㄴ데 룸데이터도 같이 가져오는거 손해같아서 수정
+	
+	//확인필요
 	public Roomdata Roomdataget(Long roomid) {
 		Room room=roomrepo.findbyroomdata(roomid);
 		//멤버데이터가져오기
@@ -458,7 +492,8 @@ public class ChatService {
 						).collect(Collectors.toList());
 		
 		List<MeseageDto> chatdatas=room.getChatdata().stream().map(
-				c->MeseageDto.builder().id(c.getId())
+				c->MeseageDto.builder().chatid(c.getId())
+				.roomid(c.getRoom().getId())
 				.messagetype(c.getMessageType())
 				.message(c.getMessage())
 				.red(c.getCreatedDate())
@@ -505,10 +540,29 @@ public class ChatService {
 				.build();
 	}
 	//채팅가져오기
-	public List<MeseageDto> chatdataget(Long roomid){
+	//수정필요
+	public ChatdataDto chatdataget(Long roomid,Long userid){
 		List<chatmessage> messagelist=messagerepo.Roomdetailchatget(roomid);
+		
+		//마지막 채팅 id 가져오기
+		Long lastMessageid=messagelist.isEmpty() ? null: messagelist.get(messagelist.size()-1).getId();
+		
+		if(lastMessageid != null) {
+			String rediskey="stomp:chat:lastread:roomid:"+roomid+":userid:"+userid;
+			Stringredistemplate.opsForValue().set(rediskey, lastMessageid.toString());
+		}
+		
+		//내가 이전에 마지막으로 읽은 메세지 
+		//복합키라이게편함
+		LastReadId key=LastReadId.builder().roomid(roomid).userid(userid).build();
+		Optional<chatrecord> beforereadmessage=chatreadrepo.findById(key);
+		//맵으로 값이 있을때만쓸수있음
+		Long beforereadmessageid=beforereadmessage.map(chatrecord::getLastchatid)
+				.orElse(lastMessageid);
+		
 		List<MeseageDto> chatdatas=messagelist.stream().map(
-				c->MeseageDto.builder().id(c.getId())
+				c->MeseageDto.builder().chatid(c.getId())
+				.roomid(roomid)
 				.messagetype(c.getMessageType())
 				.message(c.getMessage())
 				.red(c.getCreatedDate())
@@ -522,7 +576,8 @@ public class ChatService {
 				)
 				.collect(Collectors.toList());
 		
-		 return chatdatas;
+		
+		 return new ChatdataDto(chatdatas,beforereadmessageid);
 	}
 	
 }

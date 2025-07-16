@@ -663,7 +663,8 @@ NoticeEntity Entity=adminhandler.noticedetail(noticeid);
 						).collect(Collectors.toList());
 		
 		List<MeseageDto> chatdatas=room.getChatdata().stream().map(
-				c->MeseageDto.builder().id(c.getId())
+				c->MeseageDto.builder().chatid(c.getId())
+				.roomid(roomid)
 				.messagetype(c.getMessageType())
 				.message(c.getMessage())
 				.red(c.getCreatedDate())

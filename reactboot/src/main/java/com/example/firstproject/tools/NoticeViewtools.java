@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NoticeViewtools {
 
+	@Qualifier("redisTemplateString")
 	private final RedisTemplate<String, String> redisTemplate;
 	
 	private final NoticeRepository noticerepo;

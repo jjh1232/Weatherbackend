@@ -44,6 +44,7 @@ public class Redisconfig {
 		return new LettuceConnectionFactory(host,port);
 	}
 	
+	
 	@Bean   //레디스config에서만든 팩토리를 매게변수로가져옴
 	public CacheManager redisCachemanager(RedisConnectionFactory redisconnnectFactiory) {
 		RedisCacheConfiguration conf=RedisCacheConfiguration.defaultCacheConfig()
@@ -57,7 +58,8 @@ public class Redisconfig {
 	}
 
 	@Bean
-	public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory){
+	//이거 Dto도넣기위한 기본 형 근데 Long같은거넣으면 파싱이 되게귀찮다
+	public RedisTemplate<String, Object> ObjectredisTemplate(RedisConnectionFactory factory){
 		RedisTemplate<String,Object> template=new RedisTemplate<>();
 		template.setConnectionFactory(factory);
 		//키직렬화 문자열이라 String으로 
@@ -72,6 +74,16 @@ public class Redisconfig {
 		return template;
 		
 	}
+	
+	@Bean
+	public RedisTemplate<String, String> redisTemplateString(RedisConnectionFactory factiory){
+		RedisTemplate<String,String> template=new RedisTemplate<>();
+		template.setConnectionFactory(factiory);
+		template.setKeySerializer(new StringRedisSerializer());
+		template.setValueSerializer(new StringRedisSerializer());
+		return template;
+	}
+	
 }
 
 
