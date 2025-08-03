@@ -25,6 +25,8 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long>{
 	@Query(value="Select Count(username) from member where username =:username" ,nativeQuery=true)
 	Long emailcheck(@Param("username") String username);
 	
+	//유저심플아이디생성을위해 중복인지체크
+	boolean existsByProfileid(String profileId);
 	
 
 	Optional<MemberEntity> findByUsername(String username);
@@ -41,4 +43,7 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long>{
 	Page<MemberEntity> findByUsernameContaining(Pageable page,String keyowrd);
 	
 	Page<MemberEntity> findByNicknameContaining(Pageable page,String keyword);
+
+	
+	boolean existsByUsername(String username);
 }

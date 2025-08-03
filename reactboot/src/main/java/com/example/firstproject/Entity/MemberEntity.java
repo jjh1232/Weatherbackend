@@ -62,6 +62,8 @@ public class MemberEntity {
 	@Column(unique=false,nullable=false)
 	private String nickname;
 	
+	@Column(unique=true,nullable=true)
+	private String profileid;
 	@CreatedDate
 	@Column(updatable = false, name="REGDATE") //업데이트불가
 	private String regdate;
@@ -160,13 +162,14 @@ public class MemberEntity {
     
     
 	public MemberDto toDto(Long id,
-			String username,String password,String nickname,String role,
+			String username,String password,String profileid,String nickname,String role,
 			String refreshtoken,String provider,String providerid,Address region,
 			String red,String updatered) {
 		return MemberDto.builder()
 				.id(id)
 				.username(username)
 				.password(password)
+				.profileid(profileid)
 				.nickname(nickname)
 				.role(role)
 				.refreshtoken(refreshtoken)

@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.example.firstproject.Dto.follow.FollowerDto;
+import com.example.firstproject.Dto.follow.followlistDto;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.follow.FollowEntity;
 import com.example.firstproject.Repository.FollowRepository;
@@ -39,9 +41,13 @@ public class FollowHandler {
 		return followrepository.findBytoMember(userid);
 	}
 	//프롬멤버
-	public List<FollowEntity> followerfromfind(Long userid){
+	public List<followlistDto> followerfromfind(Long userid){
 		log.info("팔로워찾기");
 		return followrepository.findByFromMember(userid);
+	}
+	public List<FollowerDto> findfollowerlist(Long userid){
+		
+		return followrepository.findfollowerlist(userid);
 	}
 	
 	public void deletefollow(FollowEntity entity) {

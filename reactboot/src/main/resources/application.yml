@@ -26,6 +26,7 @@ spring:
     maximum-pool-size: 10
   
   jpa:
+   open-in-view: false # 이위치
    properties:
     default_batch_fetch_size: 1000
     hibernate:

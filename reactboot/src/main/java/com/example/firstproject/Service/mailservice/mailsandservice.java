@@ -31,6 +31,7 @@ public class mailsandservice {
 	
 	private final BCryptPasswordEncoder encode;
 	
+	//메일보내기 타입으로 지정
 	public String sendmail(EmailMessage emailmessage,String type) 
 	{
 		MimeMessage mimeMessage=javamailsender.createMimeMessage();
@@ -92,9 +93,12 @@ public class mailsandservice {
  //타임리프라이브러리사용해서 html간편하게보내기 
     public String setContext(String username,String code, String type) {
         Context context = new Context();
+        //변수선언
         context.setVariable("code", code);
         context.setVariable("username", username);
-        
+        //타임리프엔진
+        //디펜던시설정시 알아서 해당하는html로 감 type에맞게 
+        //폴더추가시 그주소까지 넣거나 yml파일에 타임리프설정추가
         return templateengine.process(type, context);//타임리프엔진 (리소스파일명,콘텍스트변수설정)
     }
 }

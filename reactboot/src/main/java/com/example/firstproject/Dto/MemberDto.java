@@ -25,8 +25,9 @@ public class MemberDto {
 	private Long id;
 	private String username;
 	private String password;
-	
+	private String profileid;
 	private String nickname;
+	
 	private String role;
 	private String refreshtoken;
 	
@@ -51,6 +52,7 @@ public class MemberDto {
 		this.nickname = member.getNickname();
 		this.role = member.getRole();
 		this.profileimg=member.getProfileimg();
+		this.profileid=member.getProfileid();
 		/*
 		this.refreshtoken = refreshtoken;
 		this.provider = provider;

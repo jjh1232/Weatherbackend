@@ -12,7 +12,8 @@ public enum ErrorCode {
 	NOT_ALLOW_EMAIL("009_NOT_ALLOW_EMAIL","인증되지 않은이메일입니다!"),
 	
 	//401
-	INVALID_TOKEN("101_INVALID_TOKEN","유효하지 않은 토큰입니다");
+	INVALID_TOKEN("101_INVALID_TOKEN","유효하지 않은 토큰입니다"),
+	NOT_FOUND_USER("NOT_FOUND_USER","해당하는 유저이메일이 없습니다!");
 	
 	private final String code;
 	private final String msg;

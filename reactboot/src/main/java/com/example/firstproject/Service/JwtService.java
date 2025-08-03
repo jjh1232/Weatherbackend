@@ -38,9 +38,10 @@ public class JwtService {
 				.withSubject("Accesstoken")
 				.withClaim("id", member.getMember().getId())
 				.withClaim("username", member.getUsername())
-				
+				.withClaim("profileid", member.getMember().getProfileid())
 				.withClaim("nickname", member.getMember().getNickname())
 				.withClaim("role", member.getMember().getRole())
+				.withClaim("provider", member.getMember().getProvider())
 				.withExpiresAt(new Date(System.currentTimeMillis()+(1000*60*60)))//일단*60뺴고
 				.sign(Algorithm.HMAC512(secretkey));
 			
@@ -60,10 +61,10 @@ public class JwtService {
 	@Transactional
 	public void Setrefreshtoken(String username, String represhtoken) {
 		// TODO Auto-generated method stub
-		Optional<MemberEntity> member=memberrepository.findByUsername(username);
-		MemberEntity nwemem=member.get();
+		MemberEntity member=memberrepository.findByUsername(username).orElseThrow(()->new RuntimeException("유저가없어요"));
+		
 		//변경감지가왜..
-		nwemem.setRefreshtoken(represhtoken);
+		member.setRefreshtoken(represhtoken);
 		//memberrepository.save(nwemem);
 		
 		

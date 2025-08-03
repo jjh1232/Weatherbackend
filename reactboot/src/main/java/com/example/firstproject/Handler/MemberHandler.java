@@ -12,7 +12,9 @@ public interface MemberHandler {
 	
 	public MemberEntity membercreate(MemberEntity entity);
 
-	public Long emailcheck(String email);
+	public boolean emailcheck(String email);
+	
+	
 	
 	public Optional<MemberEntity> login(String email);
 	
@@ -23,4 +25,9 @@ public interface MemberHandler {
 	public void deletemember(MemberEntity entity);
 
 	public List<MemberEntity> findbynickname(String keyword);
+	
+	public boolean existsByProfileId(String profileid);
+
+
+	public Optional<MemberEntity> findbyusername(String username);
 }

@@ -1,4 +1,4 @@
-package com.example.firstproject.Dto.follow;
+package com.example.firstproject.Dto.ChatDto.Roomdata;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,10 +11,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class followlistDto {
+public class ChatlistmemberDto {
 
-	private String username;
+	private Long userid;
+	private Long roomid;
+	private String email;
 	private String nickname;
-	private boolean favorite;
-	private String profileimg;
+	private String profileurl;
 }

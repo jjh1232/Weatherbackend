@@ -27,13 +27,12 @@ public class MemberHandlerImpl implements MemberHandler{
 	}
 
 	@Override
-	public Long emailcheck(String username) {
+	public boolean emailcheck(String username) {
 		// TODO Auto-generated method stub
-		String as="as";
-		log.info(as);
-		long check=memberrepository.emailcheck(username);
-		String a=String.valueOf(check);
-		log.info(a);
+		
+		//long check=memberrepository.emailcheck(username);
+		boolean check=memberrepository.existsByUsername(username);
+		
 		return check;
 	}
 
@@ -80,7 +79,22 @@ public class MemberHandlerImpl implements MemberHandler{
 		Optional<MemberEntity> member=memberrepository.findById(userid);
 		return member;
 	}
-	
+
+	@Override
+	public boolean existsByProfileId(String profileid) {
+		// TODO Auto-generated method stub
+		
+		return memberrepository.existsByProfileid(profileid);
+	}
+
+	@Override
+	public Optional<MemberEntity> findbyusername(String username) {
+		// TODO Auto-generated method stub
+		
+		return memberrepository.findByUsername(username);
+	}
+
+
 	
 
 }

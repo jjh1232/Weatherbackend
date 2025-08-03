@@ -3,6 +3,7 @@ package com.example.firstproject.Service.chatService;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,11 +30,14 @@ import com.example.firstproject.Dto.ChatDto.ChatdataDto;
 import com.example.firstproject.Dto.ChatDto.RoomlistDto;
 import com.example.firstproject.Dto.ChatDto.roomlistresponseDto;
 import com.example.firstproject.Dto.ChatDto.stompchatDto;
+import com.example.firstproject.Dto.ChatDto.Roomdata.ChatlistmemberDto;
 import com.example.firstproject.Dto.ChatDto.Roomdata.EzRoomDto;
 import com.example.firstproject.Dto.ChatDto.Roomdata.EzmemberDto;
 import com.example.firstproject.Dto.ChatDto.Roomdata.MeseageDto;
 import com.example.firstproject.Dto.ChatDto.Roomdata.Roomdata;
+import com.example.firstproject.Dto.ChatDto.Roomdata.Roomdatainfo;
 import com.example.firstproject.Dto.ChatDto.Roomdata.Roominfo;
+import com.example.firstproject.Dto.ChatDto.Roomdata.RoommetaInfo;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.StompRoom.MemberRoom;
 import com.example.firstproject.Entity.StompRoom.Room;
@@ -46,6 +50,7 @@ import com.example.firstproject.Repository.roomrepo.ChatMessageRepository;
 import com.example.firstproject.Repository.roomrepo.ChatRoomRepository;
 import com.example.firstproject.Repository.roomrepo.LastchatreadRepository;
 import com.example.firstproject.Repository.roomrepo.MemberRoomRepository;
+
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -64,6 +69,9 @@ public class ChatService {
 	private final MemberRoomRepository memberroomrepo;
 	
 	private final LastchatreadRepository chatreadrepo;
+	
+	
+	
 	
 	@Qualifier("redisTemplateString")
 	private final RedisTemplate<String, String> Stringredistemplate;
@@ -424,15 +432,68 @@ public class ChatService {
 		return memberroom;
 		
 	}
-	
-	//멤버정보 sql두번해서가져오기
-	public List<RoomlistDto> findmemberlist(Long memberid){
-		
+	//방정보 데이터 멤버와 룸아이디같은거
+	public List<Roomdatainfo> chatlistinfo(Long memberid){
+		//이거새로만ㄷ든 아이디만가져오기
+		//List<Long> memberroomids=memberroomrepo.findmemberroomidbymemberids(memberid);
+		//생각해보니 이거 제목도필요하고 해서.. 걍전체가져오기
 		List<MemberRoom> roomlist=memberroomrepo.findmemberroomlist(memberid);
-		
+		//룸아이디만추출
 		List<Long> roomids=roomlist.stream().map(mr->mr.getRoom().getId()).collect(Collectors.toList());
+		//각룸마다 멤버들추출
+		//방별멤버가져오기
 		
+		List<ChatlistmemberDto> roominmemberlists=memberroomrepo.findmemberroomsbyroomids(roomids);	
+		//방아이디와타이틀매칭
+		Map<Long,String> roomidtotitle =roomlist.stream()
+				.collect(Collectors.toMap(mr->mr.getRoom().getId(),mr->mr.getRoomname()));
+		//방별멤버룸아이디도 받아서 그룹핑
+		Map<Long,List<ChatlistmemberDto>> roommembermap=roominmemberlists.stream()
+				.collect(Collectors.groupingBy(ChatlistmemberDto::getRoomid));
+		
+		List<Roomdatainfo> result=roomids.stream().map(roomid ->{
+			String title=roomidtotitle.get(roomid);
+			List<ChatlistmemberDto> members = roommembermap.getOrDefault(roomid,
+					Collections.emptyList());
+			
+			return Roomdatainfo.builder().roomid(roomid).roomtitle(title)
+					.membercount(members.size()).members(members).build();
+		}).collect(Collectors.toList());
+		
+		return result;
+	}
+	//마지막채팅과 안읽은 메세지데이터
+	public List<RoommetaInfo> chatlistsub(Long memberid,List<Long> roomids){
+		//유저가 각방 마지막으로 읽은 챗아이디 아래조인으로해결해서필요없음
+		//List<chatrecord> lastchatdata=chatreadrepo.findlastchatIds(memberid,roomids);
+		
+		//마지막채팅과 안읽은 챗데이터
+		List<RoommetaInfo> meta=messagerepo.findLastMessageAndUnreadcount(memberid, roomids);
+		
+		
+		return meta;
+		
+	}
+	
+	
+	
+	//멤버채팅창리스트 sql두번해서가져오기
+	public List<RoomlistDto> findmemberlist(Long memberid){
+		//멤버룸에서 룸아이디가져오기
+		List<MemberRoom> roomlist=memberroomrepo.findmemberroomlist(memberid);
+		//룸아이디만추출
+		List<Long> roomids=roomlist.stream().map(mr->mr.getRoom().getId()).collect(Collectors.toList());
+		//각룸마다 멤버들추출
+		
+		//멤버룸으로 멤버들가져옴
 		List<MemberRoom> allmemberrooms=memberroomrepo.findMemberRoomsbyroomid(roomids);
+		
+		
+		
+	
+		
+		
+	
 		
 		//방별멤버생성
 		Map<Long,List<MemberDto>> roommembermap=allmemberrooms.stream()
@@ -442,6 +503,7 @@ public class ChatService {
 						Collectors.mapping(mr-> new MemberDto(mr.getMember())
 								,Collectors.toList())));
 		
+	
 		//방별 메세지생성
 		Map<Long, Map<String, Object>> roomMessageInfo = roomlist.stream()
 			    .collect(Collectors.toMap(

@@ -35,6 +35,10 @@ public class Memberform {
 	//@NotNull
 	//@NotEmpty
 	
+	@NotBlank
+	@Size(min=3,max=16,message = "프로필아이디는 세글자에서16글자를 사용해주십시오")
+	@Pattern(regexp = "^[a-zA-Z가-힣0-9]*$", message = "한글, 영문 또는 숫자만 입력 가능합니다.")
+	private String profileid;
 
 	@NotBlank
 	@Size(min=3,max=10,message = "닉네임은 세글자에서10글자를 사용해주십시오")

@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.firstproject.Dto.MemberDto;
-import com.example.firstproject.Dto.follow.FollowDto;
+
+import com.example.firstproject.Dto.follow.FollowerDto;
 import com.example.firstproject.Dto.follow.findDto;
 import com.example.firstproject.Dto.follow.followlistDto;
 import com.example.firstproject.Entity.MemberEntity;
@@ -93,19 +94,9 @@ public class FollowController {
 	@Logoutano 
 	public ResponseEntity followlist(Authentication authentication) {
 		log.info("팔로우리스트");
-		MemberEntity member=memberservice.findemail(authentication.getName()).orElseThrow();
-		List<followlistDto> listname=new ArrayList<>();
-		for (FollowEntity entity:member.getFollowings()){
-			System.out.println(entity.getTomember().getUsername());
-			followlistDto listdto=followlistDto.builder()
-					.username(entity.getTomember().getUsername())
-					.nickname(entity.getTomember().getNickname())
-					.profileurl(entity.getTomember().getProfileimg())
-					.favorite(entity.isFavorite())
-					.build();
-			listname.add(listdto);
-			log.info("즐겨찾기여부:"+listdto.isFavorite());
-		}
+		PrincipalDetails member=(PrincipalDetails) authentication.getPrincipal();
+		List<followlistDto> listname=followservice.followlistfind(member.getMember().getId());
+		
 		return ResponseEntity.ok(listname);
 	}
 	//팔로워조회 내가당한거팔로우 목록도 필요함
@@ -115,7 +106,7 @@ public class FollowController {
 		log.info("팔로워리스트");
 		PrincipalDetails member=(PrincipalDetails) authentication.getPrincipal();
 		
-		List<FollowDto> nicklist=followservice.followerfind(member.getMember().getId());
+		List<FollowerDto> nicklist=followservice.followerfind(member.getMember().getId());
 				return ResponseEntity.ok(nicklist);
 	}
 

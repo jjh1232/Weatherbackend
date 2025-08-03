@@ -3,6 +3,7 @@ package com.example.firstproject.Repository;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Repository;
@@ -22,8 +23,14 @@ public class EmitterRepository {
 		return sseemitter;
 	}
 
+	//숫자카운트
 	public void getemitteruser() {
 		System.out.println("현재에미터유저수:"+emittermap.size());
+		
+	}
+	//모든에미터의 키목록반환
+	public void getAllEmiter(){
+		System.out.println("키목록반환:"+emittermap.keySet());
 	}
 	public Optional<SseEmitter> get(Long username){
 		

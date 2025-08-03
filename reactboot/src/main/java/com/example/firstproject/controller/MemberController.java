@@ -17,6 +17,7 @@ import javax.validation.constraints.Email;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -34,6 +35,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import com.example.firstproject.CustomError.CustomException;
+import com.example.firstproject.CustomError.ErrorCode;
 import com.example.firstproject.Dto.MemberDto;
 import com.example.firstproject.Dto.Memberform;
 import com.example.firstproject.Dto.Weather.MemberUpdateDto;
@@ -43,6 +46,7 @@ import com.example.firstproject.configure.PrincipalDetails;
 import com.example.firstproject.configure.auth.authenticationfilter;
 
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.asm.Advice.Return;
 import net.minidev.json.JSONObject;
 
 
@@ -112,10 +116,11 @@ public class MemberController {
 	
 	//이메일중복확인
 	@GetMapping(value="/open/emailcheck")
-	public  Map<String,Object> emailcheck(@RequestParam @Email String username) {
+	public  ResponseEntity emailcheck(@RequestParam @Email String username) {
 		log.info(username);//Validated랑 발리데이션어노테이션으로 가능함파람도 
 		
-		
+		boolean check =memberservice.Emailauth(username);
+		/*
 		Map<String,Object> chemap=new HashMap<String,Object>();
 		Long check = memberservice.findbyemail(username);
 		int em=check.intValue();
@@ -131,10 +136,30 @@ public class MemberController {
 			chemap.put("check", check);
 			
 			return chemap;
-		}
+			}
+			*/
+		
+		return ResponseEntity.ok(check);
 		
 		
-		
+	}
+	//닉네임중복확인
+	@GetMapping("/open/profileidcheck")
+	public ResponseEntity dupliprofileidcheck(@RequestParam String profileid) {
+		  if (profileid == null || profileid.trim().isEmpty()) {
+		        throw new IllegalArgumentException("프로필 아이디를 입력해주세요.");
+		    }
+		    if (!profileid.matches("^[a-zA-Z가-힣0-9]{3,16}$")) {
+		        throw new IllegalArgumentException("프로필 아이디는 3~16자의 한글, 영문, 숫자만 가능합니다.");
+		    }
+		    
+		    
+		   
+		    boolean profileidcheck=memberservice.profileidcheck(profileid);
+		    
+		    return ResponseEntity.ok(profileidcheck);
+		    
+		 
 	}
 	
 	//스프링시큐리티쓸꺼라 이제안쓸듯? 
@@ -207,10 +232,10 @@ public class MemberController {
 	@GetMapping("/open/passwordfind")
 	public ResponseEntity passfind(@RequestParam String email) {
 		
-			String msg=memberservice.passfind(email);
+			Map<String,String> data=memberservice.passfind(email);
 			//memberservice.memberpasswordupdate(email,authokey);
 			
-			return ResponseEntity.ok(msg);		
+			return ResponseEntity.ok(data);		
 	
 		
 		
@@ -218,7 +243,7 @@ public class MemberController {
 	
 	//비밀번호와 닉네임 벽녕
 	@PutMapping(value="/memberupdate/{email}")
-	public String memberupdate(@PathVariable String email,
+	public String memberupdate(Authentication authentication,
 			//@RequestBody HashMap<String,Object> data
 			@Valid @RequestPart(value="dto",required = false) MemberUpdateDto dto
 			,@RequestPart(required =false,value = "newprofile") MultipartFile newprofile,
@@ -226,6 +251,7 @@ public class MemberController {
 			) throws UnsupportedEncodingException {
 		//String name=data.get("name").toString();
 		//String password=data.get("password").toString();
+		PrincipalDetails user=(PrincipalDetails) authentication.getAuthorities();
 		
 		
 		System.out.println("현재닉네임"+dto.getEmail());
@@ -238,7 +264,7 @@ public class MemberController {
 	    MemberEntity member=new MemberEntity();
 	    
 	   if(newprofile !=null) {
-	   String profileurl=memberservice.profileimagesave(newprofile, email);
+	   String profileurl=memberservice.profileimagesave(newprofile, user.getUsername());
 	   
 	   log.info(profileurl);
 	  member=memberservice.memberupdate(dto.getEmail(),dto, profileurl);
@@ -251,6 +277,7 @@ public class MemberController {
 		 member=memberservice.memberupdate(dto.getEmail(),dto, dto.profileimage);
 	   }
 	   
+	
 	   //새유저인포쿠키
 	   JSONObject json= new JSONObject();
 		
@@ -263,6 +290,7 @@ public class MemberController {
 		json.put("gridy", member.getHomeaddress().getGridy());
 		json.put("profileimg", member.getProfileimg());
 		json.put("userrole", member.getRole());
+		json.put("profileid", member.getProfileid());
 	   Cookie idCookie=new Cookie("userinfo",URLEncoder.encode(json.toJSONString(),"UTF-8"));
 		
 		idCookie.setPath("/");//사용가능한패스
@@ -338,7 +366,15 @@ public class MemberController {
 		}
 	
 	}
+	//멤버아이디차직
+	@GetMapping("/open/usernamefind/{username}")
+	public ResponseEntity Usernamefind(@PathVariable String username) {
+		
+		
+		Map<String, String> data=memberservice.Usernamefind(username);
 	
+		return ResponseEntity.ok(data);
+	}
 
 
 	

@@ -1,6 +1,8 @@
 package com.example.firstproject.controller;
 
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException.BadRequest;
 
+import com.example.firstproject.CustomError.CustomException;
+
 import ch.qos.logback.core.status.Status;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,6 +27,7 @@ public class ErrorController {
 	//Valid에러 인지 Duply에러인지 확인하고 exception에서 정보받아서 필요한거 매핑해서주거나 그냥주면될듯?
 	@ExceptionHandler(MethodArgumentNotValidException.class)//바인드써야함
 	public ResponseEntity validerror(MethodArgumentNotValidException exception,HttpServletRequest req) {
+		//첫번째 검증에러메세지 가져오는것
 		BindingResult bindresult=exception.getBindingResult();//메서드아구먼트는 여기서
 		String message= bindresult.getFieldError().getDefaultMessage().toString();
 		System.out.println(bindresult);
@@ -32,6 +37,19 @@ public class ErrorController {
 		
 		System.out.println("깃확인용");
 		return new ResponseEntity<>(message,HttpStatus.BAD_REQUEST);
+	}
+	
+	
+	//핸들러이벤트를만들지않으면 커스텀에러메세지나설정이안가고 기본설정이간다
+	@ExceptionHandler(CustomException.class)
+	public ResponseEntity customerror(CustomException ex,HttpServletRequest request) {
+		System.out.println("에러카운트실행");
+		Map<String,Object> body=new HashMap<>();
+		body.put("status", ex.getStatus().value());
+		body.put("errorcode",ex.getErrorCode());
+		body.put("message",ex.getMessage());
+		
+		return new ResponseEntity<>(body,ex.getStatus());
 	}
 	
 	//@ExceptionHandler(RuntimeException.class) //sql 에러 이걸로나네 일단닉네임중복만

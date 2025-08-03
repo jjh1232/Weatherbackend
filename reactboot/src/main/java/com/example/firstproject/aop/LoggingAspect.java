@@ -61,6 +61,8 @@ public class LoggingAspect {
 		} catch (Throwable e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			//여기서처리해야지안그러면 start가무조건나감;
+			throw e;
 		}finally {
 			long end=System.currentTimeMillis();
 			long timein=end-start;
@@ -68,7 +70,7 @@ public class LoggingAspect {
 			log.info("조인포인트시그네이처:{} 걸린시간:{}ms",joinpoint.getSignature(),timein);
 		}
 		
-		return start;
+		
 		
 		
 		

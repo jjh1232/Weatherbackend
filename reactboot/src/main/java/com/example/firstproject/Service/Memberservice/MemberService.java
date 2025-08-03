@@ -23,11 +23,11 @@ public interface MemberService {
 
 	public long findbyemail(String username);
 
-	public String Emailauth(String username);
+	public boolean Emailauth(String username);
 	
 	public Object memberlogin(String email,String password);
 	
-	public String passfind(String username);
+	public Map<String,String> passfind(String username);
 	
 	public void memberpasswordupdate(String username,String authokey);
 	
@@ -49,6 +49,7 @@ public interface MemberService {
 
 	public Map<String,Object> userpagedate(String username,int page); 
 		
-	
+	public boolean profileidcheck(String profileid);
 
+	public Map<String, String> Usernamefind(String username);
 }

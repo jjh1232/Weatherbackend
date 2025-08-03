@@ -49,6 +49,7 @@ public class SSEController {
 		Long userid=cipal.getMember().getId();
 		System.out.println("어센티케이션유저아이디:"+userid);
 		
+		//리턴을안해주면 전달이안된다
 		return sseservice.SSEcon(userid);
 	}
 	//노티피케이션도 에미터에서하자
@@ -60,11 +61,17 @@ PrincipalDetails cipal=(PrincipalDetails) authentication.getPrincipal();
 		System.out.println("어디가문제임");
 		NotifiResult<NotificationDto> notilist=sseservice.getusernotifi(member.getId(), page);
 		System.out.println("어디가문제임1");
+		
 		return ResponseEntity.ok(notilist);
 		
 		
 	}
-	
+	@GetMapping("/emittercheck")
+	public void emittercheck() {
+		
+		emitterrepo.getemitteruser();
+		emitterrepo.getAllEmiter();
+	}
 	@GetMapping("/notificationcount")
 	public ResponseEntity notificount(Authentication authentication) {
 PrincipalDetails cipal=(PrincipalDetails) authentication.getPrincipal();
@@ -85,29 +92,7 @@ PrincipalDetails cipal=(PrincipalDetails) authenti.getPrincipal();
 		sseservice.readallnotify(member.getId());
 		
 	}
-	@GetMapping("/ssetest")
-	public void sse(Long id) {
-		//
-		
-		//알림보내기
-		
-		System.out.println("어센티케이션유저아이디:"+id);
-		SseEmitter emitter=emitterrepo.get((long) 1).get();
-		try {
-			emitter.send(emitter.event().id("test").name("message").data("테스트메세지"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		 
-		//return sseservice.SSEcon(id);
-	}
-	
-	@GetMapping("/ssetest2")
-	public void ssete() {
-		
-		emitterrepo.getemitteruser();
-	}
+
 	
 	//로그아웃시 백엔드처리가 사실 sse뿐이라여기나둠
 	@GetMapping("/memberlogout")

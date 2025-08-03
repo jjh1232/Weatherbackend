@@ -20,12 +20,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import com.example.firstproject.CustomError.CustomException;
+import com.example.firstproject.CustomError.ErrorCode;
 import com.example.firstproject.Dto.MemberDto;
 import com.example.firstproject.Dto.Memberform;
 import com.example.firstproject.Dto.NoticeDto;
@@ -80,7 +83,7 @@ public class MemberServiceImpl implements MemberService{
 		// TODO Auto-generated method stub
 		
 	
-		
+		//셀프로해야행
 		String newpass=passen.encode(form.getPassword());//시큐리티로그인도 인코딩해줌
 		Address regions=new Address();
 		
@@ -93,7 +96,9 @@ public class MemberServiceImpl implements MemberService{
 		 regions=Address.builder().juso(form.getRegion()).gridx(form.getGridx()).gridy(form.getGridy())
 		.build();
 		}
-		
+	
+		String profileid=form.getProfileid();
+	
 		
 		MemberEntity entity=MemberEntity.builder()
 				
@@ -106,7 +111,7 @@ public class MemberServiceImpl implements MemberService{
 				.providerid(null)
 				.homeaddress(regions)
 				.role("ROLE_User")
-				
+				.profileid(profileid)
 				.build();
 		
 		
@@ -115,13 +120,16 @@ public class MemberServiceImpl implements MemberService{
 		
 		EmailMessage message=EmailMessage.builder()
 				.to(form.getUsername())
-				.subject("이메일인증메일")
+				.subject("이메일인증메일")//메일제목
 				.build();
 		System.out.println("이메일인증시작");
+		//인증키를만들어서 entity에저장
 		String authkey=mailservice.sendmail(message,"email");
+		//엔티티에 셋
 		entity.setAuth(authkey);
+		//멤버정보리턴
 		MemberDto dto=entity.toDto(entity.getId(),entity.getUsername(), entity.getPassword(),
-				entity.getNickname(),
+				entity.getProfileid(),entity.getNickname(),
 				entity.getRole(), entity.getRefreshtoken(), entity.getProvider(),
 				entity.getProviderid(),entity.getHomeaddress(),
 				entity.getRegdate(), entity.getUpdatered());
@@ -152,19 +160,20 @@ public class MemberServiceImpl implements MemberService{
 	}
 
 	@Override
-	public String Emailauth(String username) {
+	public boolean Emailauth(String username) {
 		// TODO Auto-generated method stub
-		Long check=handler.emailcheck(username);
-		if(check>=1) {
+		boolean check=handler.emailcheck(username);
+		if(check) {
 			System.out.println("이미존재하는이메일");
 			String a="가입불가";
-			return a;
+			
 		}
 		else {
 			System.out.println("가입가능한이메일");
 			String auth="가입가능";
-			return auth;
+			
 		}
+		return check;
 	
 	}
 
@@ -190,19 +199,22 @@ public class MemberServiceImpl implements MemberService{
 	}
 
 	@Override
-	public String passfind(String username) {
+	public Map<String,String> passfind(String username) {
 		// TODO Auto-generated method stub
+		//에러코드
 		MemberEntity entity=handler.findemail(username).orElseThrow(()->{
-			return new IllegalArgumentException("이메일이존재하지않아수정실패");
+			return new CustomException(HttpStatus.NOT_FOUND,ErrorCode.NOT_ALLOW_EMAIL);
 		});
-		
+		//데이터담기
+		Map<String,String> data=new HashMap<>();
+	
 		if(!entity.getProvider().equals("mypage")) {
-			
-			String msg ="타사이트로그인서비아이디입니다!"
-					+ " 타사이트로그인으로 접속해주세요!";
-			return msg;
+			//타사이트로그인 메일안보낸다
+			data.put("status","oauthuser");
+			data.put("provider",entity.getProvider());
+			data.put("username", entity.getUsername());
+			return data;
 		}
-		
 		
 		//메일서비스 
 		EmailMessage mail=EmailMessage.builder()
@@ -211,8 +223,11 @@ public class MemberServiceImpl implements MemberService{
 				.build();
 		String authkey=mailservice.sendmail(mail, "passfind");
 		handler.passwordupdate(username, authkey);
-		String msg="이메일로 비밀번호를 보냈습니다!";
-		return msg;
+		//내사이트 정보
+				data.put("status","Success");
+				data.put("provider",entity.getProvider());
+				data.put("username", entity.getUsername());
+		return data;
 	}
 
 	@Override
@@ -284,9 +299,11 @@ public class MemberServiceImpl implements MemberService{
 		Optional<MemberEntity> opentity=handler.findemail(username);
 		MemberEntity entity=opentity.get();
 		
+		//필요시 쿠키만들어서 reponse객체로 전달하면되는데..사실따로하는게좋다고함
 		if(entity.getAuth().equals(authokey)){
 			System.out.println("인증키가 맞습니다");
 			entity.setAuth("Y");
+			
 			handler.membercreate(entity);
 			
 			return 0;
@@ -377,6 +394,9 @@ public class MemberServiceImpl implements MemberService{
 			member.setHomeaddress(regions);
 			//닉네임만변경
 		}
+		if(member.getRole().equals("ROLE_TEMP")) {
+			member.setRole("ROLE_User");
+		}
 		//트랜잭션사용시 리턴될떄 자동 수정(더티체킹)
 		return member;
 	}
@@ -449,6 +469,35 @@ public class MemberServiceImpl implements MemberService{
 		// TODO Auto-generated method stub
 		MemberEntity member=handler.findbyid(userid).orElseThrow(()->new IllegalAccessError());
 		return member;
+	}
+
+
+
+	//프로필아이디체크
+	@Override
+	public boolean profileidcheck(String profileid) {
+		// TODO Auto-generated method stub
+		
+		
+		return handler.existsByProfileId(profileid);
+	}
+
+
+
+
+	@Override
+	public Map<String, String> Usernamefind(String username) {
+		// TODO Auto-generated method stub
+		MemberEntity member=handler.findbyusername(username).orElseThrow(()->
+		new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_USER));
+		
+		String usernames=member.getUsername();
+		String provider=member.getProvider();
+		
+		Map<String, String> data=new HashMap<>();
+		data.put("username", usernames);
+		data.put("provider", provider);
+		return data;
 	}
 
 

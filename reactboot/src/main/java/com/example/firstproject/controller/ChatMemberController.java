@@ -27,7 +27,9 @@ import com.example.firstproject.Dto.ChatDto.Roomuseradd;
 import com.example.firstproject.Dto.ChatDto.roomlistresponseDto;
 import com.example.firstproject.Dto.ChatDto.Roomdata.MeseageDto;
 import com.example.firstproject.Dto.ChatDto.Roomdata.Roomdata;
+import com.example.firstproject.Dto.ChatDto.Roomdata.Roomdatainfo;
 import com.example.firstproject.Dto.ChatDto.Roomdata.Roominfo;
+import com.example.firstproject.Dto.ChatDto.Roomdata.RoommetaInfo;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.StompRoom.MemberRoom;
 import com.example.firstproject.Entity.StompRoom.Room;
@@ -83,7 +85,34 @@ public class ChatMemberController {
 		return roomid;
 		
 	}
-	//유저의채팅방목록검색 
+	//챗룸 컨트롤러 
+	@GetMapping("/findchatroominfo")
+	@Logoutano
+	public List<Roomdatainfo> chatroomlistinfos(Authentication authentication){
+		PrincipalDetails member=(PrincipalDetails) authentication.getPrincipal();
+		Long memberid=member.getMember().getId();
+		
+		List<Roomdatainfo> result=chatservice.chatlistinfo(memberid);
+		
+		
+		return result;
+		
+	}
+	//이거 아이디가 여러개일수있어서 이런경우 기능우선으로 레스트풀에서 벗어나지만 봐준다고함
+	@PostMapping("/findchatroommeta")
+	@Logoutano
+	public List<RoommetaInfo> chatroommetas(Authentication authentication,@RequestBody List<Long> roomids){
+		System.out.println("파인드루ㅁ챗메타");
+		PrincipalDetails member=(PrincipalDetails) authentication.getPrincipal();
+		Long memberid=member.getMember().getId();
+		
+		List<RoommetaInfo> result=chatservice.chatlistsub(memberid, roomids);
+		
+		
+		return result;
+	}
+	//유저의채팅방목록검색  이거아마곧삭제
+	//안써요===============================================================
 	@GetMapping("/findchatroomlist")
 	@Logoutano 
 	public List<RoomlistDto> findchatroom(Authentication userdata) {

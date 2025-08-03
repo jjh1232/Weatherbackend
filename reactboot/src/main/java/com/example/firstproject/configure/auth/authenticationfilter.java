@@ -88,6 +88,7 @@ public class authenticationfilter extends UsernamePasswordAuthenticationFilter{
 			
 			
 			System.out.println("authentication실행여기서 유저디테일서비스들어가는듯 ");
+			//내부적으로 usedetailservice의 loaduserbyusername메서드가호출됨
 			Authentication authentication=authenticationmanager.authenticate(authenticationtoken);
 			
 			System.out.println("이후프린시펄디테일자동실행ㅇ");
@@ -122,7 +123,8 @@ public class authenticationfilter extends UsernamePasswordAuthenticationFilter{
 		// TODO Auto-generated method stub
 		System.out.println("5.인증완료:successfulAuthentication");
 		//authresult에 저장되있음 
-		//일단담아주는데나도모르겠다
+		
+		//이거근데 석세스로넘어간순간 authenticationfliter가알아서 athentication객체를 넣어논거임
 		//SecurityContextHolder.getContext().setAuthentication(authResult);
 		
 		//
@@ -156,6 +158,7 @@ public class authenticationfilter extends UsernamePasswordAuthenticationFilter{
 		json.put("gridy", principal.getMember().getHomeaddress().getGridy());
 		json.put("profileimg", principal.getMember().getProfileimg());
 		json.put("userrole", principal.getMember().getRole());
+		json.put("Profileid",principal.getMember().getProviderid());
 		//쿠키에 = 등의기호와 한글은 저장안되기때문에 URLEncoder사용해서 저장
 		Cookie idCookie=new Cookie("userinfo",URLEncoder.encode(json.toJSONString(),"UTF-8"));
 		

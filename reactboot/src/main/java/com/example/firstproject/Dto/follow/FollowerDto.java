@@ -1,17 +1,21 @@
 package com.example.firstproject.Dto.follow;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Builder
-public class FollowDto {
+@AllArgsConstructor
+@NoArgsConstructor
+public class FollowerDto {
 
 	private String username;
 	private String nickname;
-	private String profileurl;
+	private String profileimg;
 	
 	private boolean followcheck;
 }

@@ -1,5 +1,7 @@
 package com.example.firstproject.configure.auth;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLDecoder;
@@ -20,6 +22,7 @@ import com.example.firstproject.Entity.LoginHistory;
 import com.example.firstproject.Service.JwtService;
 import com.example.firstproject.Service.Memberservice.HistoryService;
 import com.example.firstproject.configure.PrincipalDetails;
+
 import com.nimbusds.jose.util.StandardCharset;
 
 import lombok.RequiredArgsConstructor;
@@ -42,6 +45,7 @@ public class oauth2successfilter implements AuthenticationSuccessHandler{
 		System.out.println("oauth2로그인석세스");
 		 System.out.println("석세스핸들러이건머지:"+authentication.getAuthorities().stream().map(Object::toString).collect(Collectors.joining(" ")));
 		
+	
 		 PrincipalDetails principal=(PrincipalDetails) authentication.getPrincipal();
 		 
 		 System.out.println("어트리뷰트스:"+principal.getMember());
@@ -55,7 +59,7 @@ public class oauth2successfilter implements AuthenticationSuccessHandler{
 	      System.out.println("jwt토큰"+jwttoken);
 	      System.out.println("리프레쉬토큰토큰"+refreshtoken);
 	      
-	      
+	 	
 	      //response.addHeader("Authorization", jwttoken);
 	      //response.addHeader("Refreshtoken", refreshtoken);
 	      
@@ -73,6 +77,7 @@ public class oauth2successfilter implements AuthenticationSuccessHandler{
 			json.put("gridy", principal.getMember().getHomeaddress().getGridy());
 			json.put("profileimg", principal.getMember().getProfileimg());
 			json.put("userrole", principal.getMember().getRole());
+			json.put("Profileid",principal.getMember().getProviderid());
 			//쿠키에 = 등의기호와 한글은 저장안되기때문에 URLEncoder사용해서 저장
 			   Cookie cookie1=new Cookie("Acesstoken",jwttoken);
 			      Cookie cookie2=new Cookie("Refreshtoken",refreshtoken);
@@ -93,10 +98,21 @@ public class oauth2successfilter implements AuthenticationSuccessHandler{
 	     historyservice.saveLoginlog(history);
 	     System.out.println("리다이렉트체크:"+request.getHeaders("Referer"));
 	    
-	    System.out.println("이전패스로하기위해체크:"+request.getParameter("state"));
+	    System.out.println("로그인전경로로하기위해체크:"+request.getParameter("state"));
 	    String prevPath = request.getParameter("state");
 	    String decode=URLDecoder.decode(prevPath,StandardCharset.UTF_8.name());
 	    System.out.println("디코드값:"+decode);
+	    
+	    boolean isTemp = authentication.getAuthorities().stream()
+	            .anyMatch(auth -> "ROLE_TEMP".equals(auth.getAuthority())); //권한가져오기
+	    		//anyMatch는 요소중 조건을만족하는요소가있는지찾는것
+	    if (isTemp) {
+	    	System.out.println("템프유저");
+	        response.sendRedirect("http://localhost:3001/signup/extrainfo");
+	        return;
+	    }
+		 //이거구해놓고왜저기세션을썻지..의아
+	    System.out.println("정식유저");
 	     response.sendRedirect("http://localhost:3001/oauthsuccess");
 	}
 

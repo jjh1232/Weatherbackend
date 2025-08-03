@@ -36,12 +36,12 @@ public class SseService {
 	
 	 //====================SSE subscribe========================
 	
-	
+	//첫커넥트
 		public SseEmitter SSEcon(Long userid) {
 			// TODO Auto-generated method stub
 			//새로운 SseEmitter만든다
 			System.out.println("에미터실행id:"+userid);
-			SseEmitter sseEmitter=new SseEmitter(360000000*100*60L); //타임아웃시간넣어줄수있음
+			SseEmitter sseEmitter=new SseEmitter(60*60*1000L); //타임아웃시간넣어줄수있음 1시간
 			
 			//유저아이디로 SseEmitter를저장한다
 			emitterRepository.save(userid,sseEmitter);
@@ -55,7 +55,11 @@ public class SseService {
 			try {
 				System.out.println("더미메세지");
 				sseEmitter.send(SseEmitter.event().id("").name("connect").data("connection complate"));
-			}
+			
+				//알림정보
+				Long unreadcount=notificationrepository.unreadnotificount(userid);
+				sseEmitter.send(SseEmitter.event().id("").name("unreadcount").data(unreadcount));
+				}
 			catch(IOException exception) {
 				System.out.println("에러");
 				 //throw new ApplicationException(ErrorCode.NOTIFICATION_CONNECTION_ERROR);
@@ -86,20 +90,7 @@ public class SseService {
 			emitterRepository.getemitteruser();
 			
 			
-			/*
-			SseEmitter emitter=emitterRepository.exget(notificationId);
 			
-			try {
-				emitter.send(SseEmitter.event()
-						.id(userId.toString())
-						.name("ms")
-						.data("알림이왔습니다"));
-						
-					
-				
-			}catch (IOException exception){
-				
-			}*/
 			System.out.println("노티스작성id:"+tomember.getId());
 			System.out.println("댓글작성자id:"+userId);
 			System.out.println("작성글번호id:"+noticeid);
@@ -111,7 +102,7 @@ public class SseService {
 	                sseEmitter.send(
 	                		SseEmitter.event(). 
 	                		id(userId.toString())//해당이벤트의 아이디설정
-	                		.name("message").//해당이벤트의이름설정
+	                		.name("noticealarm").//해당이벤트의이름설정
 	                		data(noticeid+"번글" +noticetitle +"에 새로운 댓글이 달렸습니다!"));//
 	                
 	                Notification notification=Notification.builder()
@@ -157,7 +148,7 @@ public class SseService {
 		                sseEmitter.send(
 		                		SseEmitter.event(). 
 		                		id(userid.toString())//해당이벤트의 아이디설정
-		                		.name("message").//해당이벤트의이름설정
+		                		.name("commentalarm").//해당이벤트의이름설정
 		                		data(noticeid+"번글"+noticetitle +"에 작성한 댓글에 새로운 대댓글이 달렸습니다!"));//
 		                
 		                Notification notification=Notification.builder()
@@ -181,6 +172,7 @@ public class SseService {
 		        
 		}
 		}
+		
 		public NotifiResult<NotificationDto> getusernotifi(Long memberid,int page) {
 			//페이지로 10개씩가져오자
 			System.out.println("서비스시작");
