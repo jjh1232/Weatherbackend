@@ -18,11 +18,14 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
+import com.example.firstproject.CustomError.CustomException;
+import com.example.firstproject.CustomError.ErrorCode;
 import com.example.firstproject.Dto.MemberDto;
 import com.example.firstproject.Dto.MessageDto;
 import com.example.firstproject.Dto.ChatDto.ChatResponseDto;
@@ -445,18 +448,23 @@ public class ChatService {
 		
 		List<ChatlistmemberDto> roominmemberlists=memberroomrepo.findmemberroomsbyroomids(roomids);	
 		//방아이디와타이틀매칭
+		//두개동시에할꺼면간이Dto써야..
 		Map<Long,String> roomidtotitle =roomlist.stream()
 				.collect(Collectors.toMap(mr->mr.getRoom().getId(),mr->mr.getRoomname()));
+		//멤버룸아이디두 
+		Map<Long,Long> memberroomids =roomlist.stream()
+				.collect(Collectors.toMap(mr->mr.getRoom().getId(),mr->mr.getId()));
 		//방별멤버룸아이디도 받아서 그룹핑
 		Map<Long,List<ChatlistmemberDto>> roommembermap=roominmemberlists.stream()
 				.collect(Collectors.groupingBy(ChatlistmemberDto::getRoomid));
 		
 		List<Roomdatainfo> result=roomids.stream().map(roomid ->{
 			String title=roomidtotitle.get(roomid);
+			Long memberroomid=memberroomids.get(roomid);
 			List<ChatlistmemberDto> members = roommembermap.getOrDefault(roomid,
 					Collections.emptyList());
 			
-			return Roomdatainfo.builder().roomid(roomid).roomtitle(title)
+			return Roomdatainfo.builder().roomid(roomid).roomtitle(title).memberroomid(memberroomid)
 					.membercount(members.size()).members(members).build();
 		}).collect(Collectors.toList());
 		
@@ -640,6 +648,22 @@ public class ChatService {
 		
 		
 		 return new ChatdataDto(chatdatas,beforereadmessageid);
+	}
+	
+	//룸네임변경
+	@Transactional
+	public MemberRoom roonnamechange(Long memberroomid,String newroonname) {
+		
+		MemberRoom memberroom=memberroomrepo.findById(memberroomid).orElseThrow(()->
+		new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_MEMBERROOM));
+		
+		//혹시몰라서 같을시 update안하게
+		if(memberroom.getRoomname().equals(newroonname)) {
+			
+		  throw new CustomException(HttpStatus.BAD_REQUEST, ErrorCode.SAME_ROOMNAME);
+		}
+		memberroom.setRoomname(newroonname);
+		return memberroom;
 	}
 	
 }

@@ -94,6 +94,14 @@ public class MemberHandlerImpl implements MemberHandler{
 		return memberrepository.findByUsername(username);
 	}
 
+	@Override
+	public Optional<MemberEntity> findprofileid(String profileid) {
+		// TODO Auto-generated method stub
+		Optional<MemberEntity> loginmember=memberrepository.findByProfileid(profileid);
+		return loginmember;
+	}
+
+	
 
 	
 

@@ -17,6 +17,7 @@ public class Roomdatainfo {
 
 	private Long roomid;
 	private String roomtitle;
+	private Long memberroomid;
 	private int membercount;
 	private List<ChatlistmemberDto> members;
 	

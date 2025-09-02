@@ -30,6 +30,8 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long>{
 	
 
 	Optional<MemberEntity> findByUsername(String username);
+	
+	Optional<MemberEntity> findByProfileid(String profileid);
 	//executeQuery로 전송되기때문에 update,delete,insult문은 리턴값이없어 안됨 따라서 executeupdtq()로전송되는 modifying을사용
 	@Modifying(clearAutomatically = true)//해당쿼리메서드실행직호 영속성컨텍스트를클리어할것인지아닌지 기본은디폴트임 
 	@Transactional

@@ -30,4 +30,6 @@ public interface MemberHandler {
 
 
 	public Optional<MemberEntity> findbyusername(String username);
+	
+	public Optional<MemberEntity> findprofileid(String profileid);
 }

@@ -203,7 +203,7 @@ public class MemberServiceImpl implements MemberService{
 		// TODO Auto-generated method stub
 		//에러코드
 		MemberEntity entity=handler.findemail(username).orElseThrow(()->{
-			return new CustomException(HttpStatus.NOT_FOUND,ErrorCode.NOT_ALLOW_EMAIL);
+			return new CustomException(HttpStatus.NOT_FOUND,ErrorCode.NOT_FOUND_USER);
 		});
 		//데이터담기
 		Map<String,String> data=new HashMap<>();
@@ -433,7 +433,7 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public Map<String,Object> userpagedate(String username,int page) {
 		// TODO Auto-generated method stub
-		MemberEntity user=handler.login(username).orElseThrow(()->{
+		MemberEntity user=handler.findprofileid(username).orElseThrow(()->{
 			return new IllegalArgumentException("해당유저가존재하지 않습니다!");
 		});
 		UserDto userdto=UserDto.builder()

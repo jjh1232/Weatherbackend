@@ -21,7 +21,7 @@ import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
 import com.example.firstproject.Entity.Notification;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import javax.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -44,7 +44,9 @@ public class MemberRoom extends BaseTime{
 	private String membernickname;
 	
 	private String roomname;
-	
+	//낙관적락용
+	@Version
+	private Long Version;
 	
 	@ManyToOne
 	//@Cascade(CascadeType.PERSIST)
