@@ -3,6 +3,8 @@ package com.example.firstproject.Handler;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.firstproject.Dto.userdataDto.UserDto;
+import com.example.firstproject.Dto.userdataDto.UserPageDto;
 import com.example.firstproject.Entity.MemberEntity;
 
 public interface MemberHandler {
@@ -31,5 +33,5 @@ public interface MemberHandler {
 
 	public Optional<MemberEntity> findbyusername(String username);
 	
-	public Optional<MemberEntity> findprofileid(String profileid);
+	public Optional<UserPageDto> findprofileid(String profileid,Long loginid);
 }

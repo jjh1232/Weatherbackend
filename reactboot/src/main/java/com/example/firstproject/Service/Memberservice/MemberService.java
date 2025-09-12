@@ -13,6 +13,7 @@ import com.example.firstproject.Dto.Memberform;
 import com.example.firstproject.Dto.Weather.MemberUpdateDto;
 import com.example.firstproject.Dto.follow.findDto;
 import com.example.firstproject.Dto.userdataDto.UserDto;
+import com.example.firstproject.Dto.userdataDto.UserPageDto;
 import com.example.firstproject.Entity.MemberEntity;
 
 public interface MemberService {
@@ -52,4 +53,6 @@ public interface MemberService {
 	public boolean profileidcheck(String profileid);
 
 	public Map<String, String> Usernamefind(String username);
+	
+	public UserPageDto userprofileuserdata(Long loginid,String profileid);
 }

@@ -36,6 +36,7 @@ import com.example.firstproject.Dto.Weather.MemberUpdateDto;
 import com.example.firstproject.Dto.Weather.userregionDto;
 import com.example.firstproject.Dto.follow.findDto;
 import com.example.firstproject.Dto.userdataDto.UserDto;
+import com.example.firstproject.Dto.userdataDto.UserPageDto;
 import com.example.firstproject.Entity.Address;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
@@ -432,6 +433,7 @@ public class MemberServiceImpl implements MemberService{
 	//======================유저페이지데이터=======================================
 	@Override
 	public Map<String,Object> userpagedate(String username,int page) {
+/*
 		// TODO Auto-generated method stub
 		MemberEntity user=handler.findprofileid(username).orElseThrow(()->{
 			return new IllegalArgumentException("해당유저가존재하지 않습니다!");
@@ -450,7 +452,8 @@ public class MemberServiceImpl implements MemberService{
 		Page<NoticeDto> noticedto=notice.map((m)->{
 			System.out.println("데이터확인"+m.getNoticeuser());
 			return new NoticeDto(m);
-			
+		
+	
 					});
 		
 			
@@ -459,9 +462,19 @@ public class MemberServiceImpl implements MemberService{
 			dto.put("user", userdto);
 			dto.put("notice", noticedto);
 		return dto;
+			*/
+		return null;
 	}
 
-
+	//유저페이지유저정보
+	@Override
+	public UserPageDto userprofileuserdata(Long loginid, String profileid) {
+		// TODO Auto-generated method stub
+		UserPageDto user=handler.findprofileid(profileid,loginid).orElseThrow(()->{
+			return new IllegalArgumentException("해당유저가존재하지 않습니다!");
+		});
+		return user;
+	}
 
 
 	@Override
@@ -499,6 +512,11 @@ public class MemberServiceImpl implements MemberService{
 		data.put("provider", provider);
 		return data;
 	}
+
+
+
+
+
 
 
    

@@ -45,6 +45,7 @@ import com.example.firstproject.Dto.noticeDao;
 import com.example.firstproject.Dto.Comment.CommentDto;
 import com.example.firstproject.Dto.Comment.Commentform;
 import com.example.firstproject.Dto.Previewimage.PreviewimageDto;
+import com.example.firstproject.Dto.userdataDto.UserPageDto;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
 import com.example.firstproject.Repository.MemberRepository;
@@ -383,6 +384,7 @@ public class MainController {
 		log.info("detachurl"+detach.getUri());
 		return noticeservice.getdetach(detach);
 		
+		
 	}
 	
 	@GetMapping("/open/atagdown") //a태그는 스프링부트에서막는다.. 
@@ -432,7 +434,7 @@ public class MainController {
 	
 	
 	//==============================유저정보페이지==================================
-	
+	//이거지워도될듯다하면
 	@GetMapping("/open/userpage/{profileid}")
 	public ResponseEntity userpage(@PathVariable String profileid,@RequestParam(required = false,defaultValue = "1") int page) {
 		System.out.println("유저페이지:"+profileid);
@@ -440,6 +442,19 @@ public class MainController {
 		System.out.println("왜안돼징");
 		return ResponseEntity.ok(data);
 	}
+	@GetMapping("/open/userpage/userdata/{profileid}")
+	public ResponseEntity userpageuserprofile(@PathVariable String profileid,Authentication authentication) {
+		Long userid=null;
+		//로그인비로그인유저ㅜ
+		if(authentication != null&&authentication.getPrincipal() instanceof PrincipalDetails) {
+			PrincipalDetails member=(PrincipalDetails) authentication.getPrincipal();
+			userid=member.getMember().getId();
+		}
+		UserPageDto userprofile=memberservice.userprofileuserdata(userid, profileid);
+		
+		return ResponseEntity.ok(userprofile);
+	}
+	
 	@GetMapping("/open/notice/imagelist")
 	public ResponseEntity getimagelist(@RequestParam(required = false,defaultValue="title") String option,
 			@RequestParam(required = false,defaultValue="") String keyword,

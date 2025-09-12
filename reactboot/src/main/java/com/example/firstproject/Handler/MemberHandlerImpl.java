@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.firstproject.Dto.userdataDto.UserDto;
+import com.example.firstproject.Dto.userdataDto.UserPageDto;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Repository.MemberRepository;
 
@@ -95,9 +97,9 @@ public class MemberHandlerImpl implements MemberHandler{
 	}
 
 	@Override
-	public Optional<MemberEntity> findprofileid(String profileid) {
+	public Optional<UserPageDto> findprofileid(String profileid,Long loginid) {
 		// TODO Auto-generated method stub
-		Optional<MemberEntity> loginmember=memberrepository.findByProfileid(profileid);
+		Optional<UserPageDto> loginmember=memberrepository.findByProfileid(profileid,loginid);
 		return loginmember;
 	}
 

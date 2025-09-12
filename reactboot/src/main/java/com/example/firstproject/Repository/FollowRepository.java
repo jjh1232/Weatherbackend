@@ -23,13 +23,13 @@ public interface FollowRepository extends JpaRepository<FollowEntity,Long>{
 	List<FollowEntity> findBytoMember( @Param("to") Long userid);
 
 	@Query("select new com.example.firstproject.Dto.follow.followlistDto"
-			+ "(m.username,m.nickname,f.favorite,m.profileimg) "
+			+ "(m.username,m.nickname,f.favorite,m.profileimg,m.profileid) "
 			+ "from FollowEntity f join f.tomember m "
 			+ "where f.frommember.id=:from")
 	List<followlistDto> findByFromMember(@Param("from")Long userid);
 	
 	@Query("select new com.example.firstproject.Dto.follow.FollowerDto "
-			+ "(f.frommember.username,f.frommember.nickname,f.frommember.profileimg,"
+			+ "(f.frommember.username,f.frommember.nickname,f.frommember.profileimg,f.frommember.profileid,"
 			+ "CASE WHEN mf.id IS NOT NULL THEN true ELSE false END) "
 			+ "FROM FollowEntity f " //이게 나를 팔로우한목록
 			+ "LEFT JOIN FollowEntity mf ON mf.frommember.id=:from and " //이게 내가 팔로우한목록

@@ -180,6 +180,7 @@ public class FollowService {
 						.username(entity.getTomember().getUsername())
 						.nickname(entity.getTomember().getNickname())
 						.profileimg(entity.getTomember().getProfileimg())
+						.profileid(entity.getTomember().getProfileid())
 						.favorite(true)
 						.build();
 				dtolist.add(dto);

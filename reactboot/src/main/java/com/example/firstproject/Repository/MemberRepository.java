@@ -13,6 +13,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.example.firstproject.Dto.userdataDto.UserDto;
+import com.example.firstproject.Dto.userdataDto.UserPageDto;
 import com.example.firstproject.Entity.MemberEntity;
 
 @Repository
@@ -31,7 +33,15 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long>{
 
 	Optional<MemberEntity> findByUsername(String username);
 	
-	Optional<MemberEntity> findByProfileid(String profileid);
+	@Query("SELECT new com.example.firstproject.Dto.userdataDto.UserPageDto"
+			+ "(m.id,m.username,m.nickname,m.myintro,m.profileimg,m.regdate,"
+			+ "(SELECT COUNT(f) FROM FollowEntity f Where f.frommember.id=m.id), "
+			+ "(SELECT COUNT(f) FROM FollowEntity f WHERE f.tomember.id = m.id), "
+			+ "CASE WHEN (EXISTS (SELECT 1 FROM FollowEntity f where f.frommember.id=:loginid AND f.tomember.id =m.id)) THEN true ELSE false END"
+			+ ") "
+			+ "from member m where m.profileid =:profileid"
+			)
+	Optional<UserPageDto> findByProfileid(String profileid,Long loginid);
 	//executeQuery로 전송되기때문에 update,delete,insult문은 리턴값이없어 안됨 따라서 executeupdtq()로전송되는 modifying을사용
 	@Modifying(clearAutomatically = true)//해당쿼리메서드실행직호 영속성컨텍스트를클리어할것인지아닌지 기본은디폴트임 
 	@Transactional
