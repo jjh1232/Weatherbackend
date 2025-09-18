@@ -86,4 +86,6 @@ public interface NoticeHandler {
 	public List<CommentEntity> childcomments(Long noticeid,List<Long> parentid);
 
 	long likecounts(Long noticeid);
+	
+	public Page<TwitformnoticeDto> getuserpagepost(Long loginid,Long searchid,Pageable pageable);
 }

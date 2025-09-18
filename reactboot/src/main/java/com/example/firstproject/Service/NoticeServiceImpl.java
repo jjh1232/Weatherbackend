@@ -1100,6 +1100,17 @@ public class NoticeServiceImpl implements NoticeService {
 		return dto;
 	}
 
+	//유저페이지 게시글가져오기
+	@Override
+	public Page<TwitformnoticeDto> userpagenotice(Long loginid, int page, Long userid) {
+		// TODO Auto-generated method stub
+		
+		PageRequest pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
+		Page<TwitformnoticeDto> notice=	noticehandler.getuserpagepost(loginid, userid, pageable);
+		
+		return notice;
+	}
+
 	
 	}
 	 

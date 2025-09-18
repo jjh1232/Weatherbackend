@@ -305,5 +305,27 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 	@Query("Update notice n SET n.views =n.views+:views where n.noticeid=:noticeid")
 	void updateviewcount(Long noticeid,Long views);
 
+	@Query(value="select new com.example.firstproject.Dto.TwitformnoticeDto(" +
+		       "n.noticeid, " +
+		       "n.title, " +
+		       "m.username, " +
+		       "m.nickname, " +
+		       "m.profileimg, " +
+		       "n.red, "+
+		       "n.text,n.pty,n.rain,n.sky,n.temp,n.reh,n.wsd, " + //패이보릿카운트갯수
+		       "(select count(f) from FavoriteEntity f where f.notice.noticeid = n.noticeid), " +
+		       "case when :userid is not null and exists (" +
+		       "    select 1 from FavoriteEntity f2 where f2.notice.noticeid = n.noticeid and f2.member.id = :userid" +
+		       ") then true else false end, " +
+		       "case when :userid is not null and exists (" +
+		       "    select 1 from NoticeblockEntity b where b.noticeid = n.noticeid and b.member.id = :userid" +
+		       ") then true else false end, " +
+		       "n.views, " +
+		       "(select count(c) from CommentEntity c where c.notice.noticeid = n.noticeid)" +
+		       ") " +
+		       "from notice n join n.member m where n.member.id=:searchuserid",
+		       countQuery = "select count(n) from notice n join n.member m where n.member.id=:searchuserid"
+		       		+ " and (:userid is null or 1=1)") //이거패키지이름인데 notice는 Entity네임을 notice로함
+	Page<TwitformnoticeDto> Userpagepost(@Param("searchuserid") Long searchuserid,@Param("userid") Long userid,Pageable pageable);
 	
 }

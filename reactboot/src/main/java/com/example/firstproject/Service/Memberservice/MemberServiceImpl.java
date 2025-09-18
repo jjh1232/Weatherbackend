@@ -476,6 +476,7 @@ public class MemberServiceImpl implements MemberService{
 		return user;
 	}
 
+	
 
 	@Override
 	public MemberEntity findbyid(Long userid) {

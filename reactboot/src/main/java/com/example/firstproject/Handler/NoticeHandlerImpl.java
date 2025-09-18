@@ -379,6 +379,14 @@ public class NoticeHandlerImpl implements NoticeHandler{
 		return check;
 	}
 
+	//유저페이지가져오기
+	@Override
+	public Page<TwitformnoticeDto> getuserpagepost(Long loginid, Long searchid, Pageable pageable) {
+		// TODO Auto-generated method stub
+		Page<TwitformnoticeDto> notice=noticerepository.Userpagepost(searchid, loginid, pageable);
+		return notice;
+	}
+
 
 
 
