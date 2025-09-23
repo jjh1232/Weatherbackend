@@ -323,9 +323,25 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 		       "n.views, " +
 		       "(select count(c) from CommentEntity c where c.notice.noticeid = n.noticeid)" +
 		       ") " +
-		       "from notice n join n.member m where n.member.id=:searchuserid",
+		       "from notice n join n.member m where n.member.id=:searchuserid "
+		       + "and (:keyword is null or :keyword= '' or (:option='title' and n.title like %:keyword%) or (:option='content' and n.text like %:keyword%))",
 		       countQuery = "select count(n) from notice n join n.member m where n.member.id=:searchuserid"
-		       		+ " and (:userid is null or 1=1)") //이거패키지이름인데 notice는 Entity네임을 notice로함
-	Page<TwitformnoticeDto> Userpagepost(@Param("searchuserid") Long searchuserid,@Param("userid") Long userid,Pageable pageable);
+		       		+ " and (:userid is null or 1=1) "
+		       		+  " and (:keyword is null or :keyword= '' or (:option='title' and n.title like %:keyword%) or (:option='content' and n.text like %:keyword%))") //이거패키지이름인데 notice는 Entity네임을 notice로함
+	Page<TwitformnoticeDto> Userpagepost(@Param("searchuserid") Long searchuserid,@Param("userid") Long userid,Pageable pageable,String option,String keyword);
 	
+	//유저페이지 이미지리스트
+	@Query(value="select n.id,n.title,m.username,m.nickname,m.profileimg,d.path,n.red, "
+			+ "(select count(*) from detachfiles f where f.notice_id=n.id) AS file_count, "
+			+ "(select count(*) from favorite_entity l where l.noticeid=n.id) AS like_count,n.views "
+			+ "from notice n "
+			+ "join member m on n.member_id =m.id "
+			+ "join detachfiles d on n.id =d.notice_id "
+			+ "where d.id= (select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
+			+ "and n.member_id = :userid",
+			countQuery = "select count(*) from notice n join detachfiles d on n.id=d.notice_id "
+					+ "where d.id=(select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
+					+ "and n.member_id=:userid",
+			nativeQuery = true)
+	Page<Object[]> userpageimagelist(Long userid ,Pageable page);
 }

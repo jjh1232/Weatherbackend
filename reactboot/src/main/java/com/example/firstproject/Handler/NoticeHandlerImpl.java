@@ -383,8 +383,23 @@ public class NoticeHandlerImpl implements NoticeHandler{
 	@Override
 	public Page<TwitformnoticeDto> getuserpagepost(Long loginid, Long searchid, Pageable pageable) {
 		// TODO Auto-generated method stub
-		Page<TwitformnoticeDto> notice=noticerepository.Userpagepost(searchid, loginid, pageable);
+		//Page<TwitformnoticeDto> notice=noticerepository.Userpagepost(searchid, loginid, pageable);
+		return null;
+	}
+
+	@Override
+	public Page<TwitformnoticeDto> getuserpagepostsearch(Long loginid, Long searchid, String option, String keyword,
+			Pageable pageable) {
+		// TODO Auto-generated method stub
+		Page<TwitformnoticeDto> notice=noticerepository.Userpagepost(searchid, loginid, pageable,option,keyword);
 		return notice;
+	}
+
+	@Override
+	public Page<Object[]> getuserpageimages(Pageable page, Long userid) {
+		// TODO Auto-generated method stub
+		
+		return noticerepository.userpageimagelist(userid, page);
 	}
 
 

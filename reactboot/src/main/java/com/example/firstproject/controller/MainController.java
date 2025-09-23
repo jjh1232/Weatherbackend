@@ -460,6 +460,8 @@ public class MainController {
 	@GetMapping("/open/userpage/userpost/{searchid}")
 	public ResponseEntity userpageposts(@PathVariable Long searchid,
 			@RequestParam(defaultValue="1") int page,
+			@RequestParam(required = false) String keyword,
+		    @RequestParam(required = false) String option,
 			Authentication authentication) {
 		Long userid=null;
 		//로그인비로그인유저ㅜ
@@ -468,7 +470,20 @@ public class MainController {
 			PrincipalDetails member=(PrincipalDetails) authentication.getPrincipal();
 			userid=member.getMember().getId();
 		}
-		Page<TwitformnoticeDto> posts=noticeservice.userpagenotice(userid, page,searchid);
+		Page<TwitformnoticeDto> posts=noticeservice.userpagenotice(userid, page,searchid,option,keyword);
+		return ResponseEntity.ok(posts);
+	}
+	//유저페이지 이미지
+	@GetMapping("/open/userpage/userimagepost/{searchid}")
+	public ResponseEntity userpageimagelist(@PathVariable Long searchid,@RequestParam(defaultValue="1") int page,Authentication authentication) {
+		Long userid=null;
+		//로그인비로그인유저ㅜ
+		System.out.println("유저페이지페이지:"+page);
+		if(authentication != null&&authentication.getPrincipal() instanceof PrincipalDetails) {
+			PrincipalDetails member=(PrincipalDetails) authentication.getPrincipal();
+			userid=member.getMember().getId();
+		}
+		Page<NoticeImageDto> posts=noticeservice.getuserpageimagelist(searchid, page, userid);
 		return ResponseEntity.ok(posts);
 	}
 	
@@ -501,4 +516,6 @@ public class MainController {
 		
 		return ResponseEntity.ok(dto);
 	}
+	
+	
 }

@@ -1102,13 +1102,90 @@ public class NoticeServiceImpl implements NoticeService {
 
 	//유저페이지 게시글가져오기
 	@Override
-	public Page<TwitformnoticeDto> userpagenotice(Long loginid, int page, Long userid) {
+	public Page<TwitformnoticeDto> userpagenotice(Long loginid, int page, Long searchid,String option,String keyword) {
 		// TODO Auto-generated method stub
-		
+		Page<TwitformnoticeDto> notice;//선언
 		PageRequest pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
-		Page<TwitformnoticeDto> notice=	noticehandler.getuserpagepost(loginid, userid, pageable);
+
+			notice=noticehandler.getuserpagepostsearch(loginid, searchid, option, keyword, pageable);
+		
+		
 		
 		return notice;
+	}
+
+	@Override
+	public Page<NoticeImageDto> getuserpageimagelist(Long searchid, int page,Long loginid) {
+		// TODO Auto-generated method stub
+		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
+		
+		
+		Page<Object[]> object=noticehandler.getuserpageimages(pageable, searchid);;
+		
+		if(loginid ==null) {
+			Page<NoticeImageDto> dto=object.map(obj->
+			{
+			Long id=((Number) obj[0]).longValue();
+			
+			return NoticeImageDto.builder()
+			.id(id)
+			.title((String) obj[1])
+			.username((String) obj[2])
+			.nickname((String) obj[3])
+			.userprofile((String) obj[4])
+			.mainimage((String) obj[5])
+			.red((String) obj[6].toString())
+			.imagenum(((BigInteger) obj[7]).longValue())
+			.likes(((BigInteger) obj[8]).intValue())
+			.likely(false)
+			.blockcheck(false)
+			.views(((BigInteger) obj[9]).longValue())
+			.build();
+			});
+
+
+			return dto;
+		}
+		
+		//아이디추출
+		List<Long> noticeids=object.getContent().stream()
+				.map(obj -> ((Number) obj[0]).longValue())
+				.collect(Collectors.toList());
+		
+		//위정보로 좋아요엔티티가져오기
+				List<Long> likenoticeids=(loginid !=null)
+						? noticehandler.favoritenoticeids(loginid, noticeids)
+						:Collections.emptyList();
+				
+				Set<Long> likedset=new HashSet<>(likenoticeids);
+				List<Long> blocklistid=(loginid != null)
+						? blockhandler.getuserblocknotices(loginid,noticeids)
+						: Collections.emptyList();
+				//블록목록가져오기
+				Set<Long> blockset=new HashSet<>(blocklistid);	
+		Page<NoticeImageDto> dto=object.map(obj->
+								{
+								Long id=((Number) obj[0]).longValue();
+								boolean liked=loginid != null && likedset.contains(id);
+								boolean blockcheck=loginid !=null &&blockset.contains(id);
+								return NoticeImageDto.builder()
+								.id(id)
+								.title((String) obj[1])
+								.username((String) obj[2])
+								.nickname((String) obj[3])
+								.userprofile((String) obj[4])
+								.mainimage((String) obj[5])
+								.red((String) obj[6].toString())
+								.imagenum(((BigInteger) obj[7]).longValue())
+								.likes(((BigInteger) obj[8]).intValue())
+								.likely(liked)
+								.blockcheck(blockcheck)
+								.views(((BigInteger) obj[9]).longValue())
+								.build();
+								});
+				
+	
+		return dto;
 	}
 
 	

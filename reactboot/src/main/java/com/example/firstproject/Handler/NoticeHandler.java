@@ -88,4 +88,10 @@ public interface NoticeHandler {
 	long likecounts(Long noticeid);
 	
 	public Page<TwitformnoticeDto> getuserpagepost(Long loginid,Long searchid,Pageable pageable);
+	
+	public Page<TwitformnoticeDto> getuserpagepostsearch(Long loginid,Long searchid,String option,String keyword,Pageable pageable);
+	
+	public Page<Object[]> getuserpageimages(Pageable page,Long userid);
+	
+	
 }
