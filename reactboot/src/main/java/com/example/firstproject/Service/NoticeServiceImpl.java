@@ -1115,13 +1115,13 @@ public class NoticeServiceImpl implements NoticeService {
 	}
 
 	@Override
-	public Page<NoticeImageDto> getuserpageimagelist(Long searchid, int page,Long loginid) {
+	public Page<NoticeImageDto> getuserpageimagelist(Long searchid,String option,String keyword, int page,Long loginid) {
 		// TODO Auto-generated method stub
 		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
 		
-		
-		Page<Object[]> object=noticehandler.getuserpageimages(pageable, searchid);;
-		
+		System.out.println("유저페이지실행");
+		Page<Object[]> object=noticehandler.getuserpageimages(pageable,option,keyword, searchid);;
+		System.out.println("object가져옴");
 		if(loginid ==null) {
 			Page<NoticeImageDto> dto=object.map(obj->
 			{

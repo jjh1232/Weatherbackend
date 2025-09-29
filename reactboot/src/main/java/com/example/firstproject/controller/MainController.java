@@ -475,15 +475,21 @@ public class MainController {
 	}
 	//유저페이지 이미지
 	@GetMapping("/open/userpage/userimagepost/{searchid}")
-	public ResponseEntity userpageimagelist(@PathVariable Long searchid,@RequestParam(defaultValue="1") int page,Authentication authentication) {
+	public ResponseEntity userpageimagelist(@PathVariable Long searchid,
+			@RequestParam(defaultValue="1") int page,
+			@RequestParam(required = false) String keyword,
+		    @RequestParam(required = false) String option,
+			Authentication authentication) {
 		Long userid=null;
 		//로그인비로그인유저ㅜ
 		System.out.println("유저페이지페이지:"+page);
+		System.out.println("검색옵션:"+option);
+		System.out.println("검색어:"+keyword);
 		if(authentication != null&&authentication.getPrincipal() instanceof PrincipalDetails) {
 			PrincipalDetails member=(PrincipalDetails) authentication.getPrincipal();
 			userid=member.getMember().getId();
 		}
-		Page<NoticeImageDto> posts=noticeservice.getuserpageimagelist(searchid, page, userid);
+		Page<NoticeImageDto> posts=noticeservice.getuserpageimagelist(searchid,option,keyword,page, userid);
 		return ResponseEntity.ok(posts);
 	}
 	

@@ -396,10 +396,23 @@ public class NoticeHandlerImpl implements NoticeHandler{
 	}
 
 	@Override
-	public Page<Object[]> getuserpageimages(Pageable page, Long userid) {
+	public Page<Object[]> getuserpageimages(Pageable page,String option,String keyword, Long userid) {
 		// TODO Auto-generated method stub
+		//핸들러에서 구분하는게나을거같음 만약바꾼다면 
+		//로직에서 구분해서 다른걸로 검색에따라
+		//대소문자구분안함
+		if(option.equalsIgnoreCase("content")) {
+			System.out.println("내용검색");
+			return noticerepository.userpagesearchtextimagelist(userid,keyword, page);
+		}else if(option.equalsIgnoreCase("title"))
+		{
+			System.out.println("제목검색");
+			return noticerepository.userpagesearchtitleimagelist(userid,keyword, page);
+		}else {
+			System.out.println("검색아님");
+			return noticerepository.userpageimagelist(userid, page);
+		}
 		
-		return noticerepository.userpageimagelist(userid, page);
 	}
 
 

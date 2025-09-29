@@ -91,7 +91,7 @@ public interface NoticeHandler {
 	
 	public Page<TwitformnoticeDto> getuserpagepostsearch(Long loginid,Long searchid,String option,String keyword,Pageable pageable);
 	
-	public Page<Object[]> getuserpageimages(Pageable page,Long userid);
+	public Page<Object[]> getuserpageimages(Pageable page,String option,String keyword,Long userid);
 	
 	
 }

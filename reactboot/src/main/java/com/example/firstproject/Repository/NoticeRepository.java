@@ -338,10 +338,44 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 			+ "join member m on n.member_id =m.id "
 			+ "join detachfiles d on n.id =d.notice_id "
 			+ "where d.id= (select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
-			+ "and n.member_id = :userid",
+			+ "and n.member_id = :userid ",		
 			countQuery = "select count(*) from notice n join detachfiles d on n.id=d.notice_id "
 					+ "where d.id=(select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
 					+ "and n.member_id=:userid",
 			nativeQuery = true)
-	Page<Object[]> userpageimagelist(Long userid ,Pageable page);
+	Page<Object[]> userpageimagelist(@Param("userid") Long userid ,Pageable page);
+
+	//jpql은 객체지향형쿼리라 가능하지만 네이티브쿼리는 title등이 대체가안됨..그래서따로만들래
+	@Query(value="select n.id,n.title,m.username,m.nickname,m.profileimg,d.path,n.red, "
+			+ "(select count(*) from detachfiles f where f.notice_id=n.id) AS file_count, "
+			+ "(select count(*) from favorite_entity l where l.noticeid=n.id) AS like_count,n.views "
+			+ "from notice n "
+			+ "join member m on n.member_id =m.id "
+			+ "join detachfiles d on n.id =d.notice_id "
+			+ "where d.id= (select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
+			+ "and n.member_id = :userid "
+			+ "and n.title like CONCAT('%', :keyword, '%')",		
+			countQuery = "select count(*) from notice n join detachfiles d on n.id=d.notice_id "
+					+ "where d.id=(select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
+					+ "and n.member_id=:userid "
+					+ "and n.title like CONCAT('%', :keyword, '%')",
+			nativeQuery = true)
+	Page<Object[]> userpagesearchtitleimagelist(@Param("userid") Long userid ,@Param("keyword") String keyword,Pageable page);
+
+	@Query(value="select n.id,n.title,m.username,m.nickname,m.profileimg,d.path,n.red, "
+			+ "(select count(*) from detachfiles f where f.notice_id=n.id) AS file_count, "
+			+ "(select count(*) from favorite_entity l where l.noticeid=n.id) AS like_count,n.views "
+			+ "from notice n "
+			+ "join member m on n.member_id =m.id "
+			+ "join detachfiles d on n.id =d.notice_id "
+			+ "where d.id= (select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
+			+ "and n.member_id = :userid "
+			+ "and n.text like CONCAT('%', :keyword, '%')",		
+			countQuery = "select count(*) from notice n join detachfiles d on n.id=d.notice_id "
+					+ "where d.id=(select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
+					+ "and n.member_id=:userid "
+					+ "and n.text like CONCAT('%', :keyword, '%')",
+			nativeQuery = true)
+	Page<Object[]> userpagesearchtextimagelist(@Param("userid") Long userid ,@Param("keyword") String keyword,Pageable page);
+
 }
