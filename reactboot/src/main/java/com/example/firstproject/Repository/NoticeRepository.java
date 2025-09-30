@@ -330,6 +330,35 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 		       		+  " and (:keyword is null or :keyword= '' or (:option='title' and n.title like %:keyword%) or (:option='content' and n.text like %:keyword%))") //이거패키지이름인데 notice는 Entity네임을 notice로함
 	Page<TwitformnoticeDto> Userpagepost(@Param("searchuserid") Long searchuserid,@Param("userid") Long userid,Pageable pageable,String option,String keyword);
 	
+	@Query(value = "select new com.example.firstproject.Dto.TwitformnoticeDto(" +
+		    "n.noticeid, " +
+		    "n.title, " +
+		    "m.username, " +
+		    "m.nickname, " +
+		    "m.profileimg, " +
+		    "n.red, " +
+		    "n.text, n.pty, n.rain, n.sky, n.temp, n.reh, n.wsd, " +
+		    "count(f), " +
+		    "case when :userid is not null and exists (" +
+		    "    select 1 from FavoriteEntity f2 where f2.notice.noticeid = n.noticeid and f2.member.id = :userid" +
+		    ") then true else false end, " +
+		    "case when :userid is not null and exists (" +
+		    "    select 1 from NoticeblockEntity b where b.noticeid = n.noticeid and b.member.id = :userid" +
+		    ") then true else false end, " +
+		    "n.views, " +
+		    "(select count(c) from CommentEntity c where c.notice.noticeid = n.noticeid)" +
+		    ") " +
+		    "from notice n " +
+		    "join n.member m " +
+		    "left join FavoriteEntity f on f.notice.noticeid = n.noticeid " +
+		    "where n.member.id = :searchuserid " +
+		    "and (:keyword is null or :keyword = '' or (:option = 'title' and n.title like %:keyword%) or (:option = 'content' and n.text like %:keyword%)) " +
+		    "group by n.noticeid, n.title, m.username, m.nickname, m.profileimg, n.red, n.text, n.pty, n.rain, n.sky, n.temp, n.reh, n.wsd, n.views " +
+		    "order by count(f) desc, n.red desc",
+		    countQuery = "select count(distinct n) from notice n join n.member m where n.member.id = :searchuserid " +
+		    "and (:userid is null or 1=1) and (:keyword is null or :keyword = '' or (:option = 'title' and n.title like %:keyword%) or (:option = 'content' and n.text like %:keyword%))")
+		Page<TwitformnoticeDto> Userpagehighlightpost(@Param("searchuserid") Long searchuserid, @Param("userid") Long userid, Pageable pageable, String option, String keyword);
+	
 	//유저페이지 이미지리스트
 	@Query(value="select n.id,n.title,m.username,m.nickname,m.profileimg,d.path,n.red, "
 			+ "(select count(*) from detachfiles f where f.notice_id=n.id) AS file_count, "

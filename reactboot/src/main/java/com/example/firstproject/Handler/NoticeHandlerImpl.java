@@ -379,13 +379,6 @@ public class NoticeHandlerImpl implements NoticeHandler{
 		return check;
 	}
 
-	//유저페이지가져오기
-	@Override
-	public Page<TwitformnoticeDto> getuserpagepost(Long loginid, Long searchid, Pageable pageable) {
-		// TODO Auto-generated method stub
-		//Page<TwitformnoticeDto> notice=noticerepository.Userpagepost(searchid, loginid, pageable);
-		return null;
-	}
 
 	@Override
 	public Page<TwitformnoticeDto> getuserpagepostsearch(Long loginid, Long searchid, String option, String keyword,
@@ -395,6 +388,14 @@ public class NoticeHandlerImpl implements NoticeHandler{
 		return notice;
 	}
 
+	@Override
+	public Page<TwitformnoticeDto> getuserpagehighlightpost(Long loginid, Long searchid, String option, String keyword,
+			Pageable pageable) {
+		// TODO Auto-generated method stub
+		Page<TwitformnoticeDto> notice=noticerepository.Userpagehighlightpost(searchid, loginid, pageable,option,keyword);
+		return notice;
+	}
+	
 	@Override
 	public Page<Object[]> getuserpageimages(Pageable page,String option,String keyword, Long userid) {
 		// TODO Auto-generated method stub
@@ -414,6 +415,8 @@ public class NoticeHandlerImpl implements NoticeHandler{
 		}
 		
 	}
+
+	
 
 
 

@@ -462,6 +462,7 @@ public class MainController {
 			@RequestParam(defaultValue="1") int page,
 			@RequestParam(required = false) String keyword,
 		    @RequestParam(required = false) String option,
+		    @RequestParam String sortoption,
 			Authentication authentication) {
 		Long userid=null;
 		//로그인비로그인유저ㅜ
@@ -470,7 +471,7 @@ public class MainController {
 			PrincipalDetails member=(PrincipalDetails) authentication.getPrincipal();
 			userid=member.getMember().getId();
 		}
-		Page<TwitformnoticeDto> posts=noticeservice.userpagenotice(userid, page,searchid,option,keyword);
+		Page<TwitformnoticeDto> posts=noticeservice.userpagenotice(userid, page,searchid,option,keyword,sortoption);
 		return ResponseEntity.ok(posts);
 	}
 	//유저페이지 이미지

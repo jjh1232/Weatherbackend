@@ -1102,12 +1102,18 @@ public class NoticeServiceImpl implements NoticeService {
 
 	//유저페이지 게시글가져오기
 	@Override
-	public Page<TwitformnoticeDto> userpagenotice(Long loginid, int page, Long searchid,String option,String keyword) {
+	public Page<TwitformnoticeDto> userpagenotice(Long loginid, int page, Long searchid,String option,String keyword,String sortoption) {
 		// TODO Auto-generated method stub
 		Page<TwitformnoticeDto> notice;//선언
-		PageRequest pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
-
-			notice=noticehandler.getuserpagepostsearch(loginid, searchid, option, keyword, pageable);
+		PageRequest pageable;
+		if(sortoption.equals("date")) {
+		pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
+		notice=noticehandler.getuserpagepostsearch(loginid, searchid, option, keyword, pageable);
+		}
+		else  {
+		pageable =PageRequest.of(page-1, 10);
+		notice=noticehandler.getuserpagehighlightpost(loginid, searchid, option, keyword, pageable);
+		}
 		
 		
 		

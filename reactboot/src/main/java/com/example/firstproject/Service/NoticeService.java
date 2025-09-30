@@ -76,7 +76,7 @@ public interface NoticeService {
 	
 	public List<PreviewimageDto> getPreviewimage(Long userid,Long noticeid);
 
-	public Page<TwitformnoticeDto> userpagenotice(Long loginid,int page,Long userid,String option,String keyword);
+	public Page<TwitformnoticeDto> userpagenotice(Long loginid,int page,Long userid,String option,String keyword,String sortoption);
 	//NoticeDetailDto detail(Long noticeid, Long userid);
 	
 	public Page<NoticeImageDto> getuserpageimagelist(Long userid,String option,String keyword,int page,Long loginid);
