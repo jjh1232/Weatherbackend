@@ -24,13 +24,16 @@ public class MemberDto {
 
 	private Long id;
 	private String username;
-	private String password;
+	//[삭제됨] private String password;
+	//[삭제됨] private String refreshtoken;
+	//이 DTO는 /open/membercreate 응답으로 나간다. 비밀번호 해시와 리프레시토큰이
+	//클라이언트로 전달될 이유가 없어서 필드 자체를 두지 않는다.
+	//(비밀번호 찾기는 임시비번을 새로 발급하는 방식이라 꺼내 쓸 일도 없다)
 	private String profileid;
 	private String nickname;
-	
+
 	private String role;
-	private String refreshtoken;
-	
+
 	private String provider;
 	private String providerid;
 	private Address homeaddress;

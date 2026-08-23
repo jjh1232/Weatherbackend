@@ -129,9 +129,9 @@ public class MemberServiceImpl implements MemberService{
 		//엔티티에 셋
 		entity.setAuth(authkey);
 		//멤버정보리턴
-		MemberDto dto=entity.toDto(entity.getId(),entity.getUsername(), entity.getPassword(),
+		MemberDto dto=entity.toDto(entity.getId(),entity.getUsername(),
 				entity.getProfileid(),entity.getNickname(),
-				entity.getRole(), entity.getRefreshtoken(), entity.getProvider(),
+				entity.getRole(), entity.getProvider(),
 				entity.getProviderid(),entity.getHomeaddress(),
 				entity.getRegdate(), entity.getUpdatered());
 		
