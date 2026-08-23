@@ -30,6 +30,8 @@ import com.example.firstproject.Entity.StompRoom.chatmessage;
 import com.example.firstproject.Entity.block.NoticeblockEntity;
 import com.example.firstproject.Entity.block.NoticedecleEntity;
 import com.example.firstproject.Entity.follow.FollowEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -54,9 +56,13 @@ public class MemberEntity {
 	
 	@Column(unique = true,nullable = false)
 	private String username;
+	//로그인 필터가 요청 바디를 MemberEntity 로 역직렬화하므로(authenticationfilter)
+	//들어오는 방향은 살려두고, 응답으로 나가는 방향만 막는다.
+	//@JsonIgnore 를 쓰면 password 가 null 로 파싱되어 로그인이 깨진다.
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@Column(nullable = false)
 	private String password;
-	
+
 	private String profileimg;
 	
 	@Column(unique=false,nullable=false)
@@ -84,7 +90,10 @@ public class MemberEntity {
 	    }
 	    
 	private String role;
-	
+
+	//요청으로 받을 일이 없으므로 양방향 모두 차단.
+	//클라이언트에는 응답 헤더 Refreshtoken 으로 따로 내려간다(authenticationfilter).
+	@JsonIgnore
 	private String refreshtoken;
 	
 	private String provider;
@@ -159,7 +168,7 @@ public class MemberEntity {
     @OneToMany(mappedBy="member",fetch= FetchType.LAZY,cascade = CascadeType.ALL)
     private List<FavoriteEntity> favorite;
     
-    
+    private String Profilebackground;
     
 	public MemberDto toDto(Long id,
 			String username,String password,String profileid,String nickname,String role,
