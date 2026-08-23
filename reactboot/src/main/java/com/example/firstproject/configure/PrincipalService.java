@@ -44,9 +44,18 @@ public class PrincipalService implements UserDetailsService{
 		if(open.isPresent()) {
 			System.out.println("유저잇음");
 			MemberEntity entity=open.get();
-			System.out.println(entity.getPassword());
-			
-			
+
+			//소셜(구글/네이버) 가입 계정은 아이디/비밀번호 로그인을 허용하지 않는다.
+			//소셜 가입시에는 쓰지않는 비밀번호가 들어가므로, 여기서 막지않으면
+			//그 값을 아는 사람이 소셜계정 아무거나로 로그인할수있게된다.
+			//일반가입은 provider가 "mypage", 소셜은 "Google"/"Naver" 로 저장된다.
+			String provider=entity.getProvider();
+			if(provider!=null && !provider.equals("mypage")) {
+				System.out.println("소셜가입계정의 폼로그인 시도 차단: "+username+" / provider:"+provider);
+				throw new InternalAuthenticationServiceException(
+						provider+" 간편로그인으로 가입한 계정입니다. "+provider+" 로그인을 이용해주세요.");
+			}
+
 			if(!entity.getAuth().equals("Y")) {
 				System.out.println("이메일인증을진행하지않은계정입니다");
 				System.out.println("auth:"+entity.getAuth());

@@ -3,6 +3,7 @@ package com.example.firstproject.configure;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -79,7 +80,10 @@ public class oauth2loginservice extends DefaultOAuth2UserService{
 			System.out.println("새로가입하니다");
 			String name=oauth2user.getname();
 			String nickname=oauth2user.getnickname();
-			String password=encode.encode("asdasdwekjer234325325");
+			//소셜 가입자는 이 비밀번호로 로그인하지 않는다(PrincipalService에서 폼로그인을 막는다).
+			//그래도 계정마다 다른 값을 넣어둬야, 혹시 폼로그인 차단이 뚫리더라도
+			//하나가 털렸을때 나머지 계정까지 같이 열리는 일이 없다.
+			String password=encode.encode(UUID.randomUUID().toString());
 			String role="ROLE_TEMP";
 			String provider=oauth2user.provider();
 			String providerid=oauth2user.prividerid();

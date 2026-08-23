@@ -178,26 +178,8 @@ public class MemberServiceImpl implements MemberService{
 	
 	}
 
-	@Override
-	public Object memberlogin(String email, String password) {
-		// TODO Auto-generated method stub
-		Optional<MemberEntity> opentity=handler.login(email);
-		if(opentity.isPresent()) {
-			MemberEntity entity=opentity.get();
-			if(password.equals(entity.getPassword())) {
-				System.out.println("비번맞음");
-				return entity;
-			}else {
-				System.out.println("비번틀림");
-				return "x";
-			}
-			
-			
-		}else {
-			return null;
-		}
-		
-	}
+	//[삭제됨] memberlogin(email,password)
+	///open/memberlogin 전용이었고 해당 API와 함께 제거. 로그인은 Spring Security 가 담당한다.
 
 	@Override
 	public Map<String,String> passfind(String username) {

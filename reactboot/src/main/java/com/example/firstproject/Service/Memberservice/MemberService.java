@@ -26,8 +26,6 @@ public interface MemberService {
 
 	public boolean Emailauth(String username);
 	
-	public Object memberlogin(String email,String password);
-	
 	public Map<String,String> passfind(String username);
 	
 	public void memberpasswordupdate(String username,String authokey);

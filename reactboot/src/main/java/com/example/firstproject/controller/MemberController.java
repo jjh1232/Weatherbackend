@@ -162,73 +162,13 @@ public class MemberController {
 		 
 	}
 	
-	//스프링시큐리티쓸꺼라 이제안쓸듯? 
-	@PostMapping("/open/memberlogin")
-	public Map<String,Object> memberlogin(
-			@RequestBody HashMap<String,Object> reqjsonhashmap
-			,HttpServletResponse res
-			,HttpServletRequest req) {	
-		
-		//responseData
-		
-		//ArrayList<HashMap<String,Object>> data=new ArrayList<HashMap<String,Object>>();
-		/* HttpServletRequest req 이걸로 데이터받아서 함 form data형식 
-		 * HashMap<String,Object> ddata=new HashMap<String,Object>();
-		 * ddata.put("RequestData1", req.getParameter("email"));
-		 * ddata.put("RequestData2", req.getParameter("password"));
-		 * log.info(ddata.toString());
-		 */
-		
-		//response Data
-		
-		HashMap<String, Object> output = new HashMap<String, Object>();
-//		rtnMap.put("data", reqjsonhashmap.get("password"));      
-		String email = reqjsonhashmap.get("email").toString();
-		String password = reqjsonhashmap.get("password").toString();
-		
-		Object result=memberservice.memberlogin(email,password);
-		if(result == null) {
-			output.put("result", "x");
-			log.info(output.toString());
-			return output;
-		}
-		else if(result.equals("x")) {
-			output.put("result","notpass");
-			log.info(output.toString());
-			return output;
-		}
-		else {
-			MemberEntity loginmem=(MemberEntity) result;
-			output.put("member", loginmem);
-			
-			
-			 //쿠키
-			 Cookie cookie=new Cookie("member",loginmem.getNickname());
-			 cookie.setMaxAge(60*40);
-			cookie.setPath("/");
-			cookie.setSecure(true);
-			cookie.setHttpOnly(false);
-			
-			res.addCookie(cookie);
-			//리스폰스헤더에 쿠키닮기 same사이트도되는데 프록시쓰니까위에꺼도되서안쓸
-			
-			
-			
-			// res.setHeader("Set-Cookie", responseCookie.toString()) ;
-			  
-			//  res.addHeader(HttpHeaders.SET_COOKIE, responseCookie.toString() );
-		
-			
-			HttpSession session = req.getSession(true);//세션이이미있으면반환
-			session.setAttribute("loginmember", loginmem);
-			session.setMaxInactiveInterval(3600);
-			log.info(session.getAttribute("loginmember").toString());
-			
-			return output;
-	}}
+	//[삭제됨] POST /open/memberlogin
+	//스프링시큐리티 도입전에 쓰던 수동 로그인 API. 프론트는 /login(authenticationfilter)만 사용한다.
+	//- 평문 비밀번호와 BCrypt 해시를 equals 로 비교해서 애초에 동작하지 않았고
+	//- 성공시 MemberEntity 를 통째로 응답에 실었으며(비밀번호 해시/리프레시토큰 노출)
+	//- STATELESS 설정인데 세션을 생성했다.
 
-	
-	//비밀번호 찾기 임시비번발급 
+	//비밀번호 찾기 임시비번발급
 	@GetMapping("/open/passwordfind")
 	public ResponseEntity passfind(@RequestParam String email) {
 		
