@@ -26,8 +26,11 @@ public class JwtService {
 	@Autowired
 	private MemberRepository memberrepository;
 	
-	//@value()는 빈주입전이라안된다함
-	private String secretkey= "${sercret.jwtkey}";
+	//@Value 는 이 클래스가 스프링 빈(@Service)이고 어디서도 new 로 만들지 않으므로 정상 동작한다.
+	//@Value 가 안 먹는 경우는 static 필드이거나 new 로 직접 생성한 객체일 때다.
+	//값은 application.yml 의 jwt.secret -> application-secret.yml 또는 환경변수 JWT_SECRET
+	@Value("${jwt.secret}")
+	private String secretkey;
 	
 	
 	//토큰생성 이건 com0 라이브러리를 사용했음 

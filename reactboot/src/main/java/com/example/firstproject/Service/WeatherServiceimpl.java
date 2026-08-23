@@ -23,6 +23,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -59,6 +60,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 //근데 메소드에 밸류 따로주면 그걸로 인식하는듯?
 public class WeatherServiceimpl implements WeatherService{
 
+	//기상청 서비스키. application.yml 의 weather.api.service-key
+	// -> application-secret.yml(로컬) 또는 환경변수 WEATHER_API_KEY(서버)
+	@Value("${weather.api.service-key}")
+	private String servicekey;
+
 	@Autowired
 	private WeatherServiceHandler weatherhandler;
 	
@@ -90,7 +96,6 @@ public class WeatherServiceimpl implements WeatherService{
 	@Cacheable(value = "getweather",key="#reg1+#reg2+#reg3",unless = "#result==null")
 	public List<frontweather> getweatherdata(String reg1, String reg2, String reg3,String gridx,String gridy) throws URISyntaxException, UnsupportedEncodingException {
 		// TODO Auto-generated method stub
-		String servicekey ="1UxOsFtGRc1qt%2FBSr5YDb%2B%2BBfx9rWkUUCg9Pbt8%2BbpYlHmJLRPr4aiWZINe4hGjWTia37Y5QAVtOO9D%2B6HyRFA%3D%3D";
 		String url="http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst";
 		System.out.println("날씨api 겟데이터 서비스");
 		
