@@ -1,7 +1,6 @@
 package com.example.firstproject.configure.auth;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +8,6 @@ import java.util.Optional;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
@@ -32,7 +30,9 @@ import com.example.firstproject.Repository.MemberRepository;
 import com.example.firstproject.Service.JwtService;
 import com.example.firstproject.Service.Memberservice.HistoryService;
 import com.example.firstproject.configure.PrincipalDetails;
+import com.example.firstproject.tools.ClientIp;
 import com.example.firstproject.tools.HttpResRequestWrapper;
+import com.example.firstproject.tools.Userinfoheader;
 import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DatabindException;
@@ -40,7 +40,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 import lombok.RequiredArgsConstructor;
-import net.minidev.json.JSONObject;
 
 @RequiredArgsConstructor
 public class authenticationfilter extends UsernamePasswordAuthenticationFilter{
@@ -146,34 +145,18 @@ public class authenticationfilter extends UsernamePasswordAuthenticationFilter{
 		
 		
 		
-		//json형태로 쿠키에 여러값의 유저인포저장!
-		JSONObject json= new JSONObject();
-		json.put("userid",principal.getid());
-		json.put("username",principal.getUsername());
-	
-		json.put("nickname",principal.getMember().getNickname());
-		
-		json.put("region", principal.getMember().getHomeaddress().getJuso());
-		json.put("gridx", principal.getMember().getHomeaddress().getGridx());
-		json.put("gridy", principal.getMember().getHomeaddress().getGridy());
-		json.put("profileimg", principal.getMember().getProfileimg());
-		json.put("userrole", principal.getMember().getRole());
-		json.put("Profileid",principal.getMember().getProviderid());
-		//쿠키에 = 등의기호와 한글은 저장안되기때문에 URLEncoder사용해서 저장
-		Cookie idCookie=new Cookie("userinfo",URLEncoder.encode(json.toJSONString(),"UTF-8"));
-		
-		
-		
+		//화면 표시용 유저 정보. 쿠키가 아니라 응답 헤더로 보낸다(Userinfoheader 주석 참고).
+		Userinfoheader.write(response, principal.getMember());
+
 		jwtservice.Setrefreshtoken(principal.getUsername(), refreshtoken);
-		response.addCookie(idCookie);
-	
+
 		response.addHeader("Authorization", jwttoken); //
 		response.addHeader("Refreshtoken", refreshtoken);
 		
 		System.out.println("jwttoken:"+jwttoken);
 		System.out.println("refreshtoken:"+refreshtoken);
 		//로그인 히스토리 
-		String clientip=historyservice.getrequestIp(request);
+		String clientip=ClientIp.resolve(request);
 		LoginHistory history=LoginHistory.builder()
 							.userid(principal.getUsername())
 							.islogin(true)
@@ -200,7 +183,7 @@ public class authenticationfilter extends UsernamePasswordAuthenticationFilter{
 				
 				//이거근데자격증명코드가 비번틀렸을시만하자
 				
-				String clientip=historyservice.getrequestIp(request);
+				String clientip=ClientIp.resolve(request);
 				LoginHistory history=LoginHistory.builder()
 									.userid(username)
 									.islogin(false)

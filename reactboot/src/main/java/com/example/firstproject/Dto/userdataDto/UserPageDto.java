@@ -29,5 +29,11 @@ public class UserPageDto {
 	private long followernum;
 	
 	private boolean followcheck;
+
+	//이메일 대신 화면에 보여줄 핸들
+	private String profileid;
+
+	//프로필 상단 배너 이미지 경로
+	private String profilebackground;
 	
 }

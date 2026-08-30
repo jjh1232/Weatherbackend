@@ -34,4 +34,6 @@ public class TwitformnoticeDto {
 	private boolean blockcheck;
 	private long views;
 	private long commentcount;
+	//프로필 URL/표시용 핸들. 이메일(username)을 화면에 노출하지 않으려고 같이 내려준다.
+	private String profileid;
 }

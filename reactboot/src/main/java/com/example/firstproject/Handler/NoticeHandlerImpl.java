@@ -54,6 +54,11 @@ public class NoticeHandlerImpl implements NoticeHandler{
 		Page<TwitformnoticeDto> dto =noticerepository.twitnoticelist(userid, page);
 		return dto;
 	}
+
+	@Override
+	public Page<TwitformnoticeDto> twitfollowinglist(Long userid, Pageable page) {
+		return noticerepository.twitfollowinglist(userid, page);
+	}
 	
 	@Override
 	public Page<TwitformnoticeDto> searchtwitform(Long userid,String option,String keyword,Pageable page) {
@@ -282,6 +287,28 @@ public class NoticeHandlerImpl implements NoticeHandler{
 		return result;
 	}
 
+
+	//좋아요한 글 - DTO 프로덕션 버전
+	@Override
+	public Page<TwitformnoticeDto> twitfavoritelist(Long userid, Pageable pageable) {
+		return noticerepository.twitfavoritelist(userid, pageable);
+	}
+
+	@Override
+	public Page<TwitformnoticeDto> twitfavoritesearch(Long userid, Pageable pageable, String option, String keyword) {
+		switch (option) {
+		case "title":
+			return noticerepository.twitfavoritetitle(userid, keyword, pageable);
+		case "text":
+			return noticerepository.twitfavoritetext(userid, keyword, pageable);
+		case "titletext":
+			return noticerepository.twitfavoritetitletext(userid, keyword, pageable);
+		case "name":
+			return noticerepository.twitfavoritenick(userid, keyword, pageable);
+		default:
+			throw new IllegalArgumentException("검색 옵션이 잘못되었습니다: " + option);
+		}
+	}
 
 	//좋아요 서치인데 여기다만들자너무많다
 	@Override

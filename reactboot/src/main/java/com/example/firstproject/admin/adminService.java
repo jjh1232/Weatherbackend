@@ -7,13 +7,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -65,9 +67,16 @@ public class adminService {
 	
 	
 	private final DetachfileRepository detachrepo;
+
+	//업로드 루트(application.yml: app.upload.public-dir)
+	//예전에는 옛 프로젝트의 절대경로가 그대로 박혀 있었다.
+	//그 경로는 지금 머신에 없어서, 이 값을 타는 기능은 전부 깨진 상태였다.
+	@Value("${app.upload.public-dir}")
+	private String uploadroot;
 	private final BCryptPasswordEncoder passen;
 	//==================================//멤버=========================================
 	
+	@Transactional(readOnly = true)
 	public Page<MemberDto> allmemberget(int page) {
 	
 		System.out.println("핸들러시작");
@@ -96,6 +105,7 @@ public class adminService {
 	}
 	
 	//==============멤버 검색============================
+	@Transactional(readOnly = true)
 	public Page<MemberDto> searchmembers(String option,String keyword,int page){
 		Pageable pageable=PageRequest.of(page-1, 20,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"regdate" ));
 		
@@ -195,17 +205,21 @@ public class adminService {
 	
 	
 	//=================================게시판페이지관리========================================
+	@Transactional(readOnly = true)
 	public Page<NoticeDto> allnoticeget(int page) {
 		
 		System.out.println("핸들러시작");
-		Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red" ));
+		/* Sort 는 DB 컬럼명이 아니라 JPA "프로퍼티명"으로 찾는다.
+		   NoticeEntity 는 @Column(name="id") private Long noticeid 라서
+		   "id" 로 주면 No property 'id' found for type 'NoticeEntity' 로 500 이 났다. */
+		Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"noticeid" ));
 		Page<NoticeEntity> entity=adminhandler.noticeallget(pageable);
 	
 		Page<NoticeDto> list=entity.map((m)->
 				NoticeDto.builder().num(m.getNoticeid()).username(m.getNoticeuser())
 				.nickname(m.getNoticenick()).title(m.getTitle()).text(m.getText())
 				.likes(m.getLikeuser().size()).temp(m.getTemp()).sky(m.getSky())
-				.pty(m.getPty()).rain(m.getRain()).red(m.getRed()).detachfiles(m.getFiles())
+				.pty(m.getPty()).rain(m.getRain()).red(m.getRed()).detachfiles(new ArrayList<>(m.getFiles()))
 				.userprofile(m.getMember().getProfileimg())
 				.commentcount(m.getComments().size())
 				.declaircount(m.getDecles().size())
@@ -220,8 +234,10 @@ public class adminService {
 	}
 	
 	//===============================================게시글검색==================================
+	@Transactional(readOnly = true)
 	public Page<NoticeDto> searchnotice(int page,String option,String keyword) throws IllegalAccessException{
-		Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
+		//위 allnoticeget 과 같은 이유로 "id" 가 아니라 "noticeid"
+		Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"noticeid"));
 		//케이스문변수중복이안됨;;
 		if (option.equals("titletext")) {
 			
@@ -232,7 +248,7 @@ public class adminService {
 			NoticeDto.builder().num(m.getNoticeid()).username(m.getNoticeuser())
 			.nickname(m.getNoticenick()).title(m.getTitle()).text(m.getText())
 			.likes(m.getLikeuser().size()).temp(m.getTemp()).sky(m.getSky())
-			.pty(m.getPty()).rain(m.getRain()).red(m.getRed()).detachfiles(m.getFiles())
+			.pty(m.getPty()).rain(m.getRain()).red(m.getRed()).detachfiles(new ArrayList<>(m.getFiles()))
 			.commentcount(m.getComments().size())
 			.userprofile(m.getMember().getProfileimg())
 			
@@ -250,7 +266,7 @@ public class adminService {
 			NoticeDto.builder().num(m.getNoticeid()).username(m.getNoticeuser())
 			.nickname(m.getNoticenick()).title(m.getTitle()).text(m.getText())
 			.likes(m.getLikeuser().size()).temp(m.getTemp()).sky(m.getSky())
-			.pty(m.getPty()).rain(m.getRain()).red(m.getRed()).detachfiles(m.getFiles())
+			.pty(m.getPty()).rain(m.getRain()).red(m.getRed()).detachfiles(new ArrayList<>(m.getFiles()))
 			.commentcount(m.getComments().size())
 			.userprofile(m.getMember().getProfileimg()).build()
 			);
@@ -265,7 +281,7 @@ public class adminService {
 			NoticeDto.builder().num(m.getNoticeid()).username(m.getNoticeuser())
 			.nickname(m.getNoticenick()).title(m.getTitle()).text(m.getText())
 			.likes(m.getLikeuser().size()).temp(m.getTemp()).sky(m.getSky())
-			.pty(m.getPty()).rain(m.getRain()).red(m.getRed()).detachfiles(m.getFiles())
+			.pty(m.getPty()).rain(m.getRain()).red(m.getRed()).detachfiles(new ArrayList<>(m.getFiles()))
 			.commentcount(m.getComments().size())
 			.userprofile(m.getMember().getProfileimg()).build()
 			);
@@ -280,7 +296,7 @@ public class adminService {
 			NoticeDto.builder().num(m.getNoticeid()).username(m.getNoticeuser())
 			.nickname(m.getNoticenick()).title(m.getTitle()).text(m.getText())
 			.likes(m.getLikeuser().size()).temp(m.getTemp()).sky(m.getSky())
-			.pty(m.getPty()).rain(m.getRain()).red(m.getRed()).detachfiles(m.getFiles())
+			.pty(m.getPty()).rain(m.getRain()).red(m.getRed()).detachfiles(new ArrayList<>(m.getFiles()))
 			.commentcount(m.getComments().size())
 			.userprofile(m.getMember().getProfileimg()).build()
 			);
@@ -293,7 +309,7 @@ public class adminService {
 			NoticeDto.builder().num(m.getNoticeid()).username(m.getNoticeuser())
 			.nickname(m.getNoticenick()).title(m.getTitle()).text(m.getText())
 			.likes(m.getLikeuser().size()).temp(m.getTemp()).sky(m.getSky())
-			.pty(m.getPty()).rain(m.getRain()).red(m.getRed()).detachfiles(m.getFiles())
+			.pty(m.getPty()).rain(m.getRain()).red(m.getRed()).detachfiles(new ArrayList<>(m.getFiles()))
 			.commentcount(m.getComments().size())
 			.userprofile(m.getMember().getProfileimg()).build()
 			);
@@ -306,6 +322,7 @@ public class adminService {
 		
 	}
 	
+	@Transactional(readOnly = true)
 	public NoticeDto noticedetail(Long noticeid) throws IllegalAccessException {
 		NoticeEntity m=adminhandler.findbynotice(noticeid).orElseThrow(()->new IllegalAccessException("해당게시글없습니다"));
 		System.out.println("유저프로파일이미지"+m.getMember().getProfileimg());
@@ -329,7 +346,7 @@ public class adminService {
 		NoticeDto dto=	NoticeDto.builder().num(m.getNoticeid()).username(m.getNoticeuser())
 				.nickname(m.getNoticenick()).title(m.getTitle()).text(m.getText())
 				.likes(m.getLikeuser().size()).temp(m.getTemp()).sky(m.getSky())
-				.pty(m.getPty()).rain(m.getRain()).red(m.getRed()).detachfiles(m.getFiles())
+				.pty(m.getPty()).rain(m.getRain()).red(m.getRed()).detachfiles(new ArrayList<>(m.getFiles()))
 				.comments(comdto)
 				.userprofile(m.getMember().getProfileimg()).build();
 		
@@ -347,6 +364,11 @@ public class adminService {
 	
 	//=================================게시판댓글관리========================================
 	//=======================================================================================
+	/* open-in-view: false 라 컨트롤러까지 영속성 컨텍스트가 따라오지 않는다.
+	   아래 map 안에서 m.getMember() / m.getNotice() 같은 LAZY 연관을 건드리므로
+	   트랜잭션이 없으면 LazyInitializationException 으로 500 이 난다.
+	   (게시글 쪽 allnoticeget 에는 원래 붙어 있었는데 여기만 빠져 있었다) */
+	@Transactional(readOnly = true)
 	public Page<CommentDto> allCommentrget(int page) {
 		
 		
@@ -359,6 +381,7 @@ public class adminService {
 			.nickname(m.getNickname())
 			.text(m.getText()).depth(m.getDepth()).cnum(m.getCnum())
 			.redtime(m.getCreatedDate()).userprofile(m.getMember().getProfileimg())
+			.isdelete(m.isIsdelete()).isblocked(m.isIsblocked())
 			.noticenum(m.getNotice().getNoticeid())
 					
 			.build());	
@@ -370,45 +393,148 @@ public class adminService {
 		return list;
 		
 	}
+	//차단 안내 이미지. 여기저기 문자열로 박아두면 바꿀 때 빠뜨린다.
+	public static final String BANIMAGE="/front/Subimages/chdan.png";
+
+	/*=====================================================================
+	  이미지 한 장을 차단 이미지로 바꾼다.
+
+	  (1) detachfiles.path 만 바꾸면 안 된다.
+	      글 본문(notice.text)에는 에디터가 넣은
+	      <img src="/noticeimages/xxx.png"> 가 HTML 로 그대로 박혀 있어서,
+	      path 만 바꿔봐야 첨부목록에서만 차단으로 보이고 글에서는 원본이 보인다.
+
+	  (2) 차단 주소에 ?ban={detachid} 를 붙여 이미지마다 다르게 만든다.
+	      한 글에서 두 장을 차단하면 본문에 같은 차단 주소가 두 번 들어가는데,
+	      그 상태로 한 장만 복구하면 replace 가 나머지 것까지 원본으로
+	      되돌려버린다. 주소가 서로 다르면 그 한 장만 정확히 짚어낼 수 있다.
+	      정적 파일 서빙은 쿼리스트링을 무시하므로 보이는 그림은 똑같다.
+
+	  (3) 원본 경로를 originalpath 에 남긴다. 안 남기면 오차단을 못 되돌린다.
+	 =====================================================================*/
+	private String bannedurl(Long detachid) {
+		return BANIMAGE+"?ban="+detachid;
+	}
+	private boolean isbanned(String path) {
+		return path!=null && path.startsWith(BANIMAGE);
+	}
+
+	private void banimage(detachfile detach) {
+		String oldpath=detach.getPath();
+
+		//이미 차단된 이미지면 할 일이 없다(본문 치환도 하면 안 된다)
+		if(isbanned(oldpath)) return;
+		if(oldpath==null || oldpath.isEmpty()) return;
+
+		//복구용 원본 보관. 이미 들고 있으면 덮어쓰지 않는다.
+		if(detach.getOriginalpath()==null) {
+			detach.setOriginalpath(oldpath);
+		}
+
+		String banned=bannedurl(detach.getId());
+		detach.setPath(banned);
+
+		//글이 지워졌거나 본문이 비었으면 바꿀 게 없다
+		NoticeEntity notice=detach.getNotice();
+		if(notice==null || notice.getText()==null) return;
+
+		//같은 이미지가 본문에 여러 번 들어가 있을 수 있어 전부 바꾼다.
+		//정규식이 아니라 리터럴 치환이어야 한다(경로에 . 이 들어간다).
+		notice.setText(notice.getText().replace(oldpath, banned));
+	}
+
+	//차단 해제 - 원본으로 되돌린다
+	private void restoreimage(detachfile detach) throws IllegalAccessException {
+		String originalpath=detach.getOriginalpath();
+
+		/* originalpath 가 없는 건 이 기능이 생기기 전에 차단된 행이다.
+		   그때는 원본 주소를 아무 데도 안 남겼으므로 되돌릴 수 없다. */
+		if(originalpath==null || originalpath.isEmpty()) {
+			throw new IllegalAccessException("원본 정보가 없어 복구할 수 없는 이미지입니다");
+		}
+		if(!isbanned(detach.getPath())) return;   //차단 상태가 아니면 할 일 없음
+
+		String banned=detach.getPath();
+		detach.setPath(originalpath);
+		detach.setOriginalpath(null);             //다음에 다시 차단하면 그때 새로 담는다
+
+		NoticeEntity notice=detach.getNotice();
+		if(notice==null || notice.getText()==null) return;
+
+		notice.setText(notice.getText().replace(banned, originalpath));
+	}
+
 	//부적절한 이미지 변경
 	@Transactional
 	public Long changeimage(Long detachid) throws IllegalAccessException {
-		
+
 			detachfile detach=adminhandler.detachget(detachid).orElseThrow(()->new IllegalAccessException("해당하는파일없음"));
-			detach.setPath("/front/Subimages/chdan.png");
-			
+			banimage(detach);
+
 			return detach.getId();
-	
-		
-		
-		
 	}
 	//단체 부적절한이미지 변경
 	@Transactional
 	public void manychangeimage(Admindetachchangeform form) throws IllegalAccessException {
 		for (Long detachid:form.getDetachids()) {
 			detachfile detach=adminhandler.detachget(detachid).orElseThrow(()->new IllegalAccessException("해당하는파일없음"));
-			detach.setPath("/front/Subimages/chdan.png");
+			banimage(detach);
 		}
-	
-		
+	}
+	//차단 해제
+	@Transactional
+	public Long restoreimage(Long detachid) throws IllegalAccessException {
+		detachfile detach=adminhandler.detachget(detachid).orElseThrow(()->new IllegalAccessException("해당하는파일없음"));
+		restoreimage(detach);
+		return detach.getId();
 	}
 	//=====================================================================================
-	//댓글업데이트 
+	/* [삭제됨] 댓글업데이트
+	   운영자가 남의 댓글을 고치는 기능은 두지 않는다(컨트롤러 쪽 주석 참고).
+	   참고로 이 메서드는 c.username/c.nickname 을 고쳤는데, 사용자 화면은
+	   c.member 조인의 값을 읽는다. 즉 이름을 바꿔도 관리자 화면에서만
+	   바뀌고 실제 서비스에는 반영되지 않는 반쪽짜리였다. */
+	/* 관리자 삭제.
+
+	   ★ 예전엔 자식 확인 없이 그냥 commentrepo.delete 했다.
+	   답글은 cnum(부모 댓글 id)으로 부모를 가리키는데 이건 FK 관계가 아니라
+	   그냥 Long 이다. 그래서 답글 달린 원댓글을 지우면 답글들이 DB 에는 남고,
+	   화면에서는 depth!=0 이라 원글로도 안 그려지고 부모도 없어서 어디에도
+	   안 나오는 유령이 됐다.
+	   사용자 삭제(NoticeServiceImpl.commentdelete)는 이미 자식이 있으면
+	   isdelete 만 세우고 있었다. 관리자도 같은 규칙을 따른다. */
 	@Transactional
-	public Long commentupdate(Long commentid,Commentform form) throws IllegalAccessException {
-		CommentEntity entity=adminhandler.commentfind(commentid).orElseThrow(()->new IllegalAccessException("없는댓글이빈다"));
-		entity.setUsername(form.getUsername());
-		entity.setText(form.getText());
-		entity.setNickname(form.getNickname());
-		return entity.getId();
-	}
 	public void commentdelete(Long commentid) throws IllegalAccessException {
 		CommentEntity entity=adminhandler.commentfind(commentid).orElseThrow(()->new IllegalAccessException("없는댓글이빈다"));
-		adminhandler.deletecomment(entity);
-		
+
+		if(adminhandler.hascomentchild(commentid)) {
+			entity.setIsdelete(true);   //스레드를 남긴다
+		}else {
+			adminhandler.deletecomment(entity);
+		}
+	}
+
+	/*=====================================================================
+	  운영자 댓글 차단 / 해제.
+	  삭제와 달리 원문을 지우지 않는다. 보여줄 때만 안내 문구로 바뀌므로
+	  오차단이면 그대로 되돌릴 수 있고, 관리자 화면에서는 원문이 계속 보인다.
+	 =====================================================================*/
+	@Transactional
+	public Long commentblock(Long commentid) throws IllegalAccessException {
+		CommentEntity entity=adminhandler.commentfind(commentid).orElseThrow(()->new IllegalAccessException("없는댓글입니다"));
+		entity.setIsblocked(true);
+		return entity.getId();
+	}
+
+	@Transactional
+	public Long commentunblock(Long commentid) throws IllegalAccessException {
+		CommentEntity entity=adminhandler.commentfind(commentid).orElseThrow(()->new IllegalAccessException("없는댓글입니다"));
+		entity.setIsblocked(false);
+		return entity.getId();
 	}
 	//게시글검색조건===========================================================================
+	//allCommentrget 과 같은 이유(LAZY 연관 접근)로 트랜잭션이 필요하다
+	@Transactional(readOnly = true)
 	public Page<CommentDto> commentsearch(int page,String option,String keyword){
 		
 	
@@ -422,6 +548,7 @@ public class adminService {
 			.nickname(m.getNickname())
 			.text(m.getText()).depth(m.getDepth()).cnum(m.getCnum())
 			.redtime(m.getCreatedDate()).userprofile(m.getMember().getProfileimg())
+			.isdelete(m.isIsdelete()).isblocked(m.isIsblocked())
 			.noticenum(m.getNotice().getNoticeid())
 					
 			.build());	
@@ -437,6 +564,7 @@ public class adminService {
 			.nickname(m.getNickname())
 			.text(m.getText()).depth(m.getDepth()).cnum(m.getCnum())
 			.redtime(m.getCreatedDate()).userprofile(m.getMember().getProfileimg())
+			.isdelete(m.isIsdelete()).isblocked(m.isIsblocked())
 			.noticenum(m.getNotice().getNoticeid())
 					
 			.build());	
@@ -456,6 +584,7 @@ public class adminService {
 			.nickname(m.getNickname())
 			.text(m.getText()).depth(m.getDepth()).cnum(m.getCnum())
 			.redtime(m.getCreatedDate()).userprofile(m.getMember().getProfileimg())
+			.isdelete(m.isIsdelete()).isblocked(m.isIsblocked())
 			.noticenum(m.getNotice().getNoticeid())
 					
 			.build());	
@@ -566,7 +695,7 @@ public class adminService {
 		//noticehandler.update(Entity);
 		
 	
-		String filepublic="D:/study프로그램/react/bootproject/public";
+		String filepublic=uploadroot;
 		for(removetestDto removes:remove) {
 			log.info(removes.getId().toString());
 			System.out.println(removes.isTest());
@@ -593,6 +722,7 @@ public class adminService {
 	
 	
 	
+	@Transactional(readOnly = true)
 	public NoticeDto getnoticedetail(Long noticeid) throws IllegalAccessException {
 NoticeEntity Entity=adminhandler.noticedetail(noticeid);
 		
@@ -604,8 +734,8 @@ NoticeEntity Entity=adminhandler.noticedetail(noticeid);
 						Entity.getTitle(), 
 						Entity.getText(),
 						Entity.getRed(),
-						Entity.getComments(),
-						Entity.getFiles(), 
+						new ArrayList<>(Entity.getComments()),
+						new ArrayList<>(Entity.getFiles()), 
 						Entity.getLikeuser().size(),
 						Entity.getTemp(),Entity.getSky(),Entity.getPty(),Entity.getRain(),Entity.getReh(),Entity.getWsd(),Entity.getViews()
 								);
@@ -618,6 +748,7 @@ NoticeEntity Entity=adminhandler.noticedetail(noticeid);
 	
 	//============================채티방관련 서비스================================================
 	//기본채팅방
+	@Transactional(readOnly = true)
 	public Page<roomlistresponseDto> allRoomget(int page) {
 		
 		System.out.println("핸들러시작");
@@ -626,7 +757,7 @@ NoticeEntity Entity=adminhandler.noticedetail(noticeid);
 	
 		Page<roomlistresponseDto> list=entity.map((m)->
 		roomlistresponseDto.builder().roomid(m.getId()).roomname(m.getRoomname())
-		.namelist(m.getUserlist()).red(m.getCreatedDate())
+		.namelist(new HashSet<>(m.getUserlist())).red(m.getCreatedDate())
 		.chatnum(m.getChatdata().size())
 		.latelychat(m.getChatdata().get(m.getChatdata().size()-1).getSender()+":"+m.getChatdata().get(m.getChatdata().size()-1).getMessage())
 		.lastchatred(m.getChatdata().get(m.getChatdata().size()-1).getCreatedDate())
@@ -648,6 +779,7 @@ NoticeEntity Entity=adminhandler.noticedetail(noticeid);
 		return roomentity.getId();
 	}
 	//채팅방디테일 수정필요 매세지구조가바뀜==================================================
+	@Transactional(readOnly = true)
 	public Roomdata roomdetail(Long roomid) throws IllegalAccessException {
 		Room room=adminhandler.roomget(roomid).orElseThrow(()->new IllegalAccessException("룸없음"));
 		
@@ -689,13 +821,14 @@ NoticeEntity Entity=adminhandler.noticedetail(noticeid);
 		
 	}
 	//채팅검색 시
+	@Transactional(readOnly = true)
 	public Page<roomlistresponseDto> searchrooms(int page,String option,String keyword) throws IllegalAccessException{
 		Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"createdDate" ));
 		if(option.equals("roomname")) {
 			Page<Room> entity=adminhandler.roomnamefind(pageable, keyword);
 			Page<roomlistresponseDto> list=entity.map((m)->
 			roomlistresponseDto.builder().roomid(m.getId()).roomname(m.getRoomname())
-			.namelist(m.getUserlist()).red(m.getCreatedDate())
+			.namelist(new HashSet<>(m.getUserlist())).red(m.getCreatedDate())
 			.chatnum(m.getChatdata().size())
 			.latelychat(m.getChatdata().get(m.getChatdata().size()-1).getMessage())
 			.lastchatred(m.getChatdata().get(m.getChatdata().size()-1).getCreatedDate())
@@ -711,7 +844,7 @@ NoticeEntity Entity=adminhandler.noticedetail(noticeid);
 			Page<roomlistresponseDto> list=entity.map((m)->
 			roomlistresponseDto.builder().roomid(m.getRoom().getId())
 			.roomname(m.getRoom().getRoomname())
-			.namelist(m.getRoom().getUserlist()).red(m.getRoom().getCreatedDate())
+			.namelist(new HashSet<>(m.getRoom().getUserlist())).red(m.getRoom().getCreatedDate())
 			.chatnum(m.getRoom().getChatdata().size())
 			.latelychat(m.getRoom().getChatdata().get(m.getRoom().getChatdata().size()-1).getMessage())
 			.lastchatred(m.getRoom().getChatdata().get(m.getRoom().getChatdata().size()-1).getCreatedDate())
@@ -725,7 +858,7 @@ NoticeEntity Entity=adminhandler.noticedetail(noticeid);
 			Page<roomlistresponseDto> list=entity.map((m)->
 			roomlistresponseDto.builder().roomid(m.getRoom().getId())
 			.roomname(m.getRoom().getRoomname())
-			.namelist(m.getRoom().getUserlist()).red(m.getRoom().getCreatedDate())
+			.namelist(new HashSet<>(m.getRoom().getUserlist())).red(m.getRoom().getCreatedDate())
 			.chatnum(m.getRoom().getChatdata().size())
 			.latelychat(m.getRoom().getChatdata().get(m.getRoom().getChatdata().size()-1).getMessage())
 			.lastchatred(m.getRoom().getChatdata().get(m.getRoom().getChatdata().size()-1).getCreatedDate())

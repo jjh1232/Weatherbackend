@@ -37,9 +37,15 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long>{
 			+ "(m.id,m.username,m.nickname,m.myintro,m.profileimg,m.regdate,"
 			+ "(SELECT COUNT(f) FROM FollowEntity f Where f.frommember.id=m.id), "
 			+ "(SELECT COUNT(f) FROM FollowEntity f WHERE f.tomember.id = m.id), "
-			+ "CASE WHEN (EXISTS (SELECT 1 FROM FollowEntity f where f.frommember.id=:loginid AND f.tomember.id =m.id)) THEN true ELSE false END"
+			+ "CASE WHEN (EXISTS (SELECT 1 FROM FollowEntity f where f.frommember.id=:loginid AND f.tomember.id =m.id)) THEN true ELSE false END, "
+			+ "m.profileid, "
+			+ "m.Profilebackground"
 			+ ") "
-			+ "from member m where m.profileid =:profileid"
+			//프론트의 /userpage 링크는 대부분 username(이메일)을 넘긴다.
+			//profileid 는 이메일 앞부분으로 만들어진 별도 핸들이라 그것만 보면
+			//해당유저를 못 찾고 IllegalArgumentException -> 500 이 났다.
+			//둘 다 받아준다.
+			+ "from member m where m.profileid = :profileid or m.username = :profileid"
 			)
 	Optional<UserPageDto> findByProfileid(String profileid,Long loginid);
 	//executeQuery로 전송되기때문에 update,delete,insult문은 리턴값이없어 안됨 따라서 executeupdtq()로전송되는 modifying을사용

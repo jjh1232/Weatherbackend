@@ -41,8 +41,10 @@ public interface CommentRepository extends JpaRepository<CommentEntity,Long>{
 			       "(c.id,m.id,n.id,"
 			       + "c.depth,c.cnum,"
 			       + "m.username,m.nickname, "
-			       + "CASE WHEN c.isdelete = true THEN '삭제된 댓글입니다' ELSE c.text END, "
-			       + "c.createdDate,m.profileimg,c.isdelete) " +   //연관객체도  
+			       //차단이 삭제보다 앞이다. 둘 다인 경우 운영자 조치를 보여주는 게 맞다.
+			       + "CASE WHEN c.isblocked = true THEN '운영자에 의해 차단된 댓글입니다' "
+			       + "     WHEN c.isdelete = true THEN '삭제된 댓글입니다' ELSE c.text END, "
+			       + "c.createdDate,m.profileimg,c.isdelete,c.isblocked,m.profileid) " +   //연관객체도  
 			       "FROM CommentEntity c JOIN c.notice n "
 			       + "JOIN c.member m "
 			       + "where n.id=:noticeid AND c.depth =0")
@@ -52,7 +54,9 @@ public interface CommentRepository extends JpaRepository<CommentEntity,Long>{
 		@Query("SELECT c FROM CommentEntity c " +
 			       "JOIN FETCH c.member m " +
 			       "JOIN FETCH c.notice n " +
-			       "WHERE n.id = :noticeid AND c.cnum IN :parentIds")
+			       "WHERE n.id = :noticeid AND c.cnum IN :parentIds " +
+			       //정렬을 안 주면 DB가 내주는 순서에 맡겨진다. 답글은 대화라 오래된순 고정.
+			       "ORDER BY c.createdDate ASC")
 			List<CommentEntity> findChildComments(Long noticeid, List<Long> parentIds);
 	
 		/* 이코드는 페이징이랑 fetchjoin같이몼씀 

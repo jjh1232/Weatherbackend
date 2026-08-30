@@ -7,6 +7,20 @@
 server:
   port: ${SERVER_PORT:8081}
 
+  # 클라우드플레어 터널/리버스 프록시 뒤에서 도는 것이 전제다.
+  # 없으면 request.isSecure() 가 false 로 잡혀서, 서버가 만드는 리다이렉트
+  # (OAuth 콜백 등)가 http:// 로 나가고 브라우저가 mixed content 로 막는다.
+  # X-Forwarded-Proto / -Host / -Port 를 톰캣이 그대로 반영하게 한다.
+  forward-headers-strategy: NATIVE
+
+  # 로컬 디버깅용. 기본값(include-message: never)이면 500 이 나도 응답에
+  # "Internal Server Error" 만 오고 진짜 사유가 안 보인다.
+  # 운영에 올릴 땐 둘 다 never/false 로 되돌릴 것.
+  error:
+    include-message: always
+    include-exception: true
+    include-stacktrace: on_param
+
 
 
   #ssl:
@@ -36,11 +50,22 @@ spring:
 
   jpa:
    open-in-view: false # 이위치
+   # ddl-auto 는 spring.jpa.hibernate 아래여야 한다.
+   # properties 아래 두면 하이버네이트에 'hibernate.ddl-auto' 로 그대로 전달되는데
+   # 그건 하이버네이트가 모르는 키라 무시된다(아는 이름은 hibernate.hbm2ddl.auto).
+   # 그동안 스키마 자동 반영이 꺼진 채로 돌고 있었다.
+   hibernate:
+    ddl-auto: update
+   # 하이버네이트 설정은 반드시 properties.hibernate 아래여야 한다.
+   # 바로 위 ddl-auto 와 같은 함정 - properties 바로 아래 두면
+   # 'default_batch_fetch_size' 라는 이름 그대로 넘어가는데, 하이버네이트가
+   # 아는 이름은 'hibernate.default_batch_fetch_size' 라서 조용히 무시된다.
+   # (그동안 배치 페치도 SQL 로그도 꺼진 채로 돌고 있었다)
    properties:
-    default_batch_fetch_size: 1000
     hibernate:
-      ddl-auto: update
-    show-sql: true
+     # 지연로딩을 건별 select 대신 where id in (...) 하나로 묶는다. N+1 완화.
+     default_batch_fetch_size: 1000
+     show_sql: true
 
   data:
    redis:
@@ -49,6 +74,13 @@ spring:
     type: redis
 
 
+
+  # 명시하지 않으면 기본값이 파일 1MB / 요청 10MB 라 요즘 휴대폰 사진 한 장에도 막힌다.
+  # 프론트에서 리사이즈해 올리지만 원본을 그대로 보내는 경로도 있어 넉넉히 잡는다.
+  servlet:
+    multipart:
+      max-file-size: ${MAX_FILE_SIZE:10MB}
+      max-request-size: ${MAX_REQUEST_SIZE:30MB}
 
   mail:
    host: smtp.gmail.com
@@ -73,7 +105,9 @@ spring:
            scope:
            - email
            - profile
-           redirect-uri: http://localhost:8081/callback/google
+           # 콜백 주소는 백엔드 자신의 주소다. 배포하면 APP_BASE_URL 하나만 바꾸면 된다.
+           # 구글·네이버 개발자 콘솔의 "승인된 리디렉션 URI" 에도 같은 값을 등록해야 한다.
+           redirect-uri: ${APP_BASE_URL:http://localhost:8081}/callback/google
 
          naver:
             client-id: ${NAVER_CLIENT_ID}
@@ -84,7 +118,7 @@ spring:
 
             client-name: Naver
             authorization-grant-type: authorization_code
-            redirect-uri: http://localhost:8081/callback/naver
+            redirect-uri: ${APP_BASE_URL:http://localhost:8081}/callback/naver
 
 
 
@@ -106,3 +140,25 @@ jwt:
 weather:
   api:
     service-key: ${WEATHER_API_KEY}
+
+# 업로드 이미지가 저장되는 곳.
+# 지금은 개발 편의상 리액트 public 폴더에 바로 떨군다(정적 서빙 그대로 사용).
+# 서버에서는 환경변수 UPLOAD_PUBLIC_DIR 로 덮어쓴다.
+app:
+  # 메일 본문의 인증 링크가 가리킬 주소.
+  # 배포하면 APP_BASE_URL 환경변수로 실제 도메인을 넣어야 한다.
+  # (예전에는 email.html 에 http://localhost:8081 이 박혀 있어서 배포하면 링크가 죽었다)
+  base-url: ${APP_BASE_URL:http://localhost:8081}
+  # 인증을 마친 사용자를 돌려보낼 프론트 주소.
+  frontend-url: ${APP_FRONTEND_URL:http://localhost:3001}
+  # 메일 하단에 안내하는 문의처. 개인정보 처리방침의 연락처와 같아야 한다.
+  contact-email: ${APP_CONTACT_EMAIL:dlwjdwns1945@gmail.com}
+  cors:
+    # CORS 를 허용할 프론트 오리진. 쉼표로 여러 개.
+    # 예전엔 securityconfig / WebConfig / MemberController 세 군데에 각각 다른 값이
+    # 박혀 있었다(그중 둘은 끝 슬래시·포트가 틀려서 죽은 값이었다). 여기 한 곳만 본다.
+    # 끝에 슬래시를 붙이지 말 것 - Origin 헤더에는 슬래시가 없어서 영원히 매치되지 않는다.
+    #   배포 예) https://weathertw.com,https://www.weathertw.com
+    allowed-origins: ${APP_CORS_ORIGINS:http://localhost:3001}
+  upload:
+    public-dir: ${UPLOAD_PUBLIC_DIR:D:/프로젝트간단정리/weathertw/frontend/bootproject/public}

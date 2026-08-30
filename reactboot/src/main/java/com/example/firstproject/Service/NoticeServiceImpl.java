@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.attoparser.ICommentHandler;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.UrlResource;
@@ -96,6 +97,12 @@ public class NoticeServiceImpl implements NoticeService {
 	private final MemberHandler memberhandler;
 	
 	private final DetachfileRepository detachrepo;
+
+	//업로드 루트(application.yml: app.upload.public-dir)
+	//예전에는 옛 프로젝트의 절대경로가 그대로 박혀 있었다.
+	//그 경로는 지금 머신에 없어서, 이 값을 타는 기능은 전부 깨진 상태였다.
+	@Value("${app.upload.public-dir}")
+	private String uploadroot;
 	
 	private final SseService sseservice;
 	
@@ -105,7 +112,7 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public Page<TwitformnoticeDto> read(Long userid,String option,String keyword,int page) {
 		System.out.println("게시판리드서비스");
-		PageRequest pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
+		PageRequest pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"id"));
 		if(keyword !=null&& !keyword.isBlank()) {
 			//검색
 			if(userid !=null) {
@@ -139,7 +146,7 @@ public class NoticeServiceImpl implements NoticeService {
 	public Page<NoticeDto> search(Long loginid,String option, String content,int page) {
 		// TODO Auto-generated method stub
 		log.info("서비스시작"+option);
-		PageRequest pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
+		PageRequest pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"id"));
 		//페이지객체옵션
 		
 		Page<NoticeEntity> entitypage;
@@ -401,7 +408,7 @@ public class NoticeServiceImpl implements NoticeService {
 		//noticehandler.update(Entity);
 		
 		log.info("삭제예정");
-		String filepublic="D:/study프로그램/react/bootproject/public";
+		String filepublic=uploadroot;
 		for(removetestDto removes:remove) {
 			log.info(removes.getId().toString());
 			System.out.println(removes.isTest());
@@ -620,7 +627,7 @@ public class NoticeServiceImpl implements NoticeService {
 		log.info("날짜포맷생성"+filesaveData);
 		String fileforder=filesaveData.replace("/", File.separator);
 		log.info("날짜포맷경로sepa:"+fileforder);
-		File savefolder=new File("D:/프로젝트간단정리/weathertw/frontend/bootproject/public/noticeimages",fileforder);
+		File savefolder=new File(uploadroot+File.separator+"noticeimages",fileforder);
 		if(savefolder.exists()==false) {//폴더가 있으면 트루없으면폴스
 			savefolder.mkdirs();
 			
@@ -654,7 +661,7 @@ public class NoticeServiceImpl implements NoticeService {
 	public void saveimagecut(String id,String path) {
 		// TODO Auto-generated method stub
 		log.info("서비스단"+path);
-		String pathre="D:/프로젝트간단정리/weathertw/frontend/bootproject/public"+path;
+		String pathre=uploadroot+path;
 		String repath=pathre.replace("/", File.separator);
 		log.info("수정패스:"+repath);
 		Path deletepath=Paths.get(repath);
@@ -684,7 +691,7 @@ public class NoticeServiceImpl implements NoticeService {
 		
 		String urlname="/noticeimages/"+checkdate;
 		log.info("현재시간-"+urlname);
-		String filedirectory="D:/study프로그램/react/bootproject/public"+urlname;
+		String filedirectory=uploadroot+urlname;
 		String path=filedirectory.replace("/",File.separator);
 		log.info("패스:"+path);
 		File dir=new File(path);
@@ -749,7 +756,7 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public ResponseEntity getdetach(detachVo detach) {
 		// TODO Auto-generated method stub
-		Path filepath = Paths.get("D:/프로젝트간단정리/weathertw/frontend/bootproject/public"+detach.getUri());
+		Path filepath = Paths.get(uploadroot+detach.getUri());
 		try {
 			UrlResource resource=new UrlResource(filepath.toUri());
 			//한글파일이름 꺠질수있으니인코딩
@@ -803,90 +810,24 @@ public class NoticeServiceImpl implements NoticeService {
 	}
 
 	//========================좋아요한 글만가져오기=================================
+	// 예전엔 NoticeEntity 를 받아 NoticeDto 로 손매핑했는데, 거기에 lazy 컬렉션인
+	// getFiles() 를 그대로 담았다. open-in-view:false 라서 컨트롤러가 JSON 으로 굽는
+	// 시점엔 세션이 닫혀 있어 LazyInitializationException -> 500 이 났다.
+	// 이제 저장소가 메인 피드와 같은 TwitformnoticeDto 를 바로 만들어 준다.
 	@Override
-	public  Page<NoticeDto> favoritenotice(MemberEntity member, Pageable pageable,String option,String keyword) {
-		// TODO Auto-generated method stub
-		//좋아요엔티티를 구지 건드릴 필요가 없는듯? 조인으로 바로 가져오자
-		Page<NoticeEntity> favoritelist;
-		
+	public  Page<TwitformnoticeDto> favoritenotice(MemberEntity member, Pageable pageable,String option,String keyword) {
+		Long userid=member.getId();
+
 		if(keyword==null || keyword.isBlank()) {
-			favoritelist=noticehandler.getfavoritelist(member,pageable);
+			return noticehandler.twitfavoritelist(userid,pageable);
 		}
-		else {
-			favoritelist = noticehandler.favoritenoticesearch(member, pageable, option, keyword);
-		}
-		
-		
-		Page<NoticeDto> dtolist=favoritelist.map((m)->NoticeDto.builder()
-													.num(m.getNoticeid())
-													.username(m.getNoticeuser())
-													.nickname(m.getNoticenick())
-													.title(m.getTitle())
-													.text(m.getText())
-													.temp(m.getTemp())
-													.sky(m.getSky())
-													.pty(m.getPty())
-													.rain(m.getRain())
-													.reh(m.getReh())
-													.wsd(m.getWsd())
-													.likes(m.getLikeuser().size())
-													.likeusercheck(true)
-													.red(m.getRed())
-													.userprofile(m.getMember().getProfileimg())
-													.detachfiles(m.getFiles())
-													.views(m.getViews())
-													.build()
-					);
-		return dtolist;
-		/*
-		 	Page<FavoriteEntity> followlist=noticehandler.favoritenoticefind(member, pageable);
-		 	System.out.println("좋아요글서비스단어떻게적용되나보자");
-		 	
-		 	//페이지객체생성법
-		 	List<NoticeDto> pagedto=new ArrayList<>();
-		 	//이거페이징어차피안되서안씀..생각해보니총페이지도필요없음
-		 	//Page<NoticeDto> dtolist=new PageImpl<>(pagedto);
-		 	
-		 	
-		 	for(FavoriteEntity favoriteentity:followlist) {
-		 		//아이거내가거꾸로좋아요했음
-		 		NoticeEntity notice=favoriteentity.getNotice();
-		 		List<CommentEntity> comment=notice.getComments();//댓글정렬
-				comment.sort(Comparator.comparing(CommentEntity::getCreatedDate).reversed());
-				List<CommentDto> comdto=new ArrayList<>();
-				
-					for(CommentEntity a:comment) {CommentDto dto = a.toDto(a.getId(),
-							a.getDepth(),
-							a.getCnum(),
-							a.getUsername(),
-							a.getNickname(),
-							a.getText(),
-							a.getCreatedDate(),
-							a.getMember().getProfileimg()
-							);
-					comdto.add(dto);
-				}
-					
-		 		
-		 		NoticeDto dto=NoticeDto.builder().comments(comdto)
-		 				.detachfiles(notice.getFiles())
-		 				.likes(notice.getLikeuser().size()).nickname(notice.getNoticenick()).num(notice.getNoticeid())
-		 				.pty(notice.getPty()).temp(notice.getTemp()).sky(notice.getSky()).rain(notice.getRain())
-		 				.text(notice.getText()).title(notice.getTitle()).username(notice.getNoticeuser())
-		 				.likeusercheck(true)
-		 				.red(notice.getRed())
-		 				.userprofile(notice.getMember().getProfileimg())
-		 				.build();
-		 		
-		 		pagedto.add(dto);
-		 	}
-		 	
-		 	
-		 	Map<String,Object> data=new HashMap<>();
-		 	data.put("totalpage", followlist.getTotalPages());
-		 	data.put("notice", pagedto);
-		return data;
-		*/
+		return noticehandler.twitfavoritesearch(userid,pageable,option,keyword);
+	}
+
+	//팔로잉 타임라인. 검색은 아직 붙이지 않았다(좋아요 탭처럼 나중에 확장 가능).
+	@Override
+	public Page<TwitformnoticeDto> followingnotice(Long userid, Pageable pageable) {
+		return noticehandler.twitfollowinglist(userid, pageable);
 	}
 
 	
@@ -895,7 +836,7 @@ public class NoticeServiceImpl implements NoticeService {
 	public Page<NoticeDto> loginnoticeget(Long userid,int page) {
 		// TODO Auto-generated method stub
 		/*
-		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
+		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"id"));
 		Page<NoticeEntity> entitylist=noticehandler.read(pageable);
 		System.out.println("서비스시작");
 		
@@ -931,7 +872,7 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public Page<NoticeDto> loginnoticesearchget(Long userid,String option, String content, int page) {
 		// TODO Auto-generated method stub
-		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
+		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"id"));
 		System.out.println("서비스시작");
 		long start1=System.currentTimeMillis();
 		List<NoticeblockEntity> blocklist=blockhandler.getuserblock(userid);
@@ -951,7 +892,10 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public Page<CommentDto> showcomments(Long noticeid,int page) {
 		// TODO Auto-generated method stub
-		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.ASC,"createdDate"));
+		//원댓글은 최신순(DESC). 작성창이 목록 위에 있어서 오래된순이면
+		//방금 쓴 댓글이 마지막 페이지로 가버려 1페이지에선 안 보인다.
+		//(대댓글은 대화 흐름대로 읽어야 하므로 findChildComments 에서 오래된순으로 정렬한다)
+		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"createdDate"));
 		System.out.println("문제구간찾기");
 	
 		Page<CommentDto> dtolist=noticehandler.showdirectc(noticeid, pageable);
@@ -975,6 +919,8 @@ public class NoticeServiceImpl implements NoticeService {
 			            .redtime(dto.getRedtime())
 			            .userprofile(dto.getUserprofile())
 			            .isdelete(dto.isIsdelete())
+			            .isblocked(dto.isIsblocked())
+			            .profileid(dto.getProfileid())
 			            .build();
 			    })
 			    .collect(Collectors.toList());
@@ -990,10 +936,14 @@ public class NoticeServiceImpl implements NoticeService {
 				.cnum(child.getCnum())
 				.username(child.getMember().getUsername())
 				.nickname(child.getMember().getNickname())
-				.text(child.isIsdelete()?"삭제된댓글입니다":child.getText())
+				//부모 쿼리(showcomments)와 같은 순서·같은 문구여야 한다
+				.text(child.isIsblocked()?"운영자에 의해 차단된 댓글입니다"
+						:child.isIsdelete()?"삭제된 댓글입니다":child.getText())
 				.redtime(child.getCreatedDate())
 				.userprofile(child.getMember().getProfileimg())
 				.isdelete(child.isIsdelete())
+				.isblocked(child.isIsblocked())
+				.profileid(child.getMember().getProfileid())
 				.build()
 				).collect(Collectors.toList());
 		//부모id로 부모dto저장
@@ -1027,7 +977,7 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public Page<NoticeImageDto> getimagelist(Long userid,int page,String option,String keyword) {
 		// TODO Auto-generated method stub
-		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
+		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"id"));
 		Page<Object[]> object;
 
 	
@@ -1107,7 +1057,7 @@ public class NoticeServiceImpl implements NoticeService {
 		Page<TwitformnoticeDto> notice;//선언
 		PageRequest pageable;
 		if(sortoption.equals("date")) {
-		pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
+		pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"id"));
 		notice=noticehandler.getuserpagepostsearch(loginid, searchid, option, keyword, pageable);
 		}
 		else  {
@@ -1123,7 +1073,7 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public Page<NoticeImageDto> getuserpageimagelist(Long searchid,String option,String keyword, int page,Long loginid) {
 		// TODO Auto-generated method stub
-		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
+		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"id"));
 		
 		System.out.println("유저페이지실행");
 		Page<Object[]> object=noticehandler.getuserpageimages(pageable,option,keyword, searchid);;

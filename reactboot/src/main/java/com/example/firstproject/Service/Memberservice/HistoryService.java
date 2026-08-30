@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.example.firstproject.Dto.LoginHistoryDto;
 import com.example.firstproject.Entity.LoginHistory;
 import com.example.firstproject.Repository.History.LoginhistoryRepository;
+import com.example.firstproject.tools.ClientIp;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,32 +37,17 @@ public class HistoryService {
 				//toList()리스트로 반환 aslist 는 예시리스트라고함
 	}
 	
+	/**
+	 * 로그인 이력에 남길 클라이언트 IP.
+	 *
+	 * <p>예전엔 X-Forwarded-For 만 봤다. 클라우드플레어 뒤에 두면 그 헤더가 없거나
+	 * 프록시 체인이 들어와서 <b>모든 로그인이 같은 IP 로 기록</b>됐다.
+	 * 이력 자체가 "낯선 곳에서 로그인됨"을 보라고 있는 기능이라 그러면 의미가 없다.
+	 * 판별 로직은 요청 제한(RateLimitInterceptor)과 같은 것을 쓴다.
+	 */
 	public String getrequestIp(HttpServletRequest request) {
-		 String ip = request.getHeader("X-Forwarded-For");
-		    log.info("X-FORWARDED-FOR : " + ip);
-
-		    if (ip == null) {
-		        ip = request.getHeader("Proxy-Client-IP");
-		        log.info("Proxy-Client-IP : " + ip);
-		    }
-		    if (ip == null) {
-		        ip = request.getHeader("WL-Proxy-Client-IP");
-		        log.info("WL-Proxy-Client-IP : " + ip);
-		    }
-		    if (ip == null) {
-		        ip = request.getHeader("HTTP_CLIENT_IP");
-		        log.info("HTTP_CLIENT_IP : " + ip);
-		    }
-		    if (ip == null) {
-		        ip = request.getHeader("HTTP_X_FORWARDED_FOR");
-		        log.info("HTTP_X_FORWARDED_FOR : " + ip);
-		    }
-		    if (ip == null) {
-		        ip = request.getRemoteAddr();
-		        log.info("getRemoteAddr : "+ip);
-		    }
-		    log.info("Result : IP Address : "+ip);
-
-		    return ip;
+		String ip = ClientIp.resolve(request);
+		log.info("Result : IP Address : " + ip);
+		return ip;
 	}
 }

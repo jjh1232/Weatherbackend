@@ -1,11 +1,14 @@
 package com.example.firstproject.controller;
 
 import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,6 +24,7 @@ import com.example.firstproject.Dto.userdataDto.NotifiResult;
 import com.example.firstproject.Dto.userdataDto.NotificationDto;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Repository.EmitterRepository;
+import com.example.firstproject.Service.JwtService;
 import com.example.firstproject.Service.Memberservice.MemberService;
 import com.example.firstproject.Service.Memberservice.SseService;
 import com.example.firstproject.configure.PrincipalDetails;
@@ -32,17 +36,24 @@ import lombok.RequiredArgsConstructor;
 //@CrossOrigin("*")
 public class SSEController {
 
-	//sse를통한 알림메세지를 받은 사용자들 저장할장소 로매바용
-	public static Map<Long,SseEmitter> sseEmitters=new ConcurrentHashMap<>();
+		//연결 보관은 EmitterRepository 가 전부 맡는다.
+	//예전에 여기 있던 public static Map<Long,SseEmitter> 는 아무도 쓰지 않는 죽은 필드였다.
 	private final MemberService memberservice;
 	
 	private final EmitterRepository emitterrepo;
 	
 	private final SseService sseservice;
+
+	private final JwtService jwtservice;
 	//======================SSE알림 서비스=======================
 	
-	@GetMapping("/ssesub")
-	public SseEmitter sse(Authentication authentication) {
+		@GetMapping(value="/ssesub", produces=MediaType.TEXT_EVENT_STREAM_VALUE)
+	public SseEmitter sse(Authentication authentication, HttpServletResponse response) {
+
+		//nginx·클라우드플레어 같은 앞단이 응답을 모아뒀다 보내면 실시간이 아니게 된다.
+		response.setHeader("X-Accel-Buffering", "no");
+		response.setHeader("Cache-Control", "no-cache");
+
 		//
 		PrincipalDetails cipal=(PrincipalDetails) authentication.getPrincipal();
 		
@@ -98,10 +109,19 @@ PrincipalDetails cipal=(PrincipalDetails) authenti.getPrincipal();
 	@GetMapping("/memberlogout")
 	public ResponseEntity<?> memberlogout(Authentication authentication) {
 		System.out.println("멤버로그아웃시작");
+		//액세스 토큰이 이미 만료된 채로 로그아웃을 누를 수도 있다.
+		//그 경우 인증이 없으니 서버가 지울 것도 없고, 프론트는 쿠키만 지우면 된다.
+		if(authentication==null || !(authentication.getPrincipal() instanceof PrincipalDetails)) {
+			return ResponseEntity.ok("로그아웃");
+		}
 		PrincipalDetails prin=(PrincipalDetails) authentication.getPrincipal();
 		Long userid=prin.getMember().getId();
 		
 		sseservice.deleteemiter(userid);
+
+		//저장된 리프레쉬 토큰을 지운다. 안 지우면 로그아웃한 뒤에도 그 토큰으로
+		///refresh 가 통해서 세션이 되살아난다.
+		jwtservice.clearrefreshtoken(prin.getUsername());
 		
 		
 		return ResponseEntity.ok(userid+"에미터삭제");

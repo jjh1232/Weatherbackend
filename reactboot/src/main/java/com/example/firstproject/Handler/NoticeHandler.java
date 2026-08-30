@@ -21,6 +21,14 @@ import com.example.firstproject.Entity.detachfile;
 public interface NoticeHandler {
 	
 	Page<TwitformnoticeDto> twitformnoticelist(Long userid,Pageable page);
+
+	//내가 팔로우한 사람들의 글만
+	Page<TwitformnoticeDto> twitfollowinglist(Long userid,Pageable page);
+
+	//좋아요한 글 - 메인 피드와 같은 DTO 로 내려준다
+	Page<TwitformnoticeDto> twitfavoritelist(Long userid,Pageable pageable);
+
+	Page<TwitformnoticeDto> twitfavoritesearch(Long userid,Pageable pageable,String option,String keyword);
 	
 	Page<TwitformnoticeDto> searchtwitform(Long userid,String option,String keyword,Pageable page);
 

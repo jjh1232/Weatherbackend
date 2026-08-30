@@ -180,6 +180,10 @@ public class adminhandler {
 			commentrepo.delete(comment);
 			
 		}
+		//답글이 달려 있는지. 달려 있으면 완전삭제하면 안 된다.
+		public boolean hascomentchild(Long commentid) {
+			return commentrepo.existsByCnum(commentid);
+		}
 		
 		//부적절한 이미지 변경
 		public Optional<detachfile> detachget(Long detachid){

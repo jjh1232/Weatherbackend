@@ -42,7 +42,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity(name="member")
-@Getter@Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -89,6 +90,11 @@ public class MemberEntity {
 	    	this.updatered=LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd/HH:mm:ss"));
 	    }
 	    
+		//필수 약관(이용약관 · 개인정보 수집이용 · 만14세)에 동의한 시각.
+	//"동의를 받았다"는 사실은 나중에 증명할 수 있어야 하므로 남겨 둔다.
+	//소셜 가입은 별도 절차를 타므로 값이 없을 수 있다.
+	private String agreedat;
+
 	private String role;
 
 	//요청으로 받을 일이 없으므로 양방향 모두 차단.

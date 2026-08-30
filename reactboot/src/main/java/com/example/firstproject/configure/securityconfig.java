@@ -3,6 +3,7 @@ package com.example.firstproject.configure;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,6 +33,10 @@ import com.example.firstproject.configure.websocket.ChatErrorHandler;
 @Configuration
 @EnableWebSecurity
 public class securityconfig {
+
+	//쉼표로 여러 개. 배포하면 APP_CORS_ORIGINS 로 프론트 도메인을 넣는다.
+	@Value("${app.cors.allowed-origins}")
+	private List<String> allowedorigins;
 
 	@Autowired
 	private oauth2loginservice loginservice;
@@ -80,7 +85,9 @@ public class securityconfig {
         config.setAllowCredentials(true);//이게 트루일때 절대 스트링기반 *값을 줄수없다 때문에 list.of로 우회하는것
         //쿠키와 같은 보안요청을 허용할 것인지 이걸사용하면 좀더 보안이 까다로워짐 
         //sse설정시바꿧음잠간
-        config.setAllowedOriginPatterns(List.of("http://localhost:3001"));//리스트오브로주네..이거널값은안되는거자늠..
+        //허용 오리진은 application.yml 의 app.cors.allowed-origins 한 곳에서만 정한다.
+        //예전엔 여기·WebConfig·MemberController 세 군데에 서로 다른 값이 박혀 있었다.
+        config.setAllowedOriginPatterns(allowedorigins);
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         config.setAllowedHeaders(List.of("*")); //얼로우헤더는 preflightrequest의 응답에사용되는헤더 
         //-> 실제요청에 사용할수있는 http헤더의목록나열 ->클라이언트가 사용할수있는 헤더목록 

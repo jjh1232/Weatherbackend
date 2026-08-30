@@ -1,0 +1,34 @@
+#=====================================================================
+# 운영 전용 덮어쓰기.  SPRING_PROFILES_ACTIVE=prod 로 켠다.
+#
+# application.yml 의 로컬 편의 설정 중 "배포하면 위험한 것"만 되돌린다.
+# 여기 없는 값은 전부 application.yml 을 그대로 쓴다.
+#=====================================================================
+
+server:
+  # 로컬에서는 500 의 진짜 사유를 보려고 켜 두었다.
+  # 그대로 배포하면 예외 클래스명과 메시지가 공격자에게 그대로 나간다.
+  error:
+    include-message: never
+    include-exception: false
+    include-stacktrace: never
+
+spring:
+  jpa:
+    properties:
+      hibernate:
+        # 요청마다 SQL 을 찍으면 디스크와 성능을 둘 다 먹는다.
+        show_sql: false
+
+app:
+  upload:
+    # 기본값(윈도우의 D:/... 경로)이 리눅스 VM 에는 없다.
+    # 기본값 없이 두어 UPLOAD_PUBLIC_DIR 를 빠뜨리면 조용히 엉뚱한 곳에 쓰는 대신
+    # 아예 부팅이 실패하게 한다.  예) UPLOAD_PUBLIC_DIR=/opt/weathertw/uploads
+    public-dir: ${UPLOAD_PUBLIC_DIR}
+
+logging:
+  level:
+    root: INFO
+    com.example.firstproject: INFO
+    org.hibernate.SQL: WARN

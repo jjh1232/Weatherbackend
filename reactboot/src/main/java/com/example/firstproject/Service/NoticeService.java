@@ -63,7 +63,9 @@ public interface NoticeService {
 	
 	public boolean noticelikecheck(MemberEntity member,Long noticeid);
 	
-	public  Page<NoticeDto> favoritenotice(MemberEntity member,Pageable pageable,String option,String keyword);
+	public  Page<TwitformnoticeDto> favoritenotice(MemberEntity member,Pageable pageable,String option,String keyword);
+
+	public Page<TwitformnoticeDto> followingnotice(Long userid, Pageable pageable);
 	
 	public Page<NoticeDto> loginnoticeget(Long userid,int page);
 	

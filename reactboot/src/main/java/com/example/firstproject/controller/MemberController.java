@@ -1,6 +1,10 @@
 package com.example.firstproject.controller;
 
 
+import java.net.URI;
+import java.util.Collections;
+import org.springframework.beans.factory.annotation.Value;
+import com.example.firstproject.Service.Memberservice.EmailVerifyService;
 import java.awt.PageAttributes.MediaType;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -8,11 +12,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
+import com.example.firstproject.Dto.userdataDto.ProfileUpdateDto;
 import javax.validation.constraints.Email;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +27,6 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,14 +47,17 @@ import com.example.firstproject.Dto.Weather.MemberUpdateDto;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Service.Memberservice.MemberService;
 import com.example.firstproject.configure.PrincipalDetails;
+import com.example.firstproject.tools.Userinfoheader;
 import com.example.firstproject.configure.auth.authenticationfilter;
 
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.asm.Advice.Return;
-import net.minidev.json.JSONObject;
 
 
-@CrossOrigin(origins ="https://localhost:3000")
+//클래스 레벨 @CrossOrigin(origins="https://localhost:3000") 이 붙어 있었다.
+//프론트는 http://localhost:3001 이라 프로토콜·포트가 둘 다 달라 아무 오리진도 통과하지 못했고,
+//클래스 레벨 설정이 전역 CORS 설정(securityconfig/WebConfig)을 덮어써서
+//이 컨트롤러만 CORS 가 깨질 수 있었다. 오리진은 한 곳(app.cors.allowed-origins)에서만 정한다.
 @RestController
 @Slf4j
 @Validated //패스배리어블검증용
@@ -59,24 +66,23 @@ public class MemberController {
 
 	@Autowired
 	MemberService memberservice;
+
+	@Autowired
+	EmailVerifyService emailverifyservice;
+
+	//인증을 마친 사용자를 돌려보낼 프론트 주소(배포 시 APP_FRONTEND_URL).
+	@Value("${app.frontend-url}")
+	private String frontendurl;
 	
 	//로그인유지 임시 확실한지모름 엑세스토큰을써야하나?
 	//폐기
 	@GetMapping("/userdata")
 	public void userdataget(Authentication authentication,HttpServletResponse res) {
 		PrincipalDetails cipal=(PrincipalDetails) authentication.getPrincipal();
-		String username=cipal.getUsername();
-		String nickname=cipal.getMember().getNickname();
-		String name=cipal.getName();
-		Map<String,String> userinfo=new HashMap<>();
-		userinfo.put("username", username);
-		userinfo.put("nickname", nickname);
-		userinfo.put("name", name);
-		
-		Cookie cookie=new Cookie("usernifo",userinfo.toString());
-		
-		res.addCookie(cookie);
-		
+
+		//쿠키 이름이 "usernifo" 오타였고 값도 Map.toString() 이라 JSON 도 아니었다.
+		//프론트에서 읽는 곳이 없다(폐기된 엔드포인트). 다른 곳과 같은 형식으로 통일해 둔다.
+		Userinfoheader.write(res, cipal.getMember());
 	}
 	
 	//멤버가입
@@ -93,25 +99,29 @@ public class MemberController {
 	
 	//가입인증링크 인증서비스!
 	@GetMapping("/open/member/register")
-	public String authkey(@RequestParam String username,@RequestParam String authokey) {
-		
-		int check=memberservice.auth(username,authokey);
-		
-		if(check==0) {
-			System.out.println("인증성공");
-			
-			return "<script>"+"alert(\"이메일인증이완료되었습니다\");"
-					+"location.href=\"http://localhost:3001/main/\";"
-			+"</script>";
-			}
-		else {
-			System.out.println("인증실패");
-			return "<script>"+"alert(\"잘못된 인증메일입니다다시확인해주세요!\");"
-			+"location.href=\"http://localhost:3001/main/\";"
-	+"</script>";
-		}
-		
-		
+	public ResponseEntity<Void> verifyemail(@RequestParam(required=false) String token) {
+
+		EmailVerifyService.Result result=emailverifyservice.verify(token);
+		log.info("이메일 인증 결과 {}", result);
+
+		//예전에는 <script>alert(...)</script> 문자열을 그대로 돌려줬다.
+		//  - @RestController 라 클라이언트에 따라 스크립트가 글자로 보일 수 있었고
+		//  - alert 이었고, 돌아갈 주소에 localhost:3001 이 박혀 있었다.
+		//302 로 보내면 토큰이 붙은 주소가 히스토리·Referer 에 남는 시간도 짧아진다.
+		String to=frontendurl+"/login?verified="+result.name().toLowerCase();
+		return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(to)).build();
+	}
+
+	/**
+	 * 인증메일 재발송.
+	 * 계정이 없든, 이미 인증됐든, 쿨다운에 걸렸든 <b>응답은 항상 같다.</b>
+	 * 다르게 주면 이메일 존재 여부를 알아낼 수 있다.
+	 */
+	@PostMapping("/open/member/resend")
+	public ResponseEntity<Map<String,String>> resendverifymail(@RequestBody Map<String,String> body) {
+		emailverifyservice.resend(body==null?null:body.get("username"));
+		return ResponseEntity.ok(Collections.singletonMap("message",
+				"인증 메일을 다시 보냈습니다. 메일함을 확인해 주세요."));
 	}
 	
 	//이메일중복확인
@@ -191,7 +201,9 @@ public class MemberController {
 			) throws UnsupportedEncodingException {
 		//String name=data.get("name").toString();
 		//String password=data.get("password").toString();
-		PrincipalDetails user=(PrincipalDetails) authentication.getAuthorities();
+		//getAuthorities() 는 권한 "목록"(UnmodifiableRandomAccessList)을 돌려준다.
+		//로그인한 사용자 본체는 getPrincipal() 이다. 다른 컨트롤러도 모두 이쪽을 쓴다.
+		PrincipalDetails user=(PrincipalDetails) authentication.getPrincipal();
 		
 		
 		System.out.println("현재닉네임"+dto.getEmail());
@@ -218,24 +230,11 @@ public class MemberController {
 	   }
 	   
 	
-	   //새유저인포쿠키
-	   JSONObject json= new JSONObject();
-		
-		json.put("username",member.getUsername());
-	
-		json.put("nickname",member.getNickname());
-		
-		json.put("region", member.getHomeaddress().getJuso());
-		json.put("gridx", member.getHomeaddress().getGridx());
-		json.put("gridy", member.getHomeaddress().getGridy());
-		json.put("profileimg", member.getProfileimg());
-		json.put("userrole", member.getRole());
-		json.put("profileid", member.getProfileid());
-	   Cookie idCookie=new Cookie("userinfo",URLEncoder.encode(json.toJSONString(),"UTF-8"));
-		
-		idCookie.setPath("/");//사용가능한패스
-    
-    response.addCookie(idCookie);
+	   //바뀐 정보를 화면에 바로 반영하기 위해 userinfo 를 다시 내려준다.
+	   //쿠키가 아니라 응답 헤더다(tools/Userinfoheader 주석 참고).
+	   //예전엔 여기서 만드는 JSON 에만 userid 가 빠져 있어서, 회원정보를 수정하고 나면
+	   //userid 로 키를 만드는 화면들(채팅방·팔로우 목록)이 조용히 깨졌다.
+	   Userinfoheader.write(response, member);
 	 
 	   
 		//MemberEntity opdto=memberservice.findemail(email).orElseThrow();
@@ -248,6 +247,38 @@ public class MemberController {
 		
 	}
 	
+	/* 유저페이지 Edit Profile.
+	   /memberupdate 를 쓰지 않는 이유는 ProfileUpdateDto 주석 참고
+	   (그쪽은 지역을 조건 없이 덮어써서 이 화면에서 쓰면 주소가 날아간다). */
+	@PutMapping(value="/profileupdate")
+	public ResponseEntity<Object> profileupdate(Authentication authentication,
+			@Valid @RequestPart(value="dto") ProfileUpdateDto dto,
+			@RequestPart(required=false,value="newprofile") MultipartFile newprofile,
+			@RequestPart(required=false,value="newbackground") MultipartFile newbackground,
+			HttpServletResponse response) throws UnsupportedEncodingException {
+
+		PrincipalDetails user=(PrincipalDetails) authentication.getPrincipal();
+
+		//새 파일이 없으면 null 이 넘어가고, 서비스는 기존 이미지를 그대로 둔다
+		String profileurl=memberservice.imagesave(newprofile,"userprofileimg");
+		String backgroundurl=memberservice.imagesave(newbackground,"userbackgroundimg");
+
+		MemberEntity member=memberservice.profileupdate(user.getUsername(),dto,profileurl,backgroundurl);
+
+		//교체됐을 때만 옛 파일을 지운다
+		if(profileurl!=null) {
+			memberservice.imagedelete("userprofileimg",dto.getProfileimage());
+		}
+		if(backgroundurl!=null) {
+			memberservice.imagedelete("userbackgroundimg",dto.getProfilebackground());
+		}
+
+		//바뀐 닉네임/프로필이 헤더에 바로 반영되도록 userinfo 를 다시 내려준다
+		Userinfoheader.write(response, member);
+
+		return ResponseEntity.ok().build();
+	}
+
 	//회원 탈퇴 코드 인증
 	@PostMapping("/memberdeletemail")
 	public String memberdeleteemail(@RequestBody HashMap<String,Object> data) {

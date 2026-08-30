@@ -13,6 +13,7 @@ import com.example.firstproject.Dto.Memberform;
 import com.example.firstproject.Dto.Weather.MemberUpdateDto;
 import com.example.firstproject.Dto.follow.findDto;
 import com.example.firstproject.Dto.userdataDto.UserDto;
+import com.example.firstproject.Dto.userdataDto.ProfileUpdateDto;
 import com.example.firstproject.Dto.userdataDto.UserPageDto;
 import com.example.firstproject.Entity.MemberEntity;
 
@@ -45,6 +46,11 @@ public interface MemberService {
 	public MemberEntity memberupdate(String email,MemberUpdateDto dto,String profileurl);
 	
 	public String existingprofile(String profileurl);
+
+	//유저페이지 Edit Profile 용. 지역은 건드리지 않는다.
+	public String imagesave(MultipartFile file,String subfolder);
+	public void imagedelete(String subfolder,String url);
+	public MemberEntity profileupdate(String email,ProfileUpdateDto dto,String profileurl,String backgroundurl);
 
 	public Map<String,Object> userpagedate(String username,int page); 
 		

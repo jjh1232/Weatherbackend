@@ -70,7 +70,7 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 		       "    select 1 from NoticeblockEntity b where b.noticeid = n.noticeid and b.member.id = :userid" +
 		       ") then true else false end, " +
 		       "n.views, " +
-		       "(select count(c) from CommentEntity c where c.notice.noticeid = n.noticeid)" +
+		       "(select count(c) from CommentEntity c where c.notice.noticeid = n.noticeid), m.profileid" +
 		       ") " +
 		       "from notice n join n.member m",
 		       countQuery = "select count(n) from notice n join n.member m") //이거패키지이름인데 notice는 Entity네임을 notice로함
@@ -92,7 +92,7 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 		       "    select 1 from NoticeblockEntity b where b.noticeid = n.noticeid and b.member.id = :userid" +
 		       ") then true else false end, " +
 		       "n.views, " +
-		       "(select count(c) from CommentEntity c where c.notice.noticeid = n.noticeid)" +
+		       "(select count(c) from CommentEntity c where c.notice.noticeid = n.noticeid), m.profileid" +
 		       ") " +
 		       "from notice n join n.member m " //콘캣이안전하대
 		       + "where n.title like concat('%',:text,'%')",
@@ -115,7 +115,7 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 		       "    select 1 from NoticeblockEntity b where b.noticeid = n.noticeid and b.member.id = :userid" +
 		       ") then true else false end, " +
 		       "n.views, " +
-		       "(select count(c) from CommentEntity c where c.notice.noticeid = n.noticeid)" +
+		       "(select count(c) from CommentEntity c where c.notice.noticeid = n.noticeid), m.profileid" +
 		       ") " +
 		       "from notice n join n.member m " //콘캣이안전하대
 		       + "where n.text like concat('%',:text,'%')",
@@ -138,7 +138,7 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 		       "    select 1 from NoticeblockEntity b where b.noticeid = n.noticeid and b.member.id = :userid" +
 		       ") then true else false end, " +
 		       "n.views, " +
-		       "(select count(c) from CommentEntity c where c.notice.noticeid = n.noticeid)" +
+		       "(select count(c) from CommentEntity c where c.notice.noticeid = n.noticeid), m.profileid" +
 		       ") " +
 		       "from notice n join n.member m " //콘캣이안전하대
 		       + "where n.noticenick like concat('%',:text,'%')",
@@ -161,7 +161,7 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 		       "    select 1 from NoticeblockEntity b where b.noticeid = n.noticeid and b.member.id = :userid" +
 		       ") then true else false end, " +
 		       "n.views, " +
-		       "(select count(c) from CommentEntity c where c.notice.noticeid = n.noticeid)" +
+		       "(select count(c) from CommentEntity c where c.notice.noticeid = n.noticeid), m.profileid" +
 		       ") " +
 		       "from notice n join n.member m " //콘캣이안전하대
 		       + "where n.title like concat('%',:text,'%') or n.text like concat('%',:text,'%')",
@@ -178,6 +178,89 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 	
 	Page<NoticeEntity> findByMember(MemberEntity member,Pageable page);
 	
+	//====================== 좋아요한 글 목록 (DTO 프로덕션) ==========================
+	// 아래 엔티티 fetch 버전은 NoticeDto 로 매핑하면서 lazy 컬렉션(files)을 그대로 담았고,
+	// open-in-view:false 라 컨트롤러에서 JSON 으로 굽는 순간 LazyInitializationException 이 났다.
+	// 게다가 NoticeDto 는 메인 피드가 쓰는 TwitformnoticeDto 와 필드명이 달라서(num/id,
+	// likeusercheck/likely, isblock/blockcheck) 화면 컴포넌트가 값을 못 읽었다.
+	// 메인 피드(twitnoticelist)와 똑같은 모양으로 내려주도록 프로덕션 쿼리로 바꾼다.
+	String FAVORITE_SELECT =
+			"select new com.example.firstproject.Dto.TwitformnoticeDto(" +
+			"n.noticeid, " +
+			"n.title, " +
+			"m.username, " +
+			"m.nickname, " +
+			"m.profileimg, " +
+			"n.red, " +
+			"n.text,n.pty,n.rain,n.sky,n.temp,n.reh,n.wsd, " +
+			"(select count(f) from FavoriteEntity f where f.notice.noticeid = n.noticeid), " +
+			"case when :userid is not null and exists (" +
+			"    select 1 from FavoriteEntity f2 where f2.notice.noticeid = n.noticeid and f2.member.id = :userid" +
+			") then true else false end, " +
+			"case when :userid is not null and exists (" +
+			"    select 1 from NoticeblockEntity b where b.noticeid = n.noticeid and b.member.id = :userid" +
+			") then true else false end, " +
+			"n.views, " +
+			"(select count(c) from CommentEntity c where c.notice.noticeid = n.noticeid), m.profileid" +
+			") " +
+			"from notice n join n.member m join n.likeuser lf where lf.member.id = :userid ";
+
+	//───────────────────────────────────────────────────────────────
+	// 팔로잉 타임라인 — 내가 팔로우한 사람(tomember)들이 쓴 글만.
+	// 팔로워(나를 팔로우한 사람)가 아니라 "내가 고른 사람" 기준이다.
+	//───────────────────────────────────────────────────────────────
+	String FOLLOWING_WHERE =
+			" where m.id in (select f.tomember.id from FollowEntity f where f.frommember.id = :userid) ";
+
+	String FOLLOWING_SELECT =
+			"select new com.example.firstproject.Dto.TwitformnoticeDto(" +
+			"n.noticeid, " +
+			"n.title, " +
+			"m.username, " +
+			"m.nickname, " +
+			"m.profileimg, " +
+			"n.red, " +
+			"n.text,n.pty,n.rain,n.sky,n.temp,n.reh,n.wsd, " +
+			"(select count(f) from FavoriteEntity f where f.notice.noticeid = n.noticeid), " +
+			"case when :userid is not null and exists (" +
+			"    select 1 from FavoriteEntity f2 where f2.notice.noticeid = n.noticeid and f2.member.id = :userid" +
+			") then true else false end, " +
+			"case when :userid is not null and exists (" +
+			"    select 1 from NoticeblockEntity b where b.noticeid = n.noticeid and b.member.id = :userid" +
+			") then true else false end, " +
+			"n.views, " +
+			"(select count(c) from CommentEntity c where c.notice.noticeid = n.noticeid), m.profileid" +
+			") " +
+			"from notice n join n.member m " + FOLLOWING_WHERE;
+
+	String FOLLOWING_COUNT =
+			"select count(n) from notice n join n.member m " + FOLLOWING_WHERE;
+
+	@Query(value=FOLLOWING_SELECT, countQuery=FOLLOWING_COUNT)
+	Page<TwitformnoticeDto> twitfollowinglist(@Param("userid") Long userid, Pageable pageable);
+
+	String FAVORITE_COUNT =
+			"select count(n) from notice n join n.likeuser lf where lf.member.id = :userid ";
+
+	@Query(value=FAVORITE_SELECT, countQuery=FAVORITE_COUNT)
+	Page<TwitformnoticeDto> twitfavoritelist(@Param("userid") Long userid, Pageable pageable);
+
+	@Query(value=FAVORITE_SELECT+"and n.title like %:keyword%",
+			countQuery=FAVORITE_COUNT+"and n.title like %:keyword%")
+	Page<TwitformnoticeDto> twitfavoritetitle(@Param("userid") Long userid,@Param("keyword") String keyword,Pageable pageable);
+
+	@Query(value=FAVORITE_SELECT+"and n.text like %:keyword%",
+			countQuery=FAVORITE_COUNT+"and n.text like %:keyword%")
+	Page<TwitformnoticeDto> twitfavoritetext(@Param("userid") Long userid,@Param("keyword") String keyword,Pageable pageable);
+
+	@Query(value=FAVORITE_SELECT+"and (n.title like %:keyword% or n.text like %:keyword%)",
+			countQuery=FAVORITE_COUNT+"and (n.title like %:keyword% or n.text like %:keyword%)")
+	Page<TwitformnoticeDto> twitfavoritetitletext(@Param("userid") Long userid,@Param("keyword") String keyword,Pageable pageable);
+
+	@Query(value=FAVORITE_SELECT+"and n.noticenick like %:keyword%",
+			countQuery=FAVORITE_COUNT+"and n.noticenick like %:keyword%")
+	Page<TwitformnoticeDto> twitfavoritenick(@Param("userid") Long userid,@Param("keyword") String keyword,Pageable pageable);
+
 	//좋아요한게시글다이렉트 dto프로덕션이 젤좋은데 일단 fetch조인도사용해봄 이거 영속화해서 get시바로가져옴 근데 페이지객체랑쓰려면 
 	//카운트쿼리작성해야함 페치조인사용시 오류가많아서
 	@Query(value="select n from notice n JOIN FETCH n.member join n.likeuser f where f.member=:member",
@@ -321,7 +404,7 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 		       "    select 1 from NoticeblockEntity b where b.noticeid = n.noticeid and b.member.id = :userid" +
 		       ") then true else false end, " +
 		       "n.views, " +
-		       "(select count(c) from CommentEntity c where c.notice.noticeid = n.noticeid)" +
+		       "(select count(c) from CommentEntity c where c.notice.noticeid = n.noticeid), m.profileid" +
 		       ") " +
 		       "from notice n join n.member m where n.member.id=:searchuserid "
 		       + "and (:keyword is null or :keyword= '' or (:option='title' and n.title like %:keyword%) or (:option='content' and n.text like %:keyword%))",
@@ -346,7 +429,7 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 		    "    select 1 from NoticeblockEntity b where b.noticeid = n.noticeid and b.member.id = :userid" +
 		    ") then true else false end, " +
 		    "n.views, " +
-		    "(select count(c) from CommentEntity c where c.notice.noticeid = n.noticeid)" +
+		    "(select count(c) from CommentEntity c where c.notice.noticeid = n.noticeid), m.profileid" +
 		    ") " +
 		    "from notice n " +
 		    "join n.member m " +

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
@@ -73,13 +74,19 @@ public class MainController {
 	private MemberService memberservice;
 	
 	private final NoticeViewtools noticeviewservice;
+
+	//업로드 루트(application.yml: app.upload.public-dir)
+	//예전에는 옛 프로젝트의 절대경로가 그대로 박혀 있었다.
+	//그 경로는 지금 머신에 없어서, 이 값을 타는 기능은 전부 깨진 상태였다.
+	@Value("${app.upload.public-dir}")
+	private String uploadroot;
 	
 	
 	
 	//==========================================jpa연습용 일단 ㅈㅈ==========================
 	@GetMapping("/open/test")
 	public Page<NoticeEntity>asd11(@RequestParam(value="page",required =false,defaultValue="1") int page){
-		Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
+		Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"id"));
 		
 		Page<NoticeEntity> te=repoo.test113(pageable);
 		for(NoticeEntity tes:te) {
@@ -91,7 +98,7 @@ public class MainController {
 	//======================================================================================
 	@GetMapping("/ex")
 	public List<NoticeDto> aasssd(@RequestParam(value="page",required =false,defaultValue="1") int page){
-		//Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
+		//Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"id"));
 		
 		List<NoticeDto> noticedto = noticeservice.readfd(page);
 		
@@ -142,7 +149,7 @@ public class MainController {
 		//noticeservice.search(option,keyword);
 		if(keyword.equals("")) {
 			log.info("키워드널 검색어가아님");	
-			Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
+			Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"id"));
 			//Page<NoticeDto> Dto=noticeservice.read(pageable);
 			return null;
 		}else {
@@ -188,9 +195,9 @@ public class MainController {
 			@RequestParam(required = false,defaultValue="") String keyword,
 			@RequestParam(defaultValue="1") int page){
 		PrincipalDetails principal=(PrincipalDetails) authentication.getPrincipal();
-		Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
+		Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"id"));
 		System.out.println("들어온페이지:"+page);
-		Page<NoticeDto> dto=noticeservice.favoritenotice(principal.getMember(),pageable,option,keyword);
+		Page<TwitformnoticeDto> dto=noticeservice.favoritenotice(principal.getMember(),pageable,option,keyword);
 		
 		
 		
@@ -200,6 +207,20 @@ public class MainController {
 	
 	
 	
+	//=====================================팔로잉 타임라인 ============================================
+	//내가 팔로우한 사람들의 글만. 로그인이 필요하다(팔로우 목록이 있어야 하니까).
+	@GetMapping("/followingnotice")
+	public ResponseEntity<Page<TwitformnoticeDto>> followingnotice(Authentication authentication,
+			@RequestParam(defaultValue="1") int page){
+
+		PrincipalDetails principal=(PrincipalDetails) authentication.getPrincipal();
+		Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"id"));
+
+		Page<TwitformnoticeDto> dto=noticeservice.followingnotice(principal.getMember().getId(), pageable);
+		return ResponseEntity.ok(dto);
+	}
+
+
 	@PostMapping(value="/noticecreate")
 	public void create(@Validated @RequestBody Noticeform form) {//리퀘스트바디와 겟터셋터필수임;
 		System.out.println("게시글작성!");
@@ -320,7 +341,7 @@ public class MainController {
 	public Page<NoticeEntity> exsearch(@RequestParam String option,@RequestParam String keyword,
 			@RequestParam(defaultValue="1") int page
 			){
-		Pageable Pageable=PageRequest.of(page-1,10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
+		Pageable Pageable=PageRequest.of(page-1,10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"id"));
 		
 		//Page<NoticeEntity> entity =
 		//repoo.searchnoticeex(keyword,Pageable);
@@ -390,7 +411,7 @@ public class MainController {
 	@GetMapping("/open/atagdown") //a태그는 스프링부트에서막는다.. 
 	public ResponseEntity atagdown(@RequestParam String path) {
 		log.info(path);
-		Path filepath = Paths.get("D:/study프로그램/react/bootproject/public"+path);
+		Path filepath = Paths.get(uploadroot+path);
 		try {
 			UrlResource resource=new UrlResource(filepath.toUri());
 			//한글파일이름 꺠질수있으니인코딩

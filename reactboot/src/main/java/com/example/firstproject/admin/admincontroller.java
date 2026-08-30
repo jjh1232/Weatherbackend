@@ -163,6 +163,12 @@ public class admincontroller {
 		Long imageid=adminservice.changeimage(detachid);
 		return ResponseEntity.ok(imageid+"가잘변경되었습니다");
 	};
+	//게시글이미지 차단해제 (오차단 되돌리기)
+	@PutMapping("/imagerestore/{detachid}")
+	public ResponseEntity detachrestore(@PathVariable Long detachid) throws IllegalAccessException {
+		Long imageid=adminservice.restoreimage(detachid);
+		return ResponseEntity.ok(imageid+"번 이미지를 되돌렸습니다");
+	}
 	//게시글이미지 단체변경
 	@PutMapping("/manyimageban")
 	public ResponseEntity manyimagechange(@RequestBody Admindetachchangeform form) throws IllegalAccessException {
@@ -199,13 +205,24 @@ public class admincontroller {
 		
 		 
 	}
-	//댓글 업데이트 
-	@PutMapping("/commentupdate/{commentid}")
-	public ResponseEntity commentupdate(@PathVariable Long commentid,@RequestBody Commentform form) throws IllegalAccessException {
-		Long commentnum=adminservice.commentupdate(commentid, form);
-		return ResponseEntity.ok(commentnum+"번글 수정되었습니다");
-	}
+	/* [삭제됨] 댓글 업데이트 (@PutMapping("/commentupdate/{commentid}"))
+	   운영자가 남의 댓글 내용을 고치면 작성자 이름으로 안 쓴 말이 남는다.
+	   게다가 이 폼은 username/nickname 까지 바꿀 수 있어 작성자를 갈아끼울 수 있었다.
+	   부적절한 내용을 가리는 건 차단(commentblock)이 맡는다.
+	   차단은 원문을 지우지 않아 되돌릴 수 있고, 조치 사실도 화면에 남는다. */
 	
+	//댓글 운영자 차단 / 해제
+	@PutMapping("/commentblock/{commentid}")
+	public ResponseEntity commentblock(@PathVariable Long commentid) throws IllegalAccessException {
+		adminservice.commentblock(commentid);
+		return ResponseEntity.ok("차단되었습니다");
+	}
+	@PutMapping("/commentunblock/{commentid}")
+	public ResponseEntity commentunblock(@PathVariable Long commentid) throws IllegalAccessException {
+		adminservice.commentunblock(commentid);
+		return ResponseEntity.ok("차단이 해제되었습니다");
+	}
+
 	@DeleteMapping("/commentdelete/{commentid}")
 	public ResponseEntity commentdelete(@PathVariable Long commentid) throws IllegalAccessException {
 		adminservice.commentdelete(commentid);

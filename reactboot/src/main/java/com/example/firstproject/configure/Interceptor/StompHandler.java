@@ -132,7 +132,9 @@ public class StompHandler implements ChannelInterceptor{ //채널인섭셉터 �
 					//리프레쉬토큰기간체크 
 					if(jwtservice.checktokenvalid(refreshtoken)) {
 						System.out.println("토큰합격");
-						MemberEntity member=memberrepo.findByrefreshtoken(refreshtoken).orElseThrow();
+						//리포지토리를 직접 부르면 원문으로 찾게 된다. DB 에는 해시가 들어 있으므로
+						//반드시 JwtService 를 거쳐야 한다(저장·조회가 같은 해시를 쓴다).
+						MemberEntity member=jwtservice.findbyrefreshtoken(refreshtoken).orElseThrow();
 						//인증 
 						PrincipalDetails principal=new PrincipalDetails(member);
 						Authentication authentication=new UsernamePasswordAuthenticationToken(principal,null, principal.getAuthorities());

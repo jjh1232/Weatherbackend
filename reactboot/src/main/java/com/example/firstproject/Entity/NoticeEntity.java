@@ -82,6 +82,12 @@ public class NoticeEntity {
 	private List<detachfile> files=new ArrayList<detachfile>();
 	
 	@CreatedDate
+	/* 작성일시를 문자열로 담는다. 포맷의 초가 "s"(한 자리)라
+	   같은 분 안에서는 문자열 정렬이 뒤집힌다("19:05:9" > "19:05:10").
+	   그래서 목록 정렬은 red 가 아니라 식별자 DESC 를 쓴다.
+	   정렬 프로퍼티는 "noticeid"(필드명) 가 아니라 "id" 로 준다.
+	   생성자 표현식(select new ...) 쿼리에서는 정렬 구문이 번역 없이 SQL 로 나가는데,
+	   실제 컬럼명이 id 라서 "noticeid" 로 주면 Unknown column 오류가 난다. */
 	@Column(updatable = false,name = "red")//스프링부트말고 자바컬럼 업데이트시점에서 업데이트막음 
 	private String red;
 	//데이터포맷

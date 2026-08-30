@@ -647,6 +647,23 @@ public class ChatService {
 				.collect(Collectors.toList());
 		
 		
+		 //프론트가 뭘 받는지 맞춰보기 위한 로그
+		 log.info("[chat] roomid={} userid={} 조회 {}건 / 마지막메세지id={} / 내가읽은id={}",
+				 roomid, userid, chatdatas.size(), lastMessageid, beforereadmessageid);
+		 if(!chatdatas.isEmpty()) {
+			 MeseageDto first=chatdatas.get(0);
+			 MeseageDto last=chatdatas.get(chatdatas.size()-1);
+			 log.info("[chat] 첫행 chatid={} type={} red={} sender={}",
+					 first.getChatid(), first.getMessagetype(), first.getRed(),
+					 first.getSender()==null?null:first.getSender().getEmail());
+			 log.info("[chat] 끝행 chatid={} type={} red={} sender={}",
+					 last.getChatid(), last.getMessagetype(), last.getRed(),
+					 last.getSender()==null?null:last.getSender().getEmail());
+			 //red 가 null 이거나 형식이 다른 행이 있으면 프론트 makeSection 이 이상해진다
+			 long badred=chatdatas.stream().filter(c->c.getRed()==null||c.getRed().length()<10).count();
+			 if(badred>0) log.warn("[chat] red 가 비었거나 짧은 행 {}건", badred);
+		 }
+
 		 return new ChatdataDto(chatdatas,beforereadmessageid);
 	}
 	

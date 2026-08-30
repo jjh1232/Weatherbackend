@@ -1,5 +1,8 @@
 package com.example.firstproject.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
@@ -60,6 +63,36 @@ public class JwtService {
 
 	}
 
+	//=====================================================================
+	// 리프레쉬 토큰은 원문이 아니라 SHA-256 해시로 저장한다.
+	// 원문을 그대로 두면 DB 가 유출됐을 때 그 값만으로 남의 세션을 이어받을 수 있다
+	// (비밀번호를 해시해서 저장하는 것과 같은 이유).
+	// 솔트는 쓰지 않는다 - 토큰 자체가 서명된 임의값이라 사전 대입이 성립하지 않고,
+	// 솔트를 쓰면 "토큰 값으로 회원을 찾는" 조회가 불가능해진다.
+	//
+	// 저장(Setrefreshtoken)과 조회(findbyrefreshtoken) 양쪽에서 같은 해시를 쓰므로
+	// 부르는 쪽 코드는 그대로 원문을 넘기면 된다.
+	//=====================================================================
+	public String hashrefreshtoken(String token) {
+		if(token==null) {
+			return null;
+		}
+		try {
+			MessageDigest digest=MessageDigest.getInstance("SHA-256");
+			byte[] hashed=digest.digest(token.getBytes(StandardCharsets.UTF_8));
+
+			StringBuilder builder=new StringBuilder(hashed.length*2);
+			for(byte b:hashed) {
+				builder.append(String.format("%02x", b));
+			}
+			return builder.toString();
+		}
+		catch (NoSuchAlgorithmException e) {
+			//SHA-256 은 모든 JVM 이 반드시 갖고 있어야 하는 알고리즘이라 실제로는 안 난다.
+			throw new IllegalStateException("SHA-256 을 사용할 수 없습니다", e);
+		}
+	}
+
 	//db에 리프레쉬토큰저장
 	@Transactional
 	public void Setrefreshtoken(String username, String represhtoken) {
@@ -67,15 +100,25 @@ public class JwtService {
 		MemberEntity member=memberrepository.findByUsername(username).orElseThrow(()->new RuntimeException("유저가없어요"));
 		
 		//변경감지가왜..
-		member.setRefreshtoken(represhtoken);
+		member.setRefreshtoken(hashrefreshtoken(represhtoken));
 		//memberrepository.save(nwemem);
 		
 		
 	}
+	//로그아웃 - 저장해둔 리프레쉬 토큰을 지운다.
+	//이걸 안 하면 로그아웃해도 그 토큰으로 /refresh 가 남은 기간(24시간) 내내 통해서,
+	//리프레쉬 토큰을 서버에 보관하는 이유(무효화) 자체가 사라진다.
+	@Transactional
+	public void clearrefreshtoken(String username) {
+		MemberEntity member=memberrepository.findByUsername(username).orElseThrow(()->new RuntimeException("유저가없어요"));
+		member.setRefreshtoken(null);
+	}
+
 	//리프레쉬토큰 찾기
 	@Transactional //이거 영속성엔티티문제해결보기
 	public Optional<MemberEntity> findbyrefreshtoken(String refreshtoken) {
-		Optional<MemberEntity> member=memberrepository.findByrefreshtoken(refreshtoken);
+		//받은 건 원문이므로 저장할 때와 같은 방식으로 해시해서 찾는다
+		Optional<MemberEntity> member=memberrepository.findByrefreshtoken(hashrefreshtoken(refreshtoken));
 		return member;
 	}
 	
@@ -111,6 +154,29 @@ public class JwtService {
 	return false;	
 	}
 	
+	//액세스 토큰 재발급 기준(분). 남은 시간이 이보다 적어지면 새로 발급한다.
+	public static final int ACCESS_RENEW_MINUTES = 10;
+
+	//액세스 토큰을 새로 발급할 때가 됐는가.
+	//예전엔 인가 필터가 요청마다 무조건 재발급했다. 그러면 리프레쉬 토큰까지 매번
+	//회전해서, 병렬 요청끼리 DB 에 저장된 값과 브라우저 쿠키 값이 어긋나는 사고가 난다.
+	//만료가 가까울 때만 갱신해도 "쓰는 동안 세션이 연장된다"는 성질은 그대로다.
+	public boolean isaccessrenewneeded(String token, int minutes) {
+		try {
+			Date expires=JWT.require(Algorithm.HMAC512(secretkey))
+					.build()
+					.verify(token)
+					.getExpiresAt();
+
+			long left=expires.getTime()-System.currentTimeMillis();
+			return left < (long)minutes*60*1000;
+		}
+		catch (TokenExpiredException e) {
+			//이미 만료된 토큰은 여기서 다룰 일이 아니다(호출 전에 checktokenvalid 로 걸러진다)
+			return false;
+		}
+	}
+
 	//토큰기간 검증
 	public boolean checktokenvalid(String token) {
 		// TODO Auto-generated method stub

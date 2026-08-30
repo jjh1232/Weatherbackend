@@ -80,6 +80,14 @@ public class CommentEntity extends BaseTime{
 	//두가지다 false로 설정
 	@Column(nullable=false,columnDefinition = "boolean default false")
 	private boolean isdelete=false;
+
+	/* 운영자 차단.
+	   isdelete 를 재활용하면 안 된다. 그러면 운영자가 가린 댓글이
+	   "삭제된 댓글입니다" 로 보여서 작성자가 스스로 지운 것처럼 읽힌다.
+	   삭제와 달리 되돌릴 수 있어야 하므로(오차단) 원문은 그대로 두고
+	   보여줄 때만 안내 문구로 바꿔치운다. */
+	@Column(nullable=false,columnDefinition = "boolean default false")
+	private boolean isblocked=false;
 	
 	
 	
@@ -95,6 +103,10 @@ public class CommentEntity extends BaseTime{
 				.text(text)
 				.redtime(redtime)
 				.userprofile(userprofile)
+				//관리자 화면은 원문을 그대로 보되(그래야 판단이 된다)
+				//차단/삭제 상태는 알아야 버튼을 맞게 그린다
+				.isdelete(this.isdelete)
+				.isblocked(this.isblocked)
 				.build();
 	}
 
