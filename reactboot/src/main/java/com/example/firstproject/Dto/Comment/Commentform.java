@@ -22,7 +22,7 @@ public class Commentform {
 	@NotBlank
 	private int depth;
 	
-	private int cnum;
+	private Long cnum;
 	
 
 	@NotBlank

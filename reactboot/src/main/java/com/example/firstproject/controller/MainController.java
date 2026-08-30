@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
@@ -28,18 +29,24 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriUtils;
 
+import com.example.firstproject.Dto.NoticeDetailDto;
 import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.NoticeDtointer;
+import com.example.firstproject.Dto.NoticeImageDto;
 import com.example.firstproject.Dto.NoticeUpdate;
 import com.example.firstproject.Dto.Noticeform;
+import com.example.firstproject.Dto.TwitformnoticeDto;
 import com.example.firstproject.Dto.detachVo;
 import com.example.firstproject.Dto.noticeDao;
 import com.example.firstproject.Dto.Comment.CommentDto;
 import com.example.firstproject.Dto.Comment.Commentform;
+import com.example.firstproject.Dto.Previewimage.PreviewimageDto;
+import com.example.firstproject.Dto.userdataDto.UserPageDto;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
 import com.example.firstproject.Repository.MemberRepository;
@@ -47,11 +54,14 @@ import com.example.firstproject.Repository.NoticeRepository;
 import com.example.firstproject.Service.NoticeService;
 import com.example.firstproject.Service.Memberservice.MemberService;
 import com.example.firstproject.configure.PrincipalDetails;
+import com.example.firstproject.tools.NoticeViewtools;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 //@CrossOrigin(origins ="*",exposedHeaders = "*")
 @RestController
+@RequiredArgsConstructor
 @Slf4j
 public class MainController {
 
@@ -63,12 +73,20 @@ public class MainController {
 	@Autowired
 	private MemberService memberservice;
 	
+	private final NoticeViewtools noticeviewservice;
+
+	//업로드 루트(application.yml: app.upload.public-dir)
+	//예전에는 옛 프로젝트의 절대경로가 그대로 박혀 있었다.
+	//그 경로는 지금 머신에 없어서, 이 값을 타는 기능은 전부 깨진 상태였다.
+	@Value("${app.upload.public-dir}")
+	private String uploadroot;
+	
 	
 	
 	//==========================================jpa연습용 일단 ㅈㅈ==========================
 	@GetMapping("/open/test")
 	public Page<NoticeEntity>asd11(@RequestParam(value="page",required =false,defaultValue="1") int page){
-		Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
+		Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"id"));
 		
 		Page<NoticeEntity> te=repoo.test113(pageable);
 		for(NoticeEntity tes:te) {
@@ -80,7 +98,7 @@ public class MainController {
 	//======================================================================================
 	@GetMapping("/ex")
 	public List<NoticeDto> aasssd(@RequestParam(value="page",required =false,defaultValue="1") int page){
-		//Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
+		//Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"id"));
 		
 		List<NoticeDto> noticedto = noticeservice.readfd(page);
 		
@@ -95,12 +113,26 @@ public class MainController {
 	}
 	
 	//이거 지금 안씀 여기서 데이터정리하는게 나은거같아서
-	@GetMapping("/open/notice")
-	public Page<NoticeDto> notice(@RequestParam(value="page",required =false,defaultValue="1") int page) {
+	@GetMapping("/open/twitformnoticelist")
+	public Page<TwitformnoticeDto> notice(
+			@RequestParam(required = false,defaultValue="title") String option,
+			@RequestParam(required = false,defaultValue="") String keyword,
+			@RequestParam(defaultValue="1") int page,
+			Authentication authentication
+			) {
 		System.out.println("페이지"+page);
-		//List<NoticeDto> notice = new ArrayList<NoticeDto>();
-		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
-		Page<NoticeDto> notice=noticeservice.read(pageable);
+		
+
+		PrincipalDetails user=null;
+		Long userid=null;
+		if(authentication !=null && authentication.isAuthenticated()) {
+			System.out.println("유저로그인됨");
+			user=(PrincipalDetails) authentication.getPrincipal();
+			userid=user.getMember().getId();
+		}
+		
+		
+		Page<TwitformnoticeDto> notice=noticeservice.read(userid,option,keyword,page);
 		
 		
 		return notice;
@@ -109,35 +141,63 @@ public class MainController {
 	
 	//이게지금 메인트윗으로쓰고있음
 	@GetMapping("/open/noticesearch")
-	public Page<NoticeDto> search(@RequestParam(required = false,defaultValue="title") String option,
+	public Page<NoticeDto> search(
+			@RequestParam(required = false,defaultValue="title") String option,
 			@RequestParam(required = false,defaultValue="") String keyword,
 			@RequestParam(defaultValue="1") int page) {
+		
 		//noticeservice.search(option,keyword);
 		if(keyword.equals("")) {
 			log.info("키워드널 검색어가아님");	
-			Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
-			Page<NoticeDto> Dto=noticeservice.read(pageable);
-			return Dto;
+			Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"id"));
+			//Page<NoticeDto> Dto=noticeservice.read(pageable);
+			return null;
 		}else {
 			log.info("검색임 ");	
 			log.info("페이지"+page);
 		log.info(option);
 		log.info(keyword);
 		log.info(String.valueOf(page));
-		Page<NoticeDto> Dto=noticeservice.search(option,keyword,page);
+		Page<NoticeDto> Dto=noticeservice.search(null,option,keyword,page);
 		//리퀘랑페이지똑같넹 ;
 		return Dto;
 		}
 		
 	}
+	//차단목록을위해 새로만드는 로그인시 게시글 가져오기 근데 더짧은로직으로 
+	@GetMapping("/noticeget")
+	public Page<NoticeDto> search(
+			Authentication authentication,
+			@RequestParam(required = false,defaultValue="title") String option,
+			@RequestParam(required = false,defaultValue="") String keyword,
+			@RequestParam(defaultValue="1") int page
+			){
+		System.out.println("로그인시노티스");
+		PrincipalDetails user=(PrincipalDetails) authentication.getPrincipal();
+		if(keyword.equals("")) {
+			//검색어아닐시 
+			
+			Page<NoticeDto> dtolist=noticeservice.loginnoticeget(user.getMember().getId(), page);
+			
+			return dtolist;
+		}else {
+			Page<NoticeDto> Dto=noticeservice.search(user.getMember().getId(),option,keyword,page);
+			
+			return Dto;
+		}
+
+	}
 	
 	//=====================================일단 좋아요 목록가져오는컨트롤러 ============================================
 	@GetMapping("/onlikenotice")
-	public ResponseEntity search(Authentication authentication,@RequestParam(defaultValue="1") int page){
+	public ResponseEntity searchliked(Authentication authentication,
+			@RequestParam(required = false,defaultValue="title") String option,
+			@RequestParam(required = false,defaultValue="") String keyword,
+			@RequestParam(defaultValue="1") int page){
 		PrincipalDetails principal=(PrincipalDetails) authentication.getPrincipal();
-		Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"createdDate"));
+		Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"id"));
 		System.out.println("들어온페이지:"+page);
-		Map<String,Object> dto=noticeservice.favoritenotice(principal.getMember(),pageable);
+		Page<TwitformnoticeDto> dto=noticeservice.favoritenotice(principal.getMember(),pageable,option,keyword);
 		
 		
 		
@@ -147,6 +207,20 @@ public class MainController {
 	
 	
 	
+	//=====================================팔로잉 타임라인 ============================================
+	//내가 팔로우한 사람들의 글만. 로그인이 필요하다(팔로우 목록이 있어야 하니까).
+	@GetMapping("/followingnotice")
+	public ResponseEntity<Page<TwitformnoticeDto>> followingnotice(Authentication authentication,
+			@RequestParam(defaultValue="1") int page){
+
+		PrincipalDetails principal=(PrincipalDetails) authentication.getPrincipal();
+		Pageable pageable=PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"id"));
+
+		Page<TwitformnoticeDto> dto=noticeservice.followingnotice(principal.getMember().getId(), pageable);
+		return ResponseEntity.ok(dto);
+	}
+
+
 	@PostMapping(value="/noticecreate")
 	public void create(@Validated @RequestBody Noticeform form) {//리퀘스트바디와 겟터셋터필수임;
 		System.out.println("게시글작성!");
@@ -156,18 +230,32 @@ public class MainController {
 	}
 	//=============디테일
 	@GetMapping("/open/noticedetail/{num}")
-	public NoticeDto noticedetail(@PathVariable Long num) {
+	public NoticeDetailDto noticedetail(@PathVariable Long num,Authentication authentication) {
 		log.info("글들");
-		NoticeDto Dto =noticeservice.detail(num);
+	
+		PrincipalDetails user=null;
+		Long userid=null;
+		if(authentication !=null && authentication.isAuthenticated()) {
+			System.out.println("유저로그인됨");
+			user=(PrincipalDetails) authentication.getPrincipal();
+			userid=user.getMember().getId();
+		}
+		
+		NoticeDetailDto Dto =noticeservice.detail(num,userid);
 		System.out.println(Dto);
+		//조회수증가
+		noticeviewservice.increaseviewcount(Dto.getId());
 		return Dto;
+		
 	}
+
 	//=====================수정검사==========================================
 	@GetMapping("/noticeupdate/{num}")
-	public NoticeDto noticeupdatedetail(@PathVariable Long num,Authentication authentication) throws Exception {
+	public NoticeDetailDto noticeupdatedetail(@PathVariable Long num,Authentication authentication) throws Exception {
 		PrincipalDetails principal=(PrincipalDetails) authentication.getPrincipal();
 		String username=principal.getUsername();
-		NoticeDto dto=noticeservice.detail(num);
+		Long userid=principal.getMember().getId();
+		NoticeDetailDto dto=noticeservice.detail(num,userid);
 		if(username.equals(dto.getUsername())) {
 			log.info("유저가일치합니다!");
 			return dto;
@@ -177,15 +265,18 @@ public class MainController {
 			throw new Exception("아이디불일치");
 		}
 		
-		
+
 	}
 	
 	//=======================삭제===============================
 	@DeleteMapping("/noticedelete/{num}")
 	public void delete(@PathVariable Long num,Authentication authentication) throws Exception {
+		log.info("게시글삭제");
 		PrincipalDetails principal=(PrincipalDetails) authentication.getPrincipal();
 		String username=principal.getUsername();
-		NoticeDto dto=noticeservice.detail(num);
+		Long userid=principal.getMember().getId();
+		NoticeDetailDto dto=noticeservice.detail(num,userid);
+		
 		if(username.equals(dto.getUsername())) {
 			log.info("유저가일치합니다!");
 			noticeservice.delete(num);
@@ -197,6 +288,15 @@ public class MainController {
 		
 		
 	}
+	//코멘트 가져오기
+	@GetMapping("/open/commentshow")
+	public ResponseEntity<Page<CommentDto>> commentshow(@RequestParam Long noticeid,@RequestParam(defaultValue = "1") int page){
+		System.out.println("페이지:"+page);
+;		Page<CommentDto> dto=noticeservice.showcomments(noticeid, page);
+		
+		return ResponseEntity.ok(dto);
+	}
+	//실제수정
 	@PutMapping("/noticeupdate/{num}")
 	public NoticeDto update(@PathVariable Long num,@Validated @RequestBody NoticeUpdate update) {
 		NoticeDto dto=noticeservice.noticeupdate(num,update);
@@ -241,7 +341,7 @@ public class MainController {
 	public Page<NoticeEntity> exsearch(@RequestParam String option,@RequestParam String keyword,
 			@RequestParam(defaultValue="1") int page
 			){
-		Pageable Pageable=PageRequest.of(page-1,10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
+		Pageable Pageable=PageRequest.of(page-1,10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"id"));
 		
 		//Page<NoticeEntity> entity =
 		//repoo.searchnoticeex(keyword,Pageable);
@@ -262,6 +362,7 @@ public class MainController {
 	@DeleteMapping("/commentdelete/{id}")
 	public void commentdelete(@PathVariable Long id) {
 		System.out.println("댓글삭제!");
+		
 		noticeservice.commentdelete(id);
 	}
 
@@ -282,7 +383,7 @@ public class MainController {
 
 	//이미지데이터 저장 
 	@PostMapping("/contentimage")
-	public String imagesave(MultipartFile image) {
+	public String imagesave(@RequestPart(value = "image") MultipartFile image) {
 		System.out.println("들어온이미지:"+image);
 		String path=noticeservice.contentimagesave(image);
 		log.info("리액트패스경로확인용:"+path);
@@ -304,12 +405,13 @@ public class MainController {
 		log.info("detachurl"+detach.getUri());
 		return noticeservice.getdetach(detach);
 		
+		
 	}
 	
 	@GetMapping("/open/atagdown") //a태그는 스프링부트에서막는다.. 
 	public ResponseEntity atagdown(@RequestParam String path) {
 		log.info(path);
-		Path filepath = Paths.get("D:/study프로그램/react/bootproject/public"+path);
+		Path filepath = Paths.get(uploadroot+path);
 		try {
 			UrlResource resource=new UrlResource(filepath.toUri());
 			//한글파일이름 꺠질수있으니인코딩
@@ -329,7 +431,8 @@ public class MainController {
 	}
 	
 	//==================================게시글좋아요기능 =================================
-	@GetMapping("/noticelike/{noticeid}")
+	//둘다임 
+	@PostMapping("/noticelike/{noticeid}")
 	public ResponseEntity<Object> likenotice(@PathVariable Long noticeid,Authentication authentication ) {
 		PrincipalDetails detailes=(PrincipalDetails) authentication.getPrincipal();
 		//MemberEntity member=detailes.getMember();
@@ -352,12 +455,95 @@ public class MainController {
 	
 	
 	//==============================유저정보페이지==================================
-	
-	@GetMapping("/open/userpage/{username}")
-	public ResponseEntity userpage(@PathVariable String username,@RequestParam(required = false,defaultValue = "1") int page) {
-		
-		Map<String,Object> data=memberservice.userpagedate(username, page);
-		
+	//이거지워도될듯다하면
+	@GetMapping("/open/userpage/{profileid}")
+	public ResponseEntity userpage(@PathVariable String profileid,@RequestParam(required = false,defaultValue = "1") int page) {
+		System.out.println("유저페이지:"+profileid);
+		Map<String,Object> data=memberservice.userpagedate(profileid, page);
+		System.out.println("왜안돼징");
 		return ResponseEntity.ok(data);
 	}
+	
+	//유저정보데이터
+	@GetMapping("/open/userpage/userdata/{profileid}")
+	public ResponseEntity userpageuserprofile(@PathVariable String profileid,Authentication authentication) {
+		Long userid=null;
+		//로그인비로그인유저ㅜ
+		if(authentication != null&&authentication.getPrincipal() instanceof PrincipalDetails) {
+			PrincipalDetails member=(PrincipalDetails) authentication.getPrincipal();
+			userid=member.getMember().getId();
+		}
+		UserPageDto userprofile=memberservice.userprofileuserdata(userid, profileid);
+		
+		return ResponseEntity.ok(userprofile);
+	}
+	//유저 페이지 게시글들
+	@GetMapping("/open/userpage/userpost/{searchid}")
+	public ResponseEntity userpageposts(@PathVariable Long searchid,
+			@RequestParam(defaultValue="1") int page,
+			@RequestParam(required = false) String keyword,
+		    @RequestParam(required = false) String option,
+		    @RequestParam String sortoption,
+			Authentication authentication) {
+		Long userid=null;
+		//로그인비로그인유저ㅜ
+		System.out.println("유저페이지페이지:"+page);
+		if(authentication != null&&authentication.getPrincipal() instanceof PrincipalDetails) {
+			PrincipalDetails member=(PrincipalDetails) authentication.getPrincipal();
+			userid=member.getMember().getId();
+		}
+		Page<TwitformnoticeDto> posts=noticeservice.userpagenotice(userid, page,searchid,option,keyword,sortoption);
+		return ResponseEntity.ok(posts);
+	}
+	//유저페이지 이미지
+	@GetMapping("/open/userpage/userimagepost/{searchid}")
+	public ResponseEntity userpageimagelist(@PathVariable Long searchid,
+			@RequestParam(defaultValue="1") int page,
+			@RequestParam(required = false) String keyword,
+		    @RequestParam(required = false) String option,
+			Authentication authentication) {
+		Long userid=null;
+		//로그인비로그인유저ㅜ
+		System.out.println("유저페이지페이지:"+page);
+		System.out.println("검색옵션:"+option);
+		System.out.println("검색어:"+keyword);
+		if(authentication != null&&authentication.getPrincipal() instanceof PrincipalDetails) {
+			PrincipalDetails member=(PrincipalDetails) authentication.getPrincipal();
+			userid=member.getMember().getId();
+		}
+		Page<NoticeImageDto> posts=noticeservice.getuserpageimagelist(searchid,option,keyword,page, userid);
+		return ResponseEntity.ok(posts);
+	}
+	
+	@GetMapping("/open/notice/imagelist")
+	public ResponseEntity getimagelist(@RequestParam(required = false,defaultValue="title") String option,
+			@RequestParam(required = false,defaultValue="") String keyword,
+			@RequestParam(defaultValue="1") int page,Authentication authentication) {
+		//필터자체는 걸려서 로그인시 인가를하는거고 로그인안해도 넘어옴 시큐리티설정하면
+		System.out.println("페이지:"+page);
+		System.out.println("페이지:"+keyword);
+		Long userid=null;
+		//인증안된유저도 막는게 후자 프린시펄디테일즈타입인지 인증안되면 그냥스트링으로 본다함
+		if(authentication != null&&authentication.getPrincipal() instanceof PrincipalDetails) {
+			PrincipalDetails member=(PrincipalDetails) authentication.getPrincipal();
+			userid=member.getMember().getId();
+		}
+		Page<NoticeImageDto> dto=noticeservice.getimagelist(userid,page,option,keyword);
+		
+		return ResponseEntity.ok(dto);
+	}
+	//노티스 이미지 미리보기 ==========
+	@GetMapping("/open/noticeimagepreview/{noticeid}")
+	public ResponseEntity<?> getpreviewimage(@PathVariable Long noticeid,Authentication authentication){
+		Long userid=null;
+		if(authentication != null&&authentication.getPrincipal() instanceof PrincipalDetails) {
+			PrincipalDetails member=(PrincipalDetails) authentication.getPrincipal();
+			userid=member.getMember().getId();
+		}
+		List<PreviewimageDto> dto=noticeservice.getPreviewimage(userid,noticeid);
+		
+		return ResponseEntity.ok(dto);
+	}
+	
+	
 }

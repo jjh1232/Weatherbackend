@@ -35,14 +35,17 @@ public class NoticeDto {
 	private String sky;
 	private String pty;
 	private String rain;
+	private String reh;
+	private String wsd;
 	private boolean likeusercheck;
 	private String red;
 	private String userprofile;
-	
-	private List<CommentEntity> comments;
-	
+	private int commentcount;
+	private List<CommentDto> comments;
+	private int declaircount;
 	private List<detachfile> detachfiles;
-	
+	private boolean isblock;
+	private long views;
 	
 	public NoticeDto(NoticeEntity entity) {
 		 num=entity.getNoticeid();
@@ -51,15 +54,18 @@ public class NoticeDto {
 		 title=entity.getTitle();
 		 text=entity.getText();
 		 red=entity.getRed();
-		 comments=entity.getComments();
+		 //comments=entity.getComments();
 		 likes=entity.getLikeuser().size();
 		 temp=entity.getTemp();
 		 sky=entity.getSky();
 		 pty=entity.getPty();
 		 rain=entity.getRain();
+		 reh=entity.getReh();
+		 wsd=entity.getWsd();
 		 userprofile=entity.getMember().getProfileimg();
-		 
+		 declaircount=entity.getDecles().size();
 		 detachfiles=entity.getFiles();
+		 views=entity.getViews();
 	}
 	
 }

@@ -21,5 +21,6 @@ public class UserDto {
 	
 	private String regdate;
 	
+
 	
 }

@@ -1,7 +1,9 @@
 package com.example.firstproject.configure.websocket;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
@@ -11,19 +13,24 @@ import com.example.firstproject.Handler.Websocket.ChatHandler;
 
 import lombok.RequiredArgsConstructor;
 
+@Profile("!test")
 @RequiredArgsConstructor
 @EnableWebSocket
 @Configuration
 public class WebSocketConfig implements WebSocketConfigurer{
 	//웹소캣 콘피그 인터페이스적용
 	private final ChatHandler chathandler;
+
+	//Stompconfig 와 같은 이유로 "*" 를 걷어낸다.
+	@Value("${app.cors.allowed-origins}")
+	private String[] allowedorigins;
 	//근데 이것만이용하면 채팅방은하나뿐 stomp활용해야함
 	@Override   
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 		// TODO Auto-generated method stub
 		
 		//사용할 핸들러랑 주소 cors허용주소설정 스톰프사용안하면 핸들러를구현해야함 ㅇㅇ
-	registry.addHandler(chathandler,"open/ws").setAllowedOrigins("*").withSockJS();
+	registry.addHandler(chathandler,"open/ws").setAllowedOriginPatterns(allowedorigins).withSockJS();
 	}
 
 	//이거해줘야 적용이되더라 

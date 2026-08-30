@@ -21,7 +21,7 @@ import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
 import com.example.firstproject.Entity.Notification;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import javax.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,7 +34,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberRoom {
+public class MemberRoom extends BaseTime{
 
 	//중간테이블 manytomnay가 자동으로 만들어주긴하지만 실제론 여기서 필요한 메소드가 있을수도있기때문에 직접만들어야함 ex)업데이트시간같은ㅌ거
 	@Id
@@ -44,6 +44,9 @@ public class MemberRoom {
 	private String membernickname;
 	
 	private String roomname;
+	//낙관적락용
+	@Version
+	private Long Version;
 	
 	@ManyToOne
 	//@Cascade(CascadeType.PERSIST)

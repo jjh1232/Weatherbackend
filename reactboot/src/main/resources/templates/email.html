@@ -1,25 +1,117 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<!--
+  가입 이메일 인증 메일.
+  메일 클라이언트(특히 아웃룩)는 flex/grid/svg/외부 CSS 를 못 읽는다.
+  그래서 표 기반 레이아웃 + 인라인 스타일로만 짠다. 웹 화면 규칙과 다른 세계다.
+  색은 서비스 토큰과 같은 값을 손으로 적어 둔 것이다(테마 파일을 참조할 수 없다).
+-->
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Weave 이메일 인증</title>
+</head>
+<body style="margin:0; padding:0; background:#eef1f6;">
 
-<body>
-<div style="margin:100px;">
-    <h1> 안녕하세요.</h1>
-    <h1> 이메일인증코드입니다.</h1>
-    <br>
-    <p> 아래의 인증완료를 클릭하면 회원가입이완료됩니다!</p>
-    <br>
-
-    <div align="center" style="border:1px solid black; font-family:verdana;">
-        <h3 style="color:blue"> 회원가입 인증 링크 입니다. </h3>
-        <div style="font-size:130%">
-       
-        <a th:href="@{http://localhost:8081/open/member/register(username=
-        ${username},authokey=${code})}"> 
-        인증완료</a>
-         </div>
-    </div>
-    <br/>
+<!-- 받은편지함 목록에서 제목 옆에 보이는 미리보기 문구. 화면에는 안 보인다. -->
+<div style="display:none; max-height:0; overflow:hidden; opacity:0; color:transparent;">
+    아래 버튼을 누르면 Weave 가입이 완료됩니다.
 </div>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="background:#eef1f6; padding:32px 12px;">
+<tr>
+<td align="center">
+
+    <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"
+           style="width:100%; max-width:600px; background:#ffffff; border:1px solid #e2e8f0;
+                  border-radius:16px; overflow:hidden;
+                  font-family:'Apple SD Gothic Neo','Malgun Gothic','맑은 고딕',sans-serif;">
+
+        <!-- 헤더 -->
+        <tr>
+            <td style="background:#2f7fe0; padding:20px 28px;">
+                <span style="font-size:20px; font-weight:800; color:#ffffff; letter-spacing:-0.5px;">Weave</span>
+                <span style="font-size:12px; color:#cfe3fa; padding-left:8px;">오늘의 하늘을 나누다</span>
+            </td>
+        </tr>
+
+        <!-- 본문 -->
+        <tr>
+            <td style="padding:34px 28px 0;">
+                <p style="margin:0 0 6px; font-size:20px; font-weight:700; color:#12181f; letter-spacing:-0.5px;">
+                    이메일을 인증해 주세요
+                </p>
+                <p style="margin:0 0 22px; font-size:14px; line-height:1.7; color:#5b6672;">
+                    <strong th:text="${username}" style="color:#12181f;">이메일</strong> 로 Weave 가입을 요청하셨습니다.<br/>
+                    아래 버튼을 누르면 가입이 완료되고 바로 로그인하실 수 있습니다.
+                </p>
+            </td>
+        </tr>
+
+        <!-- 인증 버튼 -->
+        <tr>
+            <td align="center" style="padding:6px 28px 24px;">
+                <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td align="center" bgcolor="#2f7fe0" style="border-radius:999px;">
+                            <a th:href="${verifyurl}"
+                               style="display:inline-block; padding:14px 34px; font-size:15px; font-weight:700;
+                                      color:#ffffff; text-decoration:none; border-radius:999px;">
+                                이메일 인증하고 가입 완료하기
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <!-- 버튼이 안 눌리는 클라이언트를 위한 대비. 메일에서는 이 안내가 꼭 필요하다. -->
+        <tr>
+            <td style="padding:0 28px 26px;">
+                <p style="margin:0 0 6px; font-size:12px; color:#8b95a1;">
+                    버튼이 눌리지 않으면 아래 주소를 복사해 브라우저에 붙여넣어 주세요.
+                </p>
+                <p style="margin:0; font-size:12px; line-height:1.6; word-break:break-all;">
+                    <a th:href="${verifyurl}" th:text="${verifyurl}"
+                       style="color:#2f7fe0; text-decoration:underline;">인증 주소</a>
+                </p>
+            </td>
+        </tr>
+
+        <!-- 안내 -->
+        <tr>
+            <td style="padding:0 28px 30px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+                       style="background:#f5f7fb; border:1px solid #e2e8f0; border-radius:12px;">
+                    <tr>
+                        <td style="padding:14px 16px; font-size:12.5px; line-height:1.7; color:#5b6672;">
+                            인증을 마치기 전까지는 로그인할 수 없습니다.<br/>
+                            <strong style="color:#12181f;">본인이 요청하지 않으셨다면</strong> 이 메일을 무시해 주세요.
+                            인증하지 않으면 계정은 활성화되지 않습니다.
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <!-- 푸터 -->
+        <tr>
+            <td style="padding:18px 28px 22px; border-top:1px solid #e2e8f0; background:#fafbfd;">
+                <p style="margin:0 0 4px; font-size:11.5px; line-height:1.7; color:#8b95a1;">
+                    이 메일은 발신 전용입니다. 문의는
+                    <a th:href="'mailto:'+${contactemail}" th:text="${contactemail}"
+                       style="color:#2f7fe0; text-decoration:none;">문의 메일</a> 로 보내주세요.
+                </p>
+                <p style="margin:0; font-size:11.5px; color:#a9b3bf;">Weave · 날씨와 타임라인</p>
+            </td>
+        </tr>
+
+    </table>
+
+</td>
+</tr>
+</table>
 
 </body>
 </html>

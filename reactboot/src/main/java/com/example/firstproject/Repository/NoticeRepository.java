@@ -7,13 +7,18 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.example.firstproject.Dto.NoticeDetailDto;
 import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.NoticeDtointer;
+import com.example.firstproject.Dto.NoticeImageDto;
+import com.example.firstproject.Dto.TwitformnoticeDto;
 import com.example.firstproject.Dto.noticeDao;
+import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
 
 @Repository
@@ -48,24 +53,120 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 	
 	
 	//=====================================일단 eager이라도써서돌아가게============================================
-	//Page<NoticeEntity> findAll(Pageable pageable);
-	//jpa는on지원안한다고함
-	//@Query(value="select n.* from notice as n join member as m on m.id=n.member_id where n.text like %:text%",nativeQuery = true)
-	@Query(value="Select * from notice   where title like %:text%",nativeQuery=true)
-	Page<NoticeEntity> searchtitle(@Param("text") String text,Pageable pageable);
 	
+	@Query(value="select new com.example.firstproject.Dto.TwitformnoticeDto(" +
+		       "n.noticeid, " +
+		       "n.title, " +
+		       "m.username, " +
+		       "m.nickname, " +
+		       "m.profileimg, " +
+		       "n.red, "+
+		       "n.text,n.pty,n.rain,n.sky,n.temp,n.reh,n.wsd, " + //패이보릿카운트갯수
+		       "(select count(f) from FavoriteEntity f where f.notice.noticeid = n.noticeid), " +
+		       "case when :userid is not null and exists (" +
+		       "    select 1 from FavoriteEntity f2 where f2.notice.noticeid = n.noticeid and f2.member.id = :userid" +
+		       ") then true else false end, " +
+		       "case when :userid is not null and exists (" +
+		       "    select 1 from NoticeblockEntity b where b.noticeid = n.noticeid and b.member.id = :userid" +
+		       ") then true else false end, " +
+		       "n.views, " +
+		       "(select count(c) from CommentEntity c where c.notice.noticeid = n.noticeid), m.profileid" +
+		       ") " +
+		       "from notice n join n.member m",
+		       countQuery = "select count(n) from notice n join n.member m") //이거패키지이름인데 notice는 Entity네임을 notice로함
+	Page<TwitformnoticeDto> twitnoticelist(Long userid,Pageable pageable);
 	
-	//@Query(value="select n.* from notice n join fetch n.member m where m.id=n.member_id where n.text like %:text%")
-	@Query(value="Select * from notice   where text like %:text%",nativeQuery=true)
-	Page<NoticeEntity> searchtext(@Param("text") String text,Pageable pageable	);
+	@Query(value="select new com.example.firstproject.Dto.TwitformnoticeDto(" +
+		       "n.noticeid, " +
+		       "n.title, " +
+		       "m.username, " +
+		       "m.nickname, " +
+		       "m.profileimg, " +
+		       "n.red, "+
+		       "n.text,n.pty,n.rain,n.sky,n.temp,n.reh,n.wsd, " + //패이보릿카운트갯수
+		       "(select count(f) from FavoriteEntity f where f.notice.noticeid = n.noticeid), " +
+		       "case when :userid is not null and exists (" +
+		       "    select 1 from FavoriteEntity f2 where f2.notice.noticeid = n.noticeid and f2.member.id = :userid" +
+		       ") then true else false end, " +
+		       "case when :userid is not null and exists (" +
+		       "    select 1 from NoticeblockEntity b where b.noticeid = n.noticeid and b.member.id = :userid" +
+		       ") then true else false end, " +
+		       "n.views, " +
+		       "(select count(c) from CommentEntity c where c.notice.noticeid = n.noticeid), m.profileid" +
+		       ") " +
+		       "from notice n join n.member m " //콘캣이안전하대
+		       + "where n.title like concat('%',:text,'%')",
+		       countQuery = "select count(n) from notice n join n.member m where n.title like concat('%',:text,'%')")
+	Page<TwitformnoticeDto> searchtitle(@Param("text") String text,Long userid,Pageable pageable	);
 	
-	//@Query(value="select n.* from notice n join fetch n.member m where m.id=n.member_id where n.nickname like %:text%")
-	@Query(value="Select * from notice   where noticenick like %:text%",nativeQuery=true)
-	Page<NoticeEntity> searchname(@Param("text") String text,Pageable pageable	);
+	@Query(value="select new com.example.firstproject.Dto.TwitformnoticeDto(" +
+		       "n.noticeid, " +
+		       "n.title, " +
+		       "m.username, " +
+		       "m.nickname, " +
+		       "m.profileimg, " +
+		       "n.red, "+
+		       "n.text,n.pty,n.rain,n.sky,n.temp,n.reh,n.wsd, " + //패이보릿카운트갯수
+		       "(select count(f) from FavoriteEntity f where f.notice.noticeid = n.noticeid), " +
+		       "case when :userid is not null and exists (" +
+		       "    select 1 from FavoriteEntity f2 where f2.notice.noticeid = n.noticeid and f2.member.id = :userid" +
+		       ") then true else false end, " +
+		       "case when :userid is not null and exists (" +
+		       "    select 1 from NoticeblockEntity b where b.noticeid = n.noticeid and b.member.id = :userid" +
+		       ") then true else false end, " +
+		       "n.views, " +
+		       "(select count(c) from CommentEntity c where c.notice.noticeid = n.noticeid), m.profileid" +
+		       ") " +
+		       "from notice n join n.member m " //콘캣이안전하대
+		       + "where n.text like concat('%',:text,'%')",
+		       countQuery = "select count(n) from notice n join n.member m where n.text like concat('%',:text,'%')")
+	Page<TwitformnoticeDto> searchtext(@Param("text") String text,Long userid,Pageable pageable	);
 	
-	//@Query(value="select n.* from notice n join fetch n.member m where m.id=n.member_id where n.title like %:text% or text like %:text%")
-	@Query(value="Select * from notice where text like %:text% or title like %:text% ",nativeQuery=true)
-	Page<NoticeEntity> searchtitletext(@Param("text") String text,Pageable pageable);
+	@Query(value="select new com.example.firstproject.Dto.TwitformnoticeDto(" +
+		       "n.noticeid, " +
+		       "n.title, " +
+		       "m.username, " +
+		       "m.nickname, " +
+		       "m.profileimg, " +
+		       "n.red, "+
+		       "n.text,n.pty,n.rain,n.sky,n.temp,n.reh,n.wsd, " + //패이보릿카운트갯수
+		       "(select count(f) from FavoriteEntity f where f.notice.noticeid = n.noticeid), " +
+		       "case when :userid is not null and exists (" +
+		       "    select 1 from FavoriteEntity f2 where f2.notice.noticeid = n.noticeid and f2.member.id = :userid" +
+		       ") then true else false end, " +
+		       "case when :userid is not null and exists (" +
+		       "    select 1 from NoticeblockEntity b where b.noticeid = n.noticeid and b.member.id = :userid" +
+		       ") then true else false end, " +
+		       "n.views, " +
+		       "(select count(c) from CommentEntity c where c.notice.noticeid = n.noticeid), m.profileid" +
+		       ") " +
+		       "from notice n join n.member m " //콘캣이안전하대
+		       + "where n.noticenick like concat('%',:text,'%')",
+		       countQuery = "select count(n) from notice n join n.member m where n.noticenick like concat('%',:text,'%')")
+	Page<TwitformnoticeDto> searchname(@Param("text") String text,Long userid,Pageable pageable	);
+	
+	@Query(value="select new com.example.firstproject.Dto.TwitformnoticeDto(" +
+		       "n.noticeid, " +
+		       "n.title, " +
+		       "m.username, " +
+		       "m.nickname, " +
+		       "m.profileimg, " +
+		       "n.red, "+
+		       "n.text,n.pty,n.rain,n.sky,n.temp,n.reh,n.wsd, " + //패이보릿카운트갯수
+		       "(select count(f) from FavoriteEntity f where f.notice.noticeid = n.noticeid), " +
+		       "case when :userid is not null and exists (" +
+		       "    select 1 from FavoriteEntity f2 where f2.notice.noticeid = n.noticeid and f2.member.id = :userid" +
+		       ") then true else false end, " +
+		       "case when :userid is not null and exists (" +
+		       "    select 1 from NoticeblockEntity b where b.noticeid = n.noticeid and b.member.id = :userid" +
+		       ") then true else false end, " +
+		       "n.views, " +
+		       "(select count(c) from CommentEntity c where c.notice.noticeid = n.noticeid), m.profileid" +
+		       ") " +
+		       "from notice n join n.member m " //콘캣이안전하대
+		       + "where n.title like concat('%',:text,'%') or n.text like concat('%',:text,'%')",
+		       countQuery = "select count(n) from notice n join n.member m where n.title like concat('%',:text,'%') or n.text like concat('%',:text,'%')")
+	Page<TwitformnoticeDto> searchtitletext(@Param("text") String text,Long userid,Pageable pageable);
 	
 	//@Query(value="select n.* from notice n join fetch n.member m where m.id=n.member_id where n.nickname like %:text%")
 	@Query(value="Select * from notice  where noticenick like %:text%",nativeQuery=true)
@@ -74,4 +175,319 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long>{
 	
 	@Query(value="select n from notice n where n.member.id=:userid")
 	Page<NoticeEntity> findbyidall(Long userid, Pageable page);
+	
+	Page<NoticeEntity> findByMember(MemberEntity member,Pageable page);
+	
+	//====================== 좋아요한 글 목록 (DTO 프로덕션) ==========================
+	// 아래 엔티티 fetch 버전은 NoticeDto 로 매핑하면서 lazy 컬렉션(files)을 그대로 담았고,
+	// open-in-view:false 라 컨트롤러에서 JSON 으로 굽는 순간 LazyInitializationException 이 났다.
+	// 게다가 NoticeDto 는 메인 피드가 쓰는 TwitformnoticeDto 와 필드명이 달라서(num/id,
+	// likeusercheck/likely, isblock/blockcheck) 화면 컴포넌트가 값을 못 읽었다.
+	// 메인 피드(twitnoticelist)와 똑같은 모양으로 내려주도록 프로덕션 쿼리로 바꾼다.
+	String FAVORITE_SELECT =
+			"select new com.example.firstproject.Dto.TwitformnoticeDto(" +
+			"n.noticeid, " +
+			"n.title, " +
+			"m.username, " +
+			"m.nickname, " +
+			"m.profileimg, " +
+			"n.red, " +
+			"n.text,n.pty,n.rain,n.sky,n.temp,n.reh,n.wsd, " +
+			"(select count(f) from FavoriteEntity f where f.notice.noticeid = n.noticeid), " +
+			"case when :userid is not null and exists (" +
+			"    select 1 from FavoriteEntity f2 where f2.notice.noticeid = n.noticeid and f2.member.id = :userid" +
+			") then true else false end, " +
+			"case when :userid is not null and exists (" +
+			"    select 1 from NoticeblockEntity b where b.noticeid = n.noticeid and b.member.id = :userid" +
+			") then true else false end, " +
+			"n.views, " +
+			"(select count(c) from CommentEntity c where c.notice.noticeid = n.noticeid), m.profileid" +
+			") " +
+			"from notice n join n.member m join n.likeuser lf where lf.member.id = :userid ";
+
+	//───────────────────────────────────────────────────────────────
+	// 팔로잉 타임라인 — 내가 팔로우한 사람(tomember)들이 쓴 글만.
+	// 팔로워(나를 팔로우한 사람)가 아니라 "내가 고른 사람" 기준이다.
+	//───────────────────────────────────────────────────────────────
+	String FOLLOWING_WHERE =
+			" where m.id in (select f.tomember.id from FollowEntity f where f.frommember.id = :userid) ";
+
+	String FOLLOWING_SELECT =
+			"select new com.example.firstproject.Dto.TwitformnoticeDto(" +
+			"n.noticeid, " +
+			"n.title, " +
+			"m.username, " +
+			"m.nickname, " +
+			"m.profileimg, " +
+			"n.red, " +
+			"n.text,n.pty,n.rain,n.sky,n.temp,n.reh,n.wsd, " +
+			"(select count(f) from FavoriteEntity f where f.notice.noticeid = n.noticeid), " +
+			"case when :userid is not null and exists (" +
+			"    select 1 from FavoriteEntity f2 where f2.notice.noticeid = n.noticeid and f2.member.id = :userid" +
+			") then true else false end, " +
+			"case when :userid is not null and exists (" +
+			"    select 1 from NoticeblockEntity b where b.noticeid = n.noticeid and b.member.id = :userid" +
+			") then true else false end, " +
+			"n.views, " +
+			"(select count(c) from CommentEntity c where c.notice.noticeid = n.noticeid), m.profileid" +
+			") " +
+			"from notice n join n.member m " + FOLLOWING_WHERE;
+
+	String FOLLOWING_COUNT =
+			"select count(n) from notice n join n.member m " + FOLLOWING_WHERE;
+
+	@Query(value=FOLLOWING_SELECT, countQuery=FOLLOWING_COUNT)
+	Page<TwitformnoticeDto> twitfollowinglist(@Param("userid") Long userid, Pageable pageable);
+
+	String FAVORITE_COUNT =
+			"select count(n) from notice n join n.likeuser lf where lf.member.id = :userid ";
+
+	@Query(value=FAVORITE_SELECT, countQuery=FAVORITE_COUNT)
+	Page<TwitformnoticeDto> twitfavoritelist(@Param("userid") Long userid, Pageable pageable);
+
+	@Query(value=FAVORITE_SELECT+"and n.title like %:keyword%",
+			countQuery=FAVORITE_COUNT+"and n.title like %:keyword%")
+	Page<TwitformnoticeDto> twitfavoritetitle(@Param("userid") Long userid,@Param("keyword") String keyword,Pageable pageable);
+
+	@Query(value=FAVORITE_SELECT+"and n.text like %:keyword%",
+			countQuery=FAVORITE_COUNT+"and n.text like %:keyword%")
+	Page<TwitformnoticeDto> twitfavoritetext(@Param("userid") Long userid,@Param("keyword") String keyword,Pageable pageable);
+
+	@Query(value=FAVORITE_SELECT+"and (n.title like %:keyword% or n.text like %:keyword%)",
+			countQuery=FAVORITE_COUNT+"and (n.title like %:keyword% or n.text like %:keyword%)")
+	Page<TwitformnoticeDto> twitfavoritetitletext(@Param("userid") Long userid,@Param("keyword") String keyword,Pageable pageable);
+
+	@Query(value=FAVORITE_SELECT+"and n.noticenick like %:keyword%",
+			countQuery=FAVORITE_COUNT+"and n.noticenick like %:keyword%")
+	Page<TwitformnoticeDto> twitfavoritenick(@Param("userid") Long userid,@Param("keyword") String keyword,Pageable pageable);
+
+	//좋아요한게시글다이렉트 dto프로덕션이 젤좋은데 일단 fetch조인도사용해봄 이거 영속화해서 get시바로가져옴 근데 페이지객체랑쓰려면 
+	//카운트쿼리작성해야함 페치조인사용시 오류가많아서
+	@Query(value="select n from notice n JOIN FETCH n.member join n.likeuser f where f.member=:member",
+			countQuery="select count(n) from notice n join n.likeuser f where f.member=:member" )
+	Page<NoticeEntity> getfavoritenotice(MemberEntity member,Pageable page);
+	//검색메소드
+	@Query(value="select n from notice n JOIN FETCH n.member join n.likeuser f where f.member=:member "
+			+ "and (n.title like %:keyword%)",
+			countQuery="select count(n) from notice n join n.likeuser f where f.member = :member and (n.title like %:keyword%)" )	
+	Page<NoticeEntity> searchtitlefavoritenotice(MemberEntity member,Pageable page,@Param("keyword") String keyword);
+	
+	
+	@Query(value="select n from notice n JOIN FETCH n.member join n.likeuser f where f.member=:member "
+			+ "and (n.text like %:keyword%)",
+			countQuery="select count(n) from notice n join n.likeuser f where f.member=:member and (n.text like %:keyword%)" )
+	Page<NoticeEntity> searchtextfavoritenotice(MemberEntity member,Pageable page,@Param("keyword") String keyword);
+	
+	@Query(value="select n from notice n JOIN FETCH n.member join n.likeuser f where f.member=:member "
+			+ "and (n.title like %:keyword% or n.text like %:keyword%)",
+			countQuery="select count(n) from notice n join n.likeuser f where f.member=:member and (n.title like %:keyword% or n.text like %:keyword%)" )
+	Page<NoticeEntity> searchtitletextfavoritenotice(MemberEntity member,Pageable page,@Param("keyword") String keyword);
+	
+	@Query(value="select n from notice n JOIN FETCH n.member join n.likeuser f where f.member=:member "
+			+ "and (n.noticenick like %:keyword%)",
+			countQuery="select count(n) from notice n join n.likeuser f where f.member=:member and (n.noticenick like %:keyword%)" )
+	Page<NoticeEntity> searchnicknamefavoritenotice(MemberEntity member,Pageable page,@Param("keyword") String keyword);
+	//이미지 만 데려오는 코드 
+	/* jpql은 select절에 서브쿼리를못사용해서 불편
+	@Query(value="select new com.example.firstproject.Dto.NoticeImageDto("
+			+"n.id,n.title,m.username,m.nickname,m.profileimg,d.path,n.red, "
+			+ "(select count(f) from detachfile f where f.notice =n) "
+			+ ") "
+			+ "from notice n "
+			+ "join n.member m "
+			+ "join n.files d "
+			+ "where d.id=("
+			+ "select min(d2.id) from detachfile d2 where d2.notice = n"
+			+ ")"
+			)
+	Page<NoticeImageDto> findimagelist(Pageable page);
+*/
+	
+	@Query(value="select new com.example.firstproject.Dto.NoticeDetailDto(n.id,m.username,m.nickname,n.title,n.text,"
+			+ "n.temp,n.sky,n.pty,n.rain,n.reh,n.wsd,n.red,m.profileimg,n.views,"
+			+ "(select count(1) from FavoriteEntity f where f.notice =n)) "
+			+ "from notice n join n.member m "
+			+ "where n.id=:noticeid")
+	NoticeDetailDto findbyid(Long noticeid);
+	
+		//카운트는 *든 id든 null이아닌행만가져오기때문에 인덱스만 있으면성능차이x
+	//이거 카운트쿼리가 똑같이하면 성능이안좋아서 간단하게 작성했음 join이딱히필요없어서
+	@Query(value="select n.id,n.title,m.username,m.nickname,m.profileimg,d.path,n.red, "
+			+ "(select count(*) from detachfiles f where f.notice_id=n.id) AS file_count, "
+			+ "(select count(*) from favorite_entity l where l.noticeid=n.id) AS like_count,n.views "
+			+ "from notice n "
+			+ "join member m on n.member_id =m.id "
+			+ "join detachfiles d on n.id =d.notice_id "
+			+ "where d.id= (select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id)",
+			countQuery = "select count(*) from notice n join detachfiles d on n.id=d.notice_id "
+					+ "where d.id=(select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id)",
+			nativeQuery = true)
+	Page<Object[]> findimagelist(Pageable page);
+	
+	//제목검색
+	@Query(value="select n.id,n.title,m.username,m.nickname,m.profileimg,d.path,n.red, "
+			+ "(select count(*) from detachfiles f where f.notice_id=n.id) AS file_count, "
+			+ "(select count(*) from favorite_entity l where l.noticeid=n.id) AS like_count,n.views "
+			+ "from notice n "
+			+ "join member m on n.member_id =m.id "
+			+ "join detachfiles d on n.id =d.notice_id "
+			+ "where d.id= (select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
+			+ "and n.title like %:keyword%",
+			countQuery = "select count(*) from notice n join detachfiles d on n.id=d.notice_id "
+					+ "where d.id=(select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
+					+ "and n.title like %:keyword%",
+			nativeQuery = true)
+	Page<Object[]> findtitleimagelist(Pageable page,String keyword);
+	
+	@Query(value="select n.id,n.title,m.username,m.nickname,m.profileimg,d.path,n.red, "
+			+ "(select count(*) from detachfiles f where f.notice_id=n.id) AS file_count, "
+			+ "(select count(*) from favorite_entity l where l.noticeid=n.id) AS like_count,n.views "
+			+ "from notice n "
+			+ "join member m on n.member_id =m.id "
+			+ "join detachfiles d on n.id =d.notice_id "
+			+ "where d.id= (select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
+			+ "and n.text like %:keyword%",
+			countQuery = "select count(*) from notice n join detachfiles d on n.id=d.notice_id "
+					+ "where d.id=(select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
+					+ "and n.text like %:keyword%",
+			nativeQuery = true)
+	Page<Object[]> findtextimagelist(Pageable page,String keyword);
+	
+	@Query(value="select n.id,n.title,m.username,m.nickname,m.profileimg,d.path,n.red, "
+			+ "(select count(*) from detachfiles f where f.notice_id=n.id) AS file_count, "
+			+ "(select count(*) from favorite_entity l where l.noticeid=n.id) AS like_count,n.views "
+			+ "from notice n "
+			+ "join member m on n.member_id =m.id "
+			+ "join detachfiles d on n.id =d.notice_id "
+			+ "where d.id= (select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
+			+ "and n.noticenick like %:keyword%",
+			countQuery = "select count(*) from notice n join detachfiles d on n.id=d.notice_id "
+					+ "where d.id=(select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
+					+ "and n.noticenick like %:keyword%",
+			nativeQuery = true)
+	Page<Object[]> findnicknameimagelist(Pageable page,String keyword);
+	
+	@Query(value="select n.id,n.title,m.username,m.nickname,m.profileimg,d.path,n.red, "
+			+ "(select count(*) from detachfiles f where f.notice_id=n.id) AS file_count, "
+			+ "(select count(*) from favorite_entity l where l.noticeid=n.id) AS like_count,n.views "
+			+ "from notice n "
+			+ "join member m on n.member_id =m.id "
+			+ "join detachfiles d on n.id =d.notice_id "
+			+ "where d.id= (select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
+			+ "and n.title like %:keyword% or n.text like %:keyword%",
+			countQuery = "select count(*) from notice n join detachfiles d on n.id=d.notice_id "
+					+ "where d.id=(select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
+					+ "and n.title like %:keyword% or n.text like %:keyword%",
+			nativeQuery = true)
+	Page<Object[]> findtitletextimagelist(Pageable page,String keyword);
+	
+	//조회수증가 로직
+	//기본적으로 select쿼리만 작동되기때문에 modifying으로 update나insertdelete인걸인지시켜야함
+	//보통 제공되는 delete같은걸써서 몰랐음
+	@Modifying
+	@Query("Update notice n SET n.views =n.views+:views where n.noticeid=:noticeid")
+	void updateviewcount(Long noticeid,Long views);
+
+	@Query(value="select new com.example.firstproject.Dto.TwitformnoticeDto(" +
+		       "n.noticeid, " +
+		       "n.title, " +
+		       "m.username, " +
+		       "m.nickname, " +
+		       "m.profileimg, " +
+		       "n.red, "+
+		       "n.text,n.pty,n.rain,n.sky,n.temp,n.reh,n.wsd, " + //패이보릿카운트갯수
+		       "(select count(f) from FavoriteEntity f where f.notice.noticeid = n.noticeid), " +
+		       "case when :userid is not null and exists (" +
+		       "    select 1 from FavoriteEntity f2 where f2.notice.noticeid = n.noticeid and f2.member.id = :userid" +
+		       ") then true else false end, " +
+		       "case when :userid is not null and exists (" +
+		       "    select 1 from NoticeblockEntity b where b.noticeid = n.noticeid and b.member.id = :userid" +
+		       ") then true else false end, " +
+		       "n.views, " +
+		       "(select count(c) from CommentEntity c where c.notice.noticeid = n.noticeid), m.profileid" +
+		       ") " +
+		       "from notice n join n.member m where n.member.id=:searchuserid "
+		       + "and (:keyword is null or :keyword= '' or (:option='title' and n.title like %:keyword%) or (:option='content' and n.text like %:keyword%))",
+		       countQuery = "select count(n) from notice n join n.member m where n.member.id=:searchuserid"
+		       		+ " and (:userid is null or 1=1) "
+		       		+  " and (:keyword is null or :keyword= '' or (:option='title' and n.title like %:keyword%) or (:option='content' and n.text like %:keyword%))") //이거패키지이름인데 notice는 Entity네임을 notice로함
+	Page<TwitformnoticeDto> Userpagepost(@Param("searchuserid") Long searchuserid,@Param("userid") Long userid,Pageable pageable,String option,String keyword);
+	
+	@Query(value = "select new com.example.firstproject.Dto.TwitformnoticeDto(" +
+		    "n.noticeid, " +
+		    "n.title, " +
+		    "m.username, " +
+		    "m.nickname, " +
+		    "m.profileimg, " +
+		    "n.red, " +
+		    "n.text, n.pty, n.rain, n.sky, n.temp, n.reh, n.wsd, " +
+		    "count(f), " +
+		    "case when :userid is not null and exists (" +
+		    "    select 1 from FavoriteEntity f2 where f2.notice.noticeid = n.noticeid and f2.member.id = :userid" +
+		    ") then true else false end, " +
+		    "case when :userid is not null and exists (" +
+		    "    select 1 from NoticeblockEntity b where b.noticeid = n.noticeid and b.member.id = :userid" +
+		    ") then true else false end, " +
+		    "n.views, " +
+		    "(select count(c) from CommentEntity c where c.notice.noticeid = n.noticeid), m.profileid" +
+		    ") " +
+		    "from notice n " +
+		    "join n.member m " +
+		    "left join FavoriteEntity f on f.notice.noticeid = n.noticeid " +
+		    "where n.member.id = :searchuserid " +
+		    "and (:keyword is null or :keyword = '' or (:option = 'title' and n.title like %:keyword%) or (:option = 'content' and n.text like %:keyword%)) " +
+		    "group by n.noticeid, n.title, m.username, m.nickname, m.profileimg, n.red, n.text, n.pty, n.rain, n.sky, n.temp, n.reh, n.wsd, n.views " +
+		    "order by count(f) desc, n.red desc",
+		    countQuery = "select count(distinct n) from notice n join n.member m where n.member.id = :searchuserid " +
+		    "and (:userid is null or 1=1) and (:keyword is null or :keyword = '' or (:option = 'title' and n.title like %:keyword%) or (:option = 'content' and n.text like %:keyword%))")
+		Page<TwitformnoticeDto> Userpagehighlightpost(@Param("searchuserid") Long searchuserid, @Param("userid") Long userid, Pageable pageable, String option, String keyword);
+	
+	//유저페이지 이미지리스트
+	@Query(value="select n.id,n.title,m.username,m.nickname,m.profileimg,d.path,n.red, "
+			+ "(select count(*) from detachfiles f where f.notice_id=n.id) AS file_count, "
+			+ "(select count(*) from favorite_entity l where l.noticeid=n.id) AS like_count,n.views "
+			+ "from notice n "
+			+ "join member m on n.member_id =m.id "
+			+ "join detachfiles d on n.id =d.notice_id "
+			+ "where d.id= (select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
+			+ "and n.member_id = :userid ",		
+			countQuery = "select count(*) from notice n join detachfiles d on n.id=d.notice_id "
+					+ "where d.id=(select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
+					+ "and n.member_id=:userid",
+			nativeQuery = true)
+	Page<Object[]> userpageimagelist(@Param("userid") Long userid ,Pageable page);
+
+	//jpql은 객체지향형쿼리라 가능하지만 네이티브쿼리는 title등이 대체가안됨..그래서따로만들래
+	@Query(value="select n.id,n.title,m.username,m.nickname,m.profileimg,d.path,n.red, "
+			+ "(select count(*) from detachfiles f where f.notice_id=n.id) AS file_count, "
+			+ "(select count(*) from favorite_entity l where l.noticeid=n.id) AS like_count,n.views "
+			+ "from notice n "
+			+ "join member m on n.member_id =m.id "
+			+ "join detachfiles d on n.id =d.notice_id "
+			+ "where d.id= (select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
+			+ "and n.member_id = :userid "
+			+ "and n.title like CONCAT('%', :keyword, '%')",		
+			countQuery = "select count(*) from notice n join detachfiles d on n.id=d.notice_id "
+					+ "where d.id=(select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
+					+ "and n.member_id=:userid "
+					+ "and n.title like CONCAT('%', :keyword, '%')",
+			nativeQuery = true)
+	Page<Object[]> userpagesearchtitleimagelist(@Param("userid") Long userid ,@Param("keyword") String keyword,Pageable page);
+
+	@Query(value="select n.id,n.title,m.username,m.nickname,m.profileimg,d.path,n.red, "
+			+ "(select count(*) from detachfiles f where f.notice_id=n.id) AS file_count, "
+			+ "(select count(*) from favorite_entity l where l.noticeid=n.id) AS like_count,n.views "
+			+ "from notice n "
+			+ "join member m on n.member_id =m.id "
+			+ "join detachfiles d on n.id =d.notice_id "
+			+ "where d.id= (select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
+			+ "and n.member_id = :userid "
+			+ "and n.text like CONCAT('%', :keyword, '%')",		
+			countQuery = "select count(*) from notice n join detachfiles d on n.id=d.notice_id "
+					+ "where d.id=(select MIN(d2.id) from detachfiles d2 where d2.notice_id=n.id) "
+					+ "and n.member_id=:userid "
+					+ "and n.text like CONCAT('%', :keyword, '%')",
+			nativeQuery = true)
+	Page<Object[]> userpagesearchtextimagelist(@Param("userid") Long userid ,@Param("keyword") String keyword,Pageable page);
+
 }

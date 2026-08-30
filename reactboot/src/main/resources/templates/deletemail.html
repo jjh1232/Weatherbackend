@@ -1,21 +1,118 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<!--
+  회원 탈퇴 확인 코드 메일.
+  되돌릴 수 없는 동작이라, 무엇이 사라지는지 먼저 알려주고 코드를 준다.
+  (지워지는 범위는 개인정보 처리방침의 "보유 및 이용 기간" 항목과 같은 내용이어야 한다)
+-->
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Weave 탈퇴 확인 코드</title>
+</head>
+<body style="margin:0; padding:0; background:#eef1f6;">
 
-<body>
-<div style="margin:100px;">
-    <h1> 안녕하세요.</h1>
-    <h1 th:text="${username}"></h1>
-    <h1>님이 요청한 삭제코드입니다!</h1>
-    <br>
-    <p> 삭제코드를 입력해주세요!</p>
-    <br>
-
-    <div align="center" style="border:1px solid black; font-family:verdana;">
-        <h3 style="color:blue"> 삭제코드 </h3>
-        <div style="font-size:130%" th:text="${code}"> </div>
-    </div>
-    <br/>
+<div style="display:none; max-height:0; overflow:hidden; opacity:0; color:transparent;">
+    탈퇴를 마치려면 아래 확인 코드를 입력해 주세요.
 </div>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="background:#eef1f6; padding:32px 12px;">
+<tr>
+<td align="center">
+
+    <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"
+           style="width:100%; max-width:600px; background:#ffffff; border:1px solid #e2e8f0;
+                  border-radius:16px; overflow:hidden;
+                  font-family:'Apple SD Gothic Neo','Malgun Gothic','맑은 고딕',sans-serif;">
+
+        <!-- 헤더 -->
+        <tr>
+            <td style="background:#2f7fe0; padding:20px 28px;">
+                <span style="font-size:20px; font-weight:800; color:#ffffff; letter-spacing:-0.5px;">Weave</span>
+                <span style="font-size:12px; color:#cfe3fa; padding-left:8px;">오늘의 하늘을 나누다</span>
+            </td>
+        </tr>
+
+        <!-- 본문 -->
+        <tr>
+            <td style="padding:34px 28px 0;">
+                <p style="margin:0 0 6px; font-size:20px; font-weight:700; color:#12181f; letter-spacing:-0.5px;">
+                    정말 떠나시는 건가요?
+                </p>
+                <p style="margin:0 0 20px; font-size:14px; line-height:1.7; color:#5b6672;">
+                    <strong th:text="${username}" style="color:#12181f;">이메일</strong> 계정의 탈퇴가 요청되었습니다.<br/>
+                    탈퇴 화면에 아래 확인 코드를 입력하시면 절차가 마무리됩니다.
+                </p>
+            </td>
+        </tr>
+
+        <!-- 코드 -->
+        <tr>
+            <td style="padding:0 28px 22px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+                       style="background:#f5f7fb; border:1px solid #e2e8f0; border-radius:12px;">
+                    <tr>
+                        <td align="center" style="padding:22px 16px;">
+                            <div style="font-size:11px; letter-spacing:1.5px; color:#8b95a1; padding-bottom:10px;">
+                                탈퇴 확인 코드
+                            </div>
+                            <div th:text="${code}"
+                                 style="font-family:Consolas,Menlo,'Courier New',monospace; font-size:26px;
+                                        font-weight:700; letter-spacing:4px; color:#12181f;">CODE0000</div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <!-- 무엇이 사라지는지 -->
+        <tr>
+            <td style="padding:0 28px 24px;">
+                <p style="margin:0 0 8px; font-size:13px; font-weight:700; color:#12181f;">탈퇴하면 이렇게 됩니다</p>
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+                       style="font-size:12.5px; line-height:1.7; color:#5b6672;">
+                    <tr><td style="padding:2px 0;">· 계정 정보(이메일 · 닉네임 · 프로필 · 지역)가 삭제됩니다</td></tr>
+                    <tr><td style="padding:2px 0;">· 팔로우 관계와 좋아요 기록이 사라집니다</td></tr>
+                    <tr><td style="padding:2px 0;">· 작성하신 글과 댓글은 대화 맥락 때문에 작성자 정보를 지운 채 남을 수 있습니다</td></tr>
+                    <tr><td style="padding:2px 0;">· <strong style="color:#12181f;">되돌릴 수 없습니다.</strong> 같은 이메일로 다시 가입하셔도 예전 기록은 복구되지 않습니다</td></tr>
+                </table>
+            </td>
+        </tr>
+
+        <!-- 본인이 아닐 때 -->
+        <tr>
+            <td style="padding:0 28px 30px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+                       style="background:#fff4f5; border:1px solid #f2c2c8; border-radius:12px;">
+                    <tr>
+                        <td style="padding:14px 16px; font-size:12.5px; line-height:1.75; color:#5b6672;">
+                            <strong style="color:#d1435b;">탈퇴를 요청하지 않으셨다면 코드를 입력하지 마세요.</strong><br/>
+                            이 메일을 무시하시면 계정은 그대로 유지됩니다. 다만 누군가 로그인을 시도했을 수 있으니
+                            비밀번호를 바꿔 두시길 권합니다.
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <!-- 푸터 -->
+        <tr>
+            <td style="padding:18px 28px 22px; border-top:1px solid #e2e8f0; background:#fafbfd;">
+                <p style="margin:0 0 4px; font-size:11.5px; line-height:1.7; color:#8b95a1;">
+                    이 메일은 발신 전용입니다. 문의는
+                    <a th:href="'mailto:'+${contactemail}" th:text="${contactemail}"
+                       style="color:#2f7fe0; text-decoration:none;">문의 메일</a> 로 보내주세요.
+                </p>
+                <p style="margin:0; font-size:11.5px; color:#a9b3bf;">Weave · 날씨와 타임라인</p>
+            </td>
+        </tr>
+
+    </table>
+
+</td>
+</tr>
+</table>
 
 </body>
 </html>

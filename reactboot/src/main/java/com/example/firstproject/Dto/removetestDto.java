@@ -10,6 +10,7 @@ import lombok.Setter;
 public class removetestDto {
 
 	private Long id;
+	private Long idx;
 	
 	boolean test;
 	

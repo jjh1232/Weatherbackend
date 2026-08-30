@@ -1,7 +1,9 @@
 package com.example.firstproject.configure;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,6 +20,7 @@ import com.example.firstproject.Repository.MemberRepository;
 import com.example.firstproject.configure.auth.provider.Googleprovider;
 import com.example.firstproject.configure.auth.provider.Naverprovider;
 import com.example.firstproject.configure.auth.provider.Provider;
+
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -69,14 +72,31 @@ public class oauth2loginservice extends DefaultOAuth2UserService{
 		Optional<MemberEntity> opuser=repository.findByUsername(username);
 		MemberEntity entity=opuser.orElse(null);
 		if(entity==null) {
+			Map<String,Object> attrs=new HashMap<>(user.getAttributes());
+			//임시객체생성
+			
+		
+			
 			System.out.println("새로가입하니다");
 			String name=oauth2user.getname();
 			String nickname=oauth2user.getnickname();
-			String password=encode.encode("asdasdwekjer234325325");
-			String role="ROLE_User";
+			//소셜 가입자는 이 비밀번호로 로그인하지 않는다(PrincipalService에서 폼로그인을 막는다).
+			//그래도 계정마다 다른 값을 넣어둬야, 혹시 폼로그인 차단이 뚫리더라도
+			//하나가 털렸을때 나머지 계정까지 같이 열리는 일이 없다.
+			String password=encode.encode(UUID.randomUUID().toString());
+			String role="ROLE_TEMP";
 			String provider=oauth2user.provider();
 			String providerid=oauth2user.prividerid();
 			String auth="Y";
+			//프로필아이디생성
+			String base=oauth2user.getname().split("@")[0];
+			String profileid=base;
+			int suffix=1;
+			while(repository.existsByProfileid(profileid)) {
+				profileid=base+suffix;
+				suffix++;
+				
+			}
 			//디폴트값이안들어가서직접
 			Address address=Address.builder().juso("서울특별시  종로구  청운효자동").gridx("60").gridy("127")
 					.build();
@@ -90,9 +110,11 @@ public class oauth2loginservice extends DefaultOAuth2UserService{
 					.homeaddress(address)
 					.provider(provider)
 					.providerid(providerid)
+					.profileid(profileid)
 					.build();
-			System.out.println("유저엔티티작성완료"+entity);
+			
 			repository.save(entity);
+		
 		}else {
 			System.out.println("기존에아이디가존재하는회원입니다"); 
 			if(entity.getProvider().equals("mypage")) {

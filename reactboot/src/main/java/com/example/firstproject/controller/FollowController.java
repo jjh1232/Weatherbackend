@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.firstproject.Dto.MemberDto;
-import com.example.firstproject.Dto.follow.FollowDto;
+
+import com.example.firstproject.Dto.follow.FollowerDto;
 import com.example.firstproject.Dto.follow.findDto;
 import com.example.firstproject.Dto.follow.followlistDto;
 import com.example.firstproject.Entity.MemberEntity;
@@ -48,35 +49,18 @@ public class FollowController {
 		
 		return ResponseEntity.ok().build();
 	}
-	
-	//팔로잉조회
-	@GetMapping("/followlist")
-	@Logoutano 
-	public ResponseEntity followlist(Authentication authentication) {
-		log.info("팔로우리스트");
-		MemberEntity member=memberservice.findemail(authentication.getName()).orElseThrow();
-		List<followlistDto> listname=new ArrayList<>();
-		for (FollowEntity entity:member.getFollowings()){
-			System.out.println(entity.getTomember().getUsername());
-			followlistDto listdto=followlistDto.builder()
-					.username(entity.getTomember().getUsername())
-					.nickname(entity.getTomember().getNickname())
-					.favorite(entity.isFavorite())
-					.build();
-			listname.add(listdto);
-			log.info("즐겨찾기여부:"+listdto.isFavorite());
-		}
-		return ResponseEntity.ok(listname);
-	}
-	//팔로워조회 내가당한거팔로우 목록도 필요함
-	@GetMapping("/followerlist")
-	@Logoutano 
-	public ResponseEntity followerlist(Authentication authentication) {
-		log.info("팔로워리스트");
-		PrincipalDetails member=(PrincipalDetails) authentication.getPrincipal();
+	//이거 아이디로 하기
+	@PostMapping("/follow/{followid}")
+	public ResponseEntity followid(Authentication authentication,@PathVariable Long followid) throws Exception {
+		log.info("인증유저겟네임:"+authentication.getName());
 		
-		List<FollowDto> nicklist=followservice.followerfind(member.getMember().getId());
-				return ResponseEntity.ok(nicklist);
+		MemberEntity frommember=memberservice.findemail(authentication.getName()).orElseThrow();		
+		
+		MemberEntity tomember=memberservice.findbyid(followid);
+		
+		followservice.follow(frommember,tomember);
+		
+		return ResponseEntity.ok().build();
 	}
 	//팔로우취소
 	
@@ -89,9 +73,43 @@ public class FollowController {
 		
 		followservice.followdelete(frommember, tomember);
 		
-		return null;
+		return ResponseEntity.ok("팔로우해제");
 		
 	}
+	@DeleteMapping("/follow/delete/{followid}")
+	public ResponseEntity deletefollow(Authentication authentication,@PathVariable Long followid) {
+		log.info("팔로우삭제");
+		MemberEntity frommember=memberservice.findemail(authentication.getName()).orElseThrow();		
+		
+		MemberEntity tomember=memberservice.findbyid(followid);
+		
+		followservice.followdelete(frommember, tomember);
+		
+		return ResponseEntity.ok("팔로우해제");
+		
+	}
+	
+	//팔로잉조회
+	@GetMapping("/followlist")
+	@Logoutano 
+	public ResponseEntity followlist(Authentication authentication) {
+		log.info("팔로우리스트");
+		PrincipalDetails member=(PrincipalDetails) authentication.getPrincipal();
+		List<followlistDto> listname=followservice.followlistfind(member.getMember().getId());
+		
+		return ResponseEntity.ok(listname);
+	}
+	//팔로워조회 내가당한거팔로우 목록도 필요함
+	@GetMapping("/followerlist")
+	@Logoutano 
+	public ResponseEntity followerlist(Authentication authentication) {
+		log.info("팔로워리스트");
+		PrincipalDetails member=(PrincipalDetails) authentication.getPrincipal();
+		
+		List<FollowerDto> nicklist=followservice.followerfind(member.getMember().getId());
+				return ResponseEntity.ok(nicklist);
+	}
+
 	
 	@GetMapping("/open/usersearch")
 	@Logoutano 
@@ -108,7 +126,7 @@ public class FollowController {
 		return ResponseEntity.ok().body(list);
 		}
 	}
-	//개인팔로우여부 체크
+	//개인팔로우여부 체크 이거..음..
 	@GetMapping("/followcheck")
 	@Logoutano 
 	public ResponseEntity followcheck(Authentication authentication,@RequestParam String friendname) {
@@ -120,6 +138,19 @@ public class FollowController {
 		
 		return ResponseEntity.ok().body(followcheck);
 	}
+	//위는 파인드바이써야해서 별로같아서 유저아이디 내리고 그걸로하게수정
+	@GetMapping("/followchecktwo/{followid}")
+	public ResponseEntity followchecktwo(Authentication authentication,@PathVariable Long followid) {
+		PrincipalDetails my=(PrincipalDetails) authentication.getPrincipal();
+		Long myid=my.getid();
+		
+		boolean followcheck=followservice.flowchecktwo(myid, followid);
+		
+		return ResponseEntity.ok().body(followcheck);
+		
+		
+	}
+	
 	
 		//팔로우 즐겨찾기 기능!
 	@GetMapping("/favoritefollow/{friendname}")
@@ -160,7 +191,23 @@ public class FollowController {
 	}
 						
 			
+	//메뉴판에 한번에 데이터받는게효율이좋을거같아서 만듬
+	@GetMapping("/usermenudata")
+	@Logoutano 
+	public ResponseEntity noticemenucheck(Authentication authentication,
+			@RequestParam String friendname,
+			@RequestParam Long noticeid
+			) {
+		MemberEntity frommember=memberservice.findemail(authentication.getName()).orElseThrow();		
 		
+		MemberEntity tomember=memberservice.findemail(friendname).orElseThrow();
+		
+		boolean followcheck=followservice.flowcheck(frommember, tomember);
+		
+		
+		
+		return null;
+	}
 		
 	
 }

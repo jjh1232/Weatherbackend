@@ -8,25 +8,36 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.firstproject.Dto.ChatDto.ChatResponseDto;
 import com.example.firstproject.Dto.ChatDto.ChatRoomDto;
+import com.example.firstproject.Dto.ChatDto.ChatdataDto;
+import com.example.firstproject.Dto.ChatDto.RoomlistDto;
 import com.example.firstproject.Dto.ChatDto.Roomuseradd;
 import com.example.firstproject.Dto.ChatDto.roomlistresponseDto;
+import com.example.firstproject.Dto.ChatDto.Roomdata.ChangeRoomnameDto;
+import com.example.firstproject.Dto.ChatDto.Roomdata.MeseageDto;
+import com.example.firstproject.Dto.ChatDto.Roomdata.Roomdata;
+import com.example.firstproject.Dto.ChatDto.Roomdata.Roomdatainfo;
+import com.example.firstproject.Dto.ChatDto.Roomdata.Roominfo;
+import com.example.firstproject.Dto.ChatDto.Roomdata.RoommetaInfo;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.StompRoom.MemberRoom;
 import com.example.firstproject.Entity.StompRoom.Room;
 import com.example.firstproject.Entity.StompRoom.chatmessage;
 import com.example.firstproject.Repository.MemberRepository;
+import com.example.firstproject.Repository.roomrepo.MemberRoomRepository;
 import com.example.firstproject.Service.Memberservice.MemberService;
 import com.example.firstproject.Service.chatService.ChatService;
 import com.example.firstproject.aop.Logoutano;
@@ -39,11 +50,15 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
+@Profile("!test")
 public class ChatMemberController {
 
 	private final MemberRepository memberrepository;
 	
 	private final ChatService chatservice;
+	
+	
+
 	//채팅방 만들기 
 	@PostMapping("/createchatroom")
 	public Long createchatroom(Authentication authentication,@RequestBody ChatRoomDto dto) {//참여자리스트랑 채팅방이름 없으면 기본으로 유저아이디
@@ -72,16 +87,46 @@ public class ChatMemberController {
 		return roomid;
 		
 	}
-	//유저의채팅방목록검색 
+	//챗룸 컨트롤러 
+	@GetMapping("/findchatroominfo")
+	@Logoutano
+	public List<Roomdatainfo> chatroomlistinfos(Authentication authentication){
+		PrincipalDetails member=(PrincipalDetails) authentication.getPrincipal();
+		Long memberid=member.getMember().getId();
+		
+		List<Roomdatainfo> result=chatservice.chatlistinfo(memberid);
+		
+		
+		return result;
+		
+	}
+	//이거 아이디가 여러개일수있어서 이런경우 기능우선으로 레스트풀에서 벗어나지만 봐준다고함
+	@PostMapping("/findchatroommeta")
+	@Logoutano
+	public List<RoommetaInfo> chatroommetas(Authentication authentication,@RequestBody List<Long> roomids){
+		System.out.println("파인드루ㅁ챗메타");
+		PrincipalDetails member=(PrincipalDetails) authentication.getPrincipal();
+		Long memberid=member.getMember().getId();
+		
+		List<RoommetaInfo> result=chatservice.chatlistsub(memberid, roomids);
+		
+		
+		return result;
+	}
+	//유저의채팅방목록검색  이거아마곧삭제
+	//안써요===============================================================
 	@GetMapping("/findchatroomlist")
 	@Logoutano 
-	public List<roomlistresponseDto> findchatroom(Authentication userdata) {
+	public List<RoomlistDto> findchatroom(Authentication userdata) {
 		log.info("유저데이터:"+userdata.getName());
 		log.info("유저디테일"+userdata.getPrincipal());
 		PrincipalDetails member=(PrincipalDetails) userdata.getPrincipal();
 		Long memberid=member.getMember().getId();
 		
+		
 		MemberEntity members=memberrepository.findById(memberid).orElseThrow();
+		/* 기존코드
+		long beforetime=System.currentTimeMillis();
 		
 		List<roomlistresponseDto> userroomlist=new ArrayList<>(); //리턴할 데이터형식
 		
@@ -105,29 +150,84 @@ public class ChatMemberController {
 			
 			
 		}
+		long aftertime=System.currentTimeMillis();
+		long finaltime=(aftertime-beforetime);
+		System.out.println("기존에 jpa로가져오는시간:"+finaltime);
+		
 		//람다함수로 
 		//Collections.sort(userroomlist,(a,b)->b.getTime()-a.getTime());
 			//내림차순 정렬!
 		userroomlist.sort(Comparator.comparing(roomlistresponseDto::getTime).reversed());
 		
+		*/
+		long beforetime2=System.currentTimeMillis();
+		List<RoomlistDto> memberRooms=chatservice.findmemberlist(memberid);
+		
+		
+		memberRooms.sort(Comparator.comparing(RoomlistDto::getLastchatred).reversed());
+		long aftertime2=System.currentTimeMillis();
+		long finaltime2=(aftertime2-beforetime2);
+		System.out.println("조인으로 jpa로가져오는시간:"+finaltime2);
+		
+		/* 얘가 더빠르긴하다
+		List<MemberRoom> roomlist2=chatservice.findbyuserchatroom(memberid);
+		List<roomlistresponseDto> userroomlist2=new ArrayList<>(); //리턴할 데이터형식
+		for(MemberRoom list:roomlist2) {
+			Room roomdata=list.getRoom();
+			log.info("룸데이터:"+roomdata);
+			log.info("룸데이터접속리스트:"+roomdata.getUserlist());
+			List<chatmessage> chatdata=roomdata.getChatdata();
+			for(MemberRoom memberrooms:roomdata.getUserlist()) {
+				
+			}
+			chatmessage lately=chatdata.get(chatdata.size()-1);
+			
+			roomlistresponseDto dto = roomlistresponseDto.builder()
+					.roomid(roomdata.getId())
+					.roomname(roomdata.getRoomname())
+					.namelist(roomdata.getUserlist())
+					.time(roomdata.getUpdatedDate())
+					.latelychat(lately.getMessage())
+					.build();
+			
+			userroomlist2.add(dto);
+			
+			
+		}
+		*/
 		//스트림으로
 		// List<roomlistresponseDto> sortlist=userroomlist.stream().sorted((a,b)->b.getTime()-a.getTime())
 		//		.collect(Collectors.toList());
 		
-		return userroomlist;
+		return memberRooms;
 		}
 	
+	//채팅방디테일
 	@GetMapping("/chatroomdataget")
 	public ResponseEntity chatroomdata(@RequestParam Long roomid){
 		log.info("방데이터가죠오기");
+		/* 기존코드가 1초느리다
+		long start1=System.currentTimeMillis();
 		Room room=chatservice.findbychatroom(roomid);
 		roomlistresponseDto roomdata=chatservice.roomdataget(room);
 		//이것도 룸에서 바로가져와도될듯 
+		log.info("챗방데이터가져왔음");
+		log.info("채팅가져오기");
 		List<ChatResponseDto> beforechat=chatservice.getbeforechat(room);
+		log.info("채팅가져왔음");
 		Map<String,Object> data=new HashMap<>();
 		data.put("roomdata", roomdata);
 		data.put("beforechat",beforechat);
-		return ResponseEntity.ok().body(data);
+		long end1=System.currentTimeMillis();
+		long res1=end1-start1;
+		System.out.println("기존시간:"+res1);
+		*/
+		long start2=System.currentTimeMillis();
+		Roomdata newdata=chatservice.Roomdataget(roomid);
+		long end2=System.currentTimeMillis();
+		long res2=end2-start2;
+		System.out.println("기존시간2:"+res2);
+		return ResponseEntity.ok().body(newdata);
 	}
 	
 	//채팅방나가기 
@@ -145,7 +245,17 @@ public class ChatMemberController {
 		chatservice.roomuserexit(room, member);
 		return ResponseEntity.ok("성공적");
 	}
+	//채팅방 이름변경
+	@PutMapping("/changeroomname/{memberroomid}")
+	public ResponseEntity changeroonname(Authentication authentication
+			,@PathVariable Long memberroomid
+			,@RequestBody ChangeRoomnameDto dto) {
+			System.out.println("룸네임변경"+memberroomid+"새이름:"+dto.getRoomname());
+			MemberRoom memberroom=chatservice.roonnamechange(memberroomid, dto.getRoomname());
+		
 	
+		return ResponseEntity.ok(memberroom);
+	}
 	//채티방 멤버추가하기
 	@PostMapping("/chatroominvite")
 	public ResponseEntity chatmemberadd(@RequestBody Roomuseradd adddto) throws Exception {
@@ -163,5 +273,32 @@ public class ChatMemberController {
 		
 		return ResponseEntity.ok().body(dto);
 	}
+	//채팅방 정보 가져오기
+	@GetMapping("/chatroomdata/info/{roomid}")
+	public ResponseEntity<Roominfo> chatroomdetailinfo(@PathVariable Long roomid){
+		log.info("채팅방정보가져오기");
+		
+		long start2=System.currentTimeMillis();
+		Roominfo roominfo=chatservice.roominfoget(roomid);
+		long end2=System.currentTimeMillis();
+		long res2=end2-start2;
+		System.out.println("기존시간2:"+res2);
+		return ResponseEntity.ok(roominfo);
+	}
+	
+	
+	//채팅방 채팅 가져오기 
+	@GetMapping("/chatroomdata/chatdata/{roomid}")
+	public ResponseEntity<ChatdataDto> chatroomdetailchatdata(@PathVariable Long roomid,Authentication authenticcation){
+		log.info("채팅가져오기");
+		PrincipalDetails details=(PrincipalDetails) authenticcation.getPrincipal();
+		long start2=System.currentTimeMillis();
+		ChatdataDto newdata=chatservice.chatdataget(roomid,details.getid());
+		long end2=System.currentTimeMillis();
+		long res2=end2-start2;
+		System.out.println("기존시간2:"+res2);
+		return ResponseEntity.ok(newdata);
+	}
+	
 	
 }

@@ -10,8 +10,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.example.firstproject.Dto.NoticeDetailDto;
 import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.NoticeDtointer;
+import com.example.firstproject.Dto.NoticeImageDto;
+import com.example.firstproject.Dto.TwitformnoticeDto;
+import com.example.firstproject.Dto.Comment.CommentDto;
+import com.example.firstproject.Dto.Comment.Testcom;
 import com.example.firstproject.Entity.CommentEntity;
 import com.example.firstproject.Entity.FavoriteEntity;
 import com.example.firstproject.Entity.MemberEntity;
@@ -40,13 +45,43 @@ public class NoticeHandlerImpl implements NoticeHandler{
 	
 	private final LikeRepository likerepository;
 		
-	@Override
-	public Page<NoticeEntity> read(Pageable page) {
-		System.out.println("페이지핸들러");
-		Page<NoticeEntity> entity=noticerepository.findAll(page);
-		
+	//페이지
 	
-		return entity;
+	
+	@Override
+	public Page<TwitformnoticeDto> twitformnoticelist(Long userid, Pageable page) {
+		// TODO Auto-generated method stub
+		Page<TwitformnoticeDto> dto =noticerepository.twitnoticelist(userid, page);
+		return dto;
+	}
+
+	@Override
+	public Page<TwitformnoticeDto> twitfollowinglist(Long userid, Pageable page) {
+		return noticerepository.twitfollowinglist(userid, page);
+	}
+	
+	@Override
+	public Page<TwitformnoticeDto> searchtwitform(Long userid,String option,String keyword,Pageable page) {
+		switch (option) {
+		case "title": 			
+			System.out.println("타이틀검색");
+			return noticerepository.searchtitle(keyword, userid,page);
+		case "text":
+			System.out.println("텍스트검색");
+			return noticerepository.searchtext(keyword, userid, page);
+		case "titletext":
+			System.out.println("제목+내용검색");
+			return noticerepository.searchtitletext(keyword, userid, page);
+		case "name":
+			System.out.println("닉네임검색");
+			return noticerepository.searchname(keyword, userid, page);
+	    default:
+            // 예외를 던지거나, 빈 결과를 반환
+            throw new IllegalArgumentException("검색 옵션이 잘못되었습니다: " + option);
+		
+			}
+	
+		
 	}
 
 
@@ -97,10 +132,11 @@ public class NoticeHandlerImpl implements NoticeHandler{
 
 
 	@Override
-	public NoticeEntity detail(Long num) {
-		NoticeEntity Entity =noticerepository.getById(num);
+	public NoticeDetailDto detail(Long num) {
+		NoticeDetailDto Entity =noticerepository.findbyid(num);
 		
 		return Entity;
+	
 	}
 
 
@@ -123,44 +159,7 @@ public class NoticeHandlerImpl implements NoticeHandler{
 
 
 
-	@Override
-	public Page<NoticeEntity> searchtitle(String text,Pageable pageable) {
-		// TODO Auto-generated method stub
-		log.info("핸들러입갤");
-		Page<NoticeEntity> result=noticerepository.searchtitle(text,pageable);
-		
-		log.info(result.toString());
-		return result;
-	}
-
-
-
-	@Override
-	public Page<NoticeEntity> searchtitletext(String text,Pageable pageable) {
-		
-		Page<NoticeEntity> result=noticerepository.searchtitletext(text,pageable);
-		return result;
-	}
-
-
-
-	@Override
-	public Page<NoticeEntity> searchtext(String text,Pageable pageable) {
-			Page<NoticeEntity> result=noticerepository.searchtext(text,pageable);
-			
-		
-		return result;
-	}
-
-
-
-	@Override
-	public Page<NoticeEntity> searchname(String text,Pageable pageable) {
-			Page<NoticeEntity> result=noticerepository.searchname(text,pageable);
-		
-		
-		return result;
-	}
+	
 
 
 
@@ -189,7 +188,7 @@ public class NoticeHandlerImpl implements NoticeHandler{
 	}
 
 
-
+	//좋아요여부확인 각유저
 	@Override
 	public Optional<FavoriteEntity>  findbynoticeanduser(MemberEntity member, NoticeEntity notice) {
 		// TODO Auto-generated method stub
@@ -202,7 +201,13 @@ public class NoticeHandlerImpl implements NoticeHandler{
 
 
 
-	
+	//좋아요갯수확인 테스트용
+	@Override
+	public long likecounts(Long noticeid) {
+		long count=likerepository.countByNoticeNoticeid(noticeid);
+		
+		return count;
+	}
 
 
 
@@ -240,6 +245,223 @@ public class NoticeHandlerImpl implements NoticeHandler{
 		Page<NoticeEntity> noticeEntity=noticerepository.findbyidall(userid,page);
 		return noticeEntity;
 	}
+
+
+
+	@Override
+	public Page<CommentEntity> showcomments(Long noticeid, Pageable pageable) {
+		// TODO Auto-generated method stub
+	Page<CommentEntity> comments=commentrepository.findByNoticeIdContaining(pageable, noticeid);
+		
+	
+		return comments;
+	}
+
+
+
+	@Override
+	public Page<CommentDto> showdirectc(Long noticeid, Pageable pageable) {
+		// TODO Auto-generated method stub
+		System.out.println("문제구간찾기핸들러시작");
+		//Page<Testcom> comments=commentrepository.showcomments(pageable);
+		Page<CommentDto> dto=commentrepository.showcomments(pageable,noticeid);
+		System.out.println("문제구간핸들러끝");
+		return dto;
+	}
+
+
+
+	@Override
+	public List<Long> favoritenoticeids(Long userid, List<Long> noticeids) {
+		// TODO Auto-generated method stub
+		List<Long> result=likerepository.findfavoriteids(userid,noticeids);
+		return result;
+	}
+
+
+	//좋아요글 다이렉트로가져오기
+	@Override
+	public Page<NoticeEntity> getfavoritelist(MemberEntity member, Pageable pageable) {
+		// TODO Auto-generated method stub
+		Page<NoticeEntity> result=noticerepository.getfavoritenotice(member, pageable);
+		return result;
+	}
+
+
+	//좋아요한 글 - DTO 프로덕션 버전
+	@Override
+	public Page<TwitformnoticeDto> twitfavoritelist(Long userid, Pageable pageable) {
+		return noticerepository.twitfavoritelist(userid, pageable);
+	}
+
+	@Override
+	public Page<TwitformnoticeDto> twitfavoritesearch(Long userid, Pageable pageable, String option, String keyword) {
+		switch (option) {
+		case "title":
+			return noticerepository.twitfavoritetitle(userid, keyword, pageable);
+		case "text":
+			return noticerepository.twitfavoritetext(userid, keyword, pageable);
+		case "titletext":
+			return noticerepository.twitfavoritetitletext(userid, keyword, pageable);
+		case "name":
+			return noticerepository.twitfavoritenick(userid, keyword, pageable);
+		default:
+			throw new IllegalArgumentException("검색 옵션이 잘못되었습니다: " + option);
+		}
+	}
+
+	//좋아요 서치인데 여기다만들자너무많다
+	@Override
+	public Page<NoticeEntity> favoritenoticesearch(MemberEntity member, Pageable pageable, String option,
+			String keyword) {
+		// TODO Auto-generated method stub
+		switch (option) {
+		case "title": 			
+			return noticerepository.searchtitlefavoritenotice(member, pageable, keyword);
+		case "text":
+			return noticerepository.searchtextfavoritenotice(member, pageable, keyword);
+		case "titletext":
+			return noticerepository.searchtitletextfavoritenotice(member, pageable, keyword);
+		case "name":
+			return noticerepository.searchnicknamefavoritenotice(member, pageable, keyword);
+	    default:
+            // 예외를 던지거나, 빈 결과를 반환
+            throw new IllegalArgumentException("검색 옵션이 잘못되었습니다: " + option);
+		
+			}
+	}
+	//이미지리스트기본
+	@Override
+	public Page<Object[]> getImagelist(Pageable page) {
+		// TODO Auto-generated method stub
+		Page<Object[]> result=noticerepository.findimagelist(page);
+		
+		return result;
+	}
+
+
+	@Override
+	public Page<Object[]> getsearchImagelist(Pageable page, String option, String keyword) {
+		// TODO Auto-generated method stub
+		switch (option) {
+		case "title": 			
+			return noticerepository.findtitleimagelist(page, keyword);
+		case "text":
+			return noticerepository.findtextimagelist( page, keyword);
+		case "titletext":
+			return noticerepository.findtitletextimagelist( page, keyword);
+		case "name":
+			return noticerepository.findnicknameimagelist(page, keyword);
+	    default:
+            // 예외를 던지거나, 빈 결과를 반환
+            throw new IllegalArgumentException("검색 옵션이 잘못되었습니다: " + option);
+		
+			}
+	}
+	
+
+	@Override
+	public List<detachfile> getPrevimage(Long noticeid) {
+		// TODO Auto-generated method stub
+		List<detachfile> result=detachrepo.findByNotice_Noticeid(noticeid);
+		return result;
+	}
+
+
+
+	//대댓글이있을시 완적삭제가아니라 삭제만 추가
+	@Override
+	public boolean childparuntcount(Long commentid) {
+		// TODO Auto-generated method stub
+		//long count=commentrepository.countBycnum(commentid);
+		boolean result=commentrepository.existsByCnum(commentid);
+		return result;
+	}
+
+
+
+	@Override
+	public Optional<CommentEntity> deletecommentget(Long commentid) {
+		// TODO Auto-generated method stub
+		Optional<CommentEntity> entity=commentrepository.findById(commentid);
+		return entity;
+	}
+
+
+
+	@Override
+	public List<CommentEntity> childcomments(Long noticeid,List<Long> parentid) {
+		// TODO Auto-generated method stub
+		List<CommentEntity> childs=commentrepository.findChildComments(noticeid, parentid);
+		return childs;
+	}
+
+
+//좋아요체크
+	@Override
+	public boolean Likenoticecheck(Long userid, Long noticeid) {
+		// TODO Auto-generated method stub
+		
+		boolean check=likerepository.Likecheck(userid, noticeid);
+		return check;
+	}
+
+
+	@Override
+	public Page<TwitformnoticeDto> getuserpagepostsearch(Long loginid, Long searchid, String option, String keyword,
+			Pageable pageable) {
+		// TODO Auto-generated method stub
+		Page<TwitformnoticeDto> notice=noticerepository.Userpagepost(searchid, loginid, pageable,option,keyword);
+		return notice;
+	}
+
+	@Override
+	public Page<TwitformnoticeDto> getuserpagehighlightpost(Long loginid, Long searchid, String option, String keyword,
+			Pageable pageable) {
+		// TODO Auto-generated method stub
+		Page<TwitformnoticeDto> notice=noticerepository.Userpagehighlightpost(searchid, loginid, pageable,option,keyword);
+		return notice;
+	}
+	
+	@Override
+	public Page<Object[]> getuserpageimages(Pageable page,String option,String keyword, Long userid) {
+		// TODO Auto-generated method stub
+		//핸들러에서 구분하는게나을거같음 만약바꾼다면 
+		//로직에서 구분해서 다른걸로 검색에따라
+		//대소문자구분안함
+		if(option.equalsIgnoreCase("content")) {
+			System.out.println("내용검색");
+			return noticerepository.userpagesearchtextimagelist(userid,keyword, page);
+		}else if(option.equalsIgnoreCase("title"))
+		{
+			System.out.println("제목검색");
+			return noticerepository.userpagesearchtitleimagelist(userid,keyword, page);
+		}else {
+			System.out.println("검색아님");
+			return noticerepository.userpageimagelist(userid, page);
+		}
+		
+	}
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
 	 
 
 }

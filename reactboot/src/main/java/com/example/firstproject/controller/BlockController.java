@@ -1,0 +1,93 @@
+package com.example.firstproject.controller;
+
+import java.util.Map;
+
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.firstproject.Dto.blockDto.NoticeblockDto;
+import com.example.firstproject.Dto.blockDto.NoticedecleDto;
+import com.example.firstproject.Entity.MemberEntity;
+import com.example.firstproject.Service.Blockservice.Blockservice;
+import com.example.firstproject.configure.PrincipalDetails;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@RestController
+@Slf4j
+@RequiredArgsConstructor
+public class BlockController {
+
+	private final Blockservice service;
+	
+	@PostMapping("/noticeblock")
+	public ResponseEntity noticeblock(Authentication authentication,@RequestBody NoticeblockDto dto) {
+		PrincipalDetails principal=(PrincipalDetails) authentication.getPrincipal();
+		MemberEntity member=principal.getMember();
+		log.info("멤버아이디:"+member.getUsername());
+		//long변환을 모르겠네왜안되는지 integer변환후 롱으로 다시바꿈;
+		//map으로 받았는데 reason도추가해야해서 ;;걍 dto로
+		
+		service.noticeblock(member,dto);
+		
+		return ResponseEntity.ok("차단완료");
+}
+
+	@PostMapping("/noticedecle")
+	public ResponseEntity noticedecle(Authentication authentication,@RequestBody NoticedecleDto dto) {
+		PrincipalDetails principal =(PrincipalDetails) authentication.getPrincipal();
+		MemberEntity member=principal.getMember();
+		
+		service.Noticedecle(member, dto);
+		return ResponseEntity.ok("신고완료");
+	}
+	//블록과 신고여부
+	@GetMapping("/noticeblockcheck")
+	public ResponseEntity noticeblockcheck(Authentication authentication,@RequestParam Long noticeid) {
+		PrincipalDetails principal =(PrincipalDetails) authentication.getPrincipal();
+		MemberEntity member=principal.getMember();
+		System.out.println("유저아이디"+member.getId());
+		System.out.println("노티스아이디:"+noticeid);
+		boolean check=service.noticeblockcheck(member.getId(), noticeid);
+		return ResponseEntity.ok(check);
+	}
+	@GetMapping("/noticedelclecheck")
+	public ResponseEntity noticedeclecheck(Authentication authentication,@RequestParam Long noticeid) {
+		PrincipalDetails principal =(PrincipalDetails) authentication.getPrincipal();
+		MemberEntity member=principal.getMember();
+		System.out.println("유저아이디"+member.getId());
+		System.out.println("노티스아이디:"+noticeid);
+		boolean check=service.noticedeclecheck(member.getId(), noticeid);
+		return ResponseEntity.ok(check);
+	}
+	//게시글 메뉴에서 게시글블록 과신고=================================================
+	@DeleteMapping("/noticeblock/delete/{noticeid}")
+	public ResponseEntity blockcancel(Authentication authentication,@PathVariable Long noticeid) throws IllegalAccessException {
+		PrincipalDetails principal =(PrincipalDetails) authentication.getPrincipal();
+		MemberEntity member=principal.getMember();
+		
+		service.blockcancle(member.getId(), noticeid);
+		return ResponseEntity.ok("차단취소");
+	}
+	//게시글신고취소
+	@DeleteMapping("/noticedecle/delete/{noticeid}")
+	public ResponseEntity declecancel(Authentication authentication,@PathVariable Long noticeid) throws IllegalAccessException {
+		PrincipalDetails principal =(PrincipalDetails) authentication.getPrincipal();
+		MemberEntity member=principal.getMember();
+		
+		service.declecancel(member.getId(), noticeid);
+		
+		return ResponseEntity.ok("신고취소");
+	}
+	
+	//============================================================================
+}

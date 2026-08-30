@@ -1,6 +1,8 @@
 package com.example.firstproject.configure.websocket;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -12,6 +14,7 @@ import com.example.firstproject.configure.Interceptor.Stompinterceptor;
 
 import lombok.RequiredArgsConstructor;
 
+@Profile("!test")
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSocketMessageBroker//웹소캣의 메세지브로커기능을 활성화하는 어노테이션 이를통해 메시지핸들링과 브로커구성이가능해짐
@@ -22,12 +25,18 @@ public class Stompconfig implements WebSocketMessageBrokerConfigurer{
 	private final StompHandler stomphandler;
 	
 	private final ChatErrorHandler errorhandler;
+
+	//HTTP 는 CORS 로 막아두고 WebSocket 만 전 세계에 열려 있었다("*").
+	//WebSocket 핸드셰이크에는 브라우저의 동일출처 정책이 적용되지 않으므로
+	//서버가 직접 오리진을 확인하지 않으면 아무 사이트나 붙어서 남의 토큰으로 채팅을 열 수 있다.
+	//HTTP 와 같은 목록(app.cors.allowed-origins)을 본다.
+	@Value("${app.cors.allowed-origins}")
+	private String[] allowedorigins;
 	@Override
 		public void registerStompEndpoints(StompEndpointRegistry registry) {
 			// TODO Auto-generated method stub
 			registry.addEndpoint("/open/stomp")
-			.setAllowedOriginPatterns("*") //전역허용
-			//.setAllowedOrigins("*")
+			.setAllowedOriginPatterns(allowedorigins)
 			.addInterceptors(cepter)//인터셉터추가 
 			.withSockJS() //참고로 웹이아닌 앱에서 사용하면 작동하지 않는다고함 
 			

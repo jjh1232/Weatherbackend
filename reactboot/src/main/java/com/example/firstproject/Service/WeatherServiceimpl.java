@@ -12,13 +12,18 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.Cache;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -55,11 +60,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 //근데 메소드에 밸류 따로주면 그걸로 인식하는듯?
 public class WeatherServiceimpl implements WeatherService{
 
+	//기상청 서비스키. application.yml 의 weather.api.service-key
+	// -> application-secret.yml(로컬) 또는 환경변수 WEATHER_API_KEY(서버)
+	@Value("${weather.api.service-key}")
+	private String servicekey;
+
 	@Autowired
 	private WeatherServiceHandler weatherhandler;
 	
 	
 	@Autowired
+	@Qualifier("redisCachemanager")
 	private CacheManager cachemanager;
 	
 
@@ -81,10 +92,10 @@ public class WeatherServiceimpl implements WeatherService{
 
 
 	@Override   //콘피그에서만든캐쉬매니저네임
+	//value값이 사실상 구분자 :: 이런거
 	@Cacheable(value = "getweather",key="#reg1+#reg2+#reg3",unless = "#result==null")
 	public List<frontweather> getweatherdata(String reg1, String reg2, String reg3,String gridx,String gridy) throws URISyntaxException, UnsupportedEncodingException {
 		// TODO Auto-generated method stub
-		String servicekey ="1UxOsFtGRc1qt%2FBSr5YDb%2B%2BBfx9rWkUUCg9Pbt8%2BbpYlHmJLRPr4aiWZINe4hGjWTia37Y5QAVtOO9D%2B6HyRFA%3D%3D";
 		String url="http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst";
 		System.out.println("날씨api 겟데이터 서비스");
 		
@@ -140,6 +151,52 @@ public class WeatherServiceimpl implements WeatherService{
 		}
 		System.out.println(weatherresponse.toString());
 		//Map<String,Object> info=new HashMap<>();
+		Set<String> validCategori=Set.of("SKY","PTY","RN1","T1H","REH","WSD");
+		List<WeatherDataDto> item= weatherresponse.getResponse().getBody().getItems().getItem().stream()
+												  .filter(data->validCategori.contains(data.getCategory()))
+												  .map(data->WeatherDataDto.builder()
+														  .category(data.getCategory())
+														  .value(data.getFcstValue())
+														  .date(data.getFcstDate())
+														  .time(data.getFcstTime())
+														  .build())
+												  .collect(Collectors.toList());
+												  
+		
+		//데이터를 맵으로 받으면 시간에따라 분배가피ㅕㄴ하다
+		Map<String,frontweather> weathermap=new LinkedHashMap<>();
+		
+		//데이터합치기
+		for(WeatherDataDto wea:item) {
+			String key=wea.getTime();
+			//맵의기능 키가 있으면 넣고 없으면 생성 2번째인자밸류를 키가 없을시 넣는다 있으면 아무것도안함
+			weathermap.putIfAbsent(key, new frontweather()); 
+			
+			//fw를끄낸다
+			frontweather fw=weathermap.get(key);
+			
+			switch (wea.getCategory()) {
+	        case "SKY" -> fw.setSKY(wea.getValue());
+	        case "PTY" -> fw.setPTY(wea.getValue());
+	        case "RN1" -> fw.setRN1(wea.getValue());
+	        case "REH" -> fw.setREH(wea.getValue());
+	        case "WSD" -> fw.setWSD(wea.getValue());
+	        case "T1H" -> {
+	            fw.setT1H(wea.getValue());
+	            fw.setDate(wea.getDate());
+	            fw.setTime(wea.getTime());
+	        }
+	    }
+			// 강수형태(PTY) 코드 : (초단기) 없음(0), 비(1), 비/눈(2), 눈(3), 빗방울(5), 빗방울눈날림(6), 눈날림(7) 
+			//RN! 1시간강수량
+			//- 하늘상태(SKY) 코드 : 맑음(1), 구름많음(3), 흐림(4)
+			//T1H 온도
+			//REH 습도
+			//WSD 풍속 
+		}
+		// 3. 결과 리스트로 변환 (시간순 정렬) 맵의 밸류 가들어감 여기선 객체기때문에 List로간다
+		List<frontweather> time = new ArrayList<>(weathermap.values());
+		/*간소화전 하드코딩..
 		List<WeatherDataDto> item=new ArrayList();
 		//String strnow=simpleformattime.format(currentdate);
 		for(int i=0;i<weatherresponse.getResponse().getBody().getItems().getItem().size();i++) {
@@ -148,12 +205,7 @@ public class WeatherServiceimpl implements WeatherService{
 					||weatherresponse.getResponse().getBody().getItems().getItem().get(i).getCategory().equals("REH")||weatherresponse.getResponse().getBody().getItems().getItem().get(i).getCategory().equals("WSD")
 					) {
 				
-				// 강수형태(PTY) 코드 : (초단기) 없음(0), 비(1), 비/눈(2), 눈(3), 빗방울(5), 빗방울눈날림(6), 눈날림(7) 
-				//RN! 1시간강수량
-				//- 하늘상태(SKY) 코드 : 맑음(1), 구름많음(3), 흐림(4)
-				//T1H 온도
-				//REH 습도
-				//WSD 풍속 
+				
 				String category=weatherresponse.getResponse().getBody().getItems().getItem().get(i).getCategory();
 				String value=weatherresponse.getResponse().getBody().getItems().getItem().get(i).getFcstValue();
 				String date=weatherresponse.getResponse().getBody().getItems().getItem().get(i).getFcstDate();
@@ -169,6 +221,7 @@ public class WeatherServiceimpl implements WeatherService{
 			}
 			
 		}
+		
 			//for문끝 여기서가공하는게나을듯 맵으로하는게나을듯?
 			List<frontweather> time=new ArrayList<>();
 			frontweather data1=new frontweather();
@@ -319,6 +372,8 @@ public class WeatherServiceimpl implements WeatherService{
 			time.add(data4);
 			time.add(data5);
 			time.add(data6);
+	
+		*/
 		System.out.println("날씨데이터정리끝"+time);
 		return time;
 	}
@@ -357,6 +412,8 @@ public class WeatherServiceimpl implements WeatherService{
 	}
 	//캐시삭제
 	@Scheduled(fixedDelay = 1000*60*59)//59분마다삭제 //웨더못찾음..
+	//엔트리가 구분자 모두지운다는설정 만약 특정키만할려면 key도설정
+	//invocation은 예외시삭제안함 기본값 메소드실행후 삭제 true시 메소드실행전삭제
 	@CacheEvict(value = "getweather",beforeInvocation = false,allEntries = true) 
 	//키값넣으면 특정 키값도 삭제가능
 	public void cashwetherdelete() {

@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -26,6 +27,10 @@ import lombok.RequiredArgsConstructor;
 public class oauth2failservice implements AuthenticationFailureHandler{
 
 	private final HistoryService historyservice;
+
+	//실패한 사용자를 돌려보낼 프론트 주소. 배포 시 APP_FRONTEND_URL 로 덮어쓴다.
+	@Value("${app.frontend-url}")
+	private String frontendurl;
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) throws IOException, ServletException {
@@ -47,11 +52,11 @@ public class oauth2failservice implements AuthenticationFailureHandler{
 		if(exception instanceof OAuth2AuthenticationException){
 			System.out.println("이미사이트에가입한메일");
 			String message="sameemail";
-			response.sendRedirect("http://localhost:3001/oauth2loginfailed?msg="+message);
+			response.sendRedirect(frontendurl + "/oauth2loginfailed?msg=" + message);
 		}
 		else {
 			System.out.println("해당사이트서버문제?");
-		response.sendRedirect("http://localhost:3001/oauth2loginfailed");
+		response.sendRedirect(frontendurl + "/oauth2loginfailed");
 		}
 	}
 

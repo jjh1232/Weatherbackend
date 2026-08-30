@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
+@Profile("!test")
 public class ChatHandler extends TextWebSocketHandler{//추상클래스 텍스트만필요해서이거고 또 웹소캣핸들러있음
 	
 	

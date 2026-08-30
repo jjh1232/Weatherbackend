@@ -41,5 +41,7 @@ public class Noticeform {
 	private String sky;
 	private String pty;
 	private String rain;
+	private String reh;
+	private String wsd;
 	private List<datachfiledto> files;
 }

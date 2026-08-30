@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.firstproject.Dto.userdataDto.UserDto;
+import com.example.firstproject.Dto.userdataDto.UserPageDto;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Repository.MemberRepository;
 
@@ -27,13 +29,12 @@ public class MemberHandlerImpl implements MemberHandler{
 	}
 
 	@Override
-	public Long emailcheck(String username) {
+	public boolean emailcheck(String username) {
 		// TODO Auto-generated method stub
-		String as="as";
-		log.info(as);
-		long check=memberrepository.emailcheck(username);
-		String a=String.valueOf(check);
-		log.info(a);
+		
+		//long check=memberrepository.emailcheck(username);
+		boolean check=memberrepository.existsByUsername(username);
+		
 		return check;
 	}
 
@@ -73,7 +74,37 @@ public class MemberHandlerImpl implements MemberHandler{
 		List<MemberEntity> list=memberrepository.findByNicknameContaining(keyword);
 		return list;
 	}
+
+	@Override
+	public Optional<MemberEntity> findbyid(Long userid) {
+		// TODO Auto-generated method stub
+		Optional<MemberEntity> member=memberrepository.findById(userid);
+		return member;
+	}
+
+	@Override
+	public boolean existsByProfileId(String profileid) {
+		// TODO Auto-generated method stub
+		
+		return memberrepository.existsByProfileid(profileid);
+	}
+
+	@Override
+	public Optional<MemberEntity> findbyusername(String username) {
+		// TODO Auto-generated method stub
+		
+		return memberrepository.findByUsername(username);
+	}
+
+	@Override
+	public Optional<UserPageDto> findprofileid(String profileid,Long loginid) {
+		// TODO Auto-generated method stub
+		Optional<UserPageDto> loginmember=memberrepository.findByProfileid(profileid,loginid);
+		return loginmember;
+	}
+
 	
+
 	
 
 }

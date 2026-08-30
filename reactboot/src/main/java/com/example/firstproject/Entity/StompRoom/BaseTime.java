@@ -23,7 +23,7 @@ import lombok.Setter;
 public abstract class BaseTime {
 
 	
-	@CreatedDate
+	//@CreatedDate
     @Column(updatable = false)
     private String createdDate;
 

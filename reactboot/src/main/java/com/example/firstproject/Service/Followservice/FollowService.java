@@ -2,13 +2,14 @@ package com.example.firstproject.Service.Followservice;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
 import com.example.firstproject.CustomError.ErrorCode;
-import com.example.firstproject.Dto.follow.FollowDto;
+import com.example.firstproject.Dto.follow.FollowerDto;
 import com.example.firstproject.Dto.follow.followlistDto;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.follow.FollowEntity;
@@ -49,14 +50,29 @@ public class FollowService {
 		
 		
 	}
+	//팔로우목록 가져오기
+	public List<followlistDto> followlistfind(Long userid){
+		//프롬멤버만찾으면됨
+		List<followlistDto> mylist=followhandler.followerfromfind(userid);
+		
+		
+		return mylist;
+	
+	}
 	
 	//팔로워 찾기 나를팔로우한애들 팔로잉 한애들은 맴버객체에 연관관계로 불러옴
-	public List<FollowDto> followerfind(Long userid){
+	public List<FollowerDto> followerfind(Long userid){
+		
+		List<FollowerDto> list =followhandler.findfollowerlist(userid);
+		
+		return list;
 		//투멤버찾아옴 
+		/*
 		List<FollowEntity> tolist=followhandler.followertofind(userid);
 		if(tolist==null||tolist.isEmpty()) {
 			log.info("팔로워없음!");
 		}
+		
 		List<FollowEntity> mylist=followhandler.followerfromfind(userid);
 		if(mylist ==null||mylist.isEmpty()) {
 			log.info("내가팔로우한애없음");
@@ -69,6 +85,7 @@ public class FollowService {
 			FollowDto dto=FollowDto.builder()
 					.username(toentity.getFrommember().getUsername())
 					.nickname(toentity.getFrommember().getNickname())
+					.profileurl(toentity.getFrommember().getProfileimg())
 					.followcheck(false)
 					.build();
 			
@@ -90,13 +107,25 @@ public class FollowService {
 			followerlist.add(dto);
 		}
 		//팔로우엔티티검사
+		return null;
+		*/
 		
-		
-		return followerlist;
 	}
 	//유저가 팔로우 했는지 안했는지여부찾기 유저클릭시 체크용 하나
 	public boolean flowcheck(MemberEntity requestmember,MemberEntity selectmember) {
 		if(followhandler.checkfollow(requestmember.getId(), selectmember.getId()).isPresent()) {
+			//존재할경우트로 
+			log.info("이미 팔로우한 계정입니다!");
+			return true;
+		}
+		else {
+				log.info("팔로우안되있는게쩡");
+				return false;
+			}
+		}
+	//유저가 팔로우 했는지 안했는지여부찾기 유저클릭시 체크용 하나
+	public boolean flowchecktwo(Long myid,Long commentid) {
+		if(followhandler.checkfollow(myid, commentid).isPresent()) {
 			//존재할경우트로 
 			log.info("이미 팔로우한 계정입니다!");
 			return true;
@@ -150,6 +179,8 @@ public class FollowService {
 				followlistDto dto=followlistDto.builder()
 						.username(entity.getTomember().getUsername())
 						.nickname(entity.getTomember().getNickname())
+						.profileimg(entity.getTomember().getProfileimg())
+						.profileid(entity.getTomember().getProfileid())
 						.favorite(true)
 						.build();
 				dtolist.add(dto);

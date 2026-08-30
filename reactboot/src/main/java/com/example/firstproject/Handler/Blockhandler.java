@@ -1,0 +1,121 @@
+package com.example.firstproject.Handler;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import com.example.firstproject.Dto.blockDto.Adminnoticedecleresponsedto;
+import com.example.firstproject.Entity.block.NoticeblockEntity;
+import com.example.firstproject.Entity.block.NoticedecleEntity;
+import com.example.firstproject.Repository.NoticeDeclerepository;
+import com.example.firstproject.Repository.NoticeblockRepository;
+import com.mysql.cj.log.Log;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class Blockhandler {
+
+	private final NoticeblockRepository blockrepository;
+	
+	private final NoticeDeclerepository declerepository;
+	
+	public void noticeblock(NoticeblockEntity entity) {
+		
+		blockrepository.save(entity);
+		
+		
+	}
+	public void noticedecleadd(NoticedecleEntity entity) {
+		declerepository.save(entity);
+	}
+
+
+	//귀찮으니까 페이지로받자
+	public Page<NoticedecleEntity> findbynoticeidget(Pageable pageable,Long noticeid){
+		Page<NoticedecleEntity> entity=declerepository.findbyNoticeid(noticeid, pageable);
+		
+		return entity;
+	}
+	
+	public boolean noticeblockcheck(Long userid,Long noticeid) {
+		log.info("블록핸들러실행"+userid + "또"+noticeid);
+		//이거 boolean값을 못받네;; 변환을못시킴 query로카운트로만해야하는데 성능이안좋음
+		//그냥여기서 if문으로해야할듯 querydsl쓰면되긴한다는데흠
+		Long check=blockrepository.noticeblockcheck(userid, noticeid);
+		log.info("블록핸들러종료"+check);
+		if (check==1) {
+			return true;
+		}else {
+		return false;
+		}
+		}
+	
+	public boolean noticedeclecheck(Long userid,Long noticeid) {
+		log.info("디클핸들러실행"+userid + "또"+noticeid);
+		Long check=declerepository.noticeblockcheck(userid, noticeid);
+		log.info("디클핸들러종료"+check);
+		if (check==1) {
+			return true;
+		}else {
+		return false;
+		}
+	}
+	//유저블록리스트
+	public List<NoticeblockEntity> getuserblock(Long userid) {
+		
+		List<NoticeblockEntity> blocks=blockrepository.userblocklist(userid);
+		
+		return blocks;
+		
+	}
+	//유저와 가져온 노티스들 블록여부
+	public List<Long> getuserblocknotices(Long userid,List<Long> noticeids){
+		List<Long> blockids=blockrepository.findblocknoticeids(userid, noticeids);
+		return blockids;
+	}
+	//유저블록테스트 2
+	
+	public List<Long> getblocknoticenum(Long userid){
+		
+		List<Long> blocks=blockrepository.userblocknoticeid(userid);
+		
+		return blocks;
+	}
+	
+	//유저블록 가져오기 
+	public Optional<NoticeblockEntity> blockfindbyuseridandnoticeid(Long userid,Long noticeid){
+		Optional<NoticeblockEntity> entity=blockrepository.findbymemberidandnoticeid(userid, noticeid);
+		
+		return entity;
+		 
+	}
+	//유저블록 엔티티삭제하기
+	public void deletenoticeblock(NoticeblockEntity entity) {
+		blockrepository.delete(entity);
+	}
+	//게시글 신고 가져오기
+	public Optional<NoticedecleEntity> declefindbyuseridandnoticeid(Long userid,Long noticeid){
+		Optional<NoticedecleEntity> entity=declerepository.findbymemberidandnoticeid(userid, noticeid);
+		
+		return entity;
+	}
+	
+	//게시글 신고 지우기
+	public void deletenoticedecle(NoticedecleEntity entity) {
+		declerepository.delete(entity);
+	}
+	//블록카운트로 블록여부 확인
+	public boolean userblockcheck(Long userid,Long noticeid) {
+		boolean check=blockrepository.isblockcheck(userid,noticeid);
+		
+		return check;
+	}
+	
+}

@@ -13,6 +13,8 @@ import com.example.firstproject.Dto.Memberform;
 import com.example.firstproject.Dto.Weather.MemberUpdateDto;
 import com.example.firstproject.Dto.follow.findDto;
 import com.example.firstproject.Dto.userdataDto.UserDto;
+import com.example.firstproject.Dto.userdataDto.ProfileUpdateDto;
+import com.example.firstproject.Dto.userdataDto.UserPageDto;
 import com.example.firstproject.Entity.MemberEntity;
 
 public interface MemberService {
@@ -23,16 +25,15 @@ public interface MemberService {
 
 	public long findbyemail(String username);
 
-	public String Emailauth(String username);
+	public boolean Emailauth(String username);
 	
-	public Object memberlogin(String email,String password);
-	
-	public String passfind(String username);
+	public Map<String,String> passfind(String username);
 	
 	public void memberpasswordupdate(String username,String authokey);
 	
 	public Optional<MemberEntity> findemail(String username);
 
+	public MemberEntity findbyid(Long userid);
 
 	public String deletecodesend(String username);
 	
@@ -46,8 +47,16 @@ public interface MemberService {
 	
 	public String existingprofile(String profileurl);
 
+	//유저페이지 Edit Profile 용. 지역은 건드리지 않는다.
+	public String imagesave(MultipartFile file,String subfolder);
+	public void imagedelete(String subfolder,String url);
+	public MemberEntity profileupdate(String email,ProfileUpdateDto dto,String profileurl,String backgroundurl);
+
 	public Map<String,Object> userpagedate(String username,int page); 
 		
-	
+	public boolean profileidcheck(String profileid);
 
+	public Map<String, String> Usernamefind(String username);
+	
+	public UserPageDto userprofileuserdata(Long loginid,String profileid);
 }

@@ -78,6 +78,11 @@ public class PrincipalDetails implements UserDetails,OAuth2User{
 	}
 	
 
+	
+	public Long getid() {
+		return member.getId();
+	}
+	
 
 	@Override
 	public boolean isAccountNonExpired() {

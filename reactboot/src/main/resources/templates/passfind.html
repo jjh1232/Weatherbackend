@@ -1,20 +1,116 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<!--
+  임시 비밀번호 안내 메일.
+  주의: 이 메일이 나가는 시점에 계정 비밀번호는 이미 임시 비밀번호로 바뀐 상태다.
+  그래서 "요청하지 않았으면 무시하세요"라고 쓰면 안 된다. 사실과 다르다.
+-->
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Weave 임시 비밀번호</title>
+</head>
+<body style="margin:0; padding:0; background:#eef1f6;">
 
-<body>
-<div style="margin:100px;">
-    <h1> 안녕하세요.</h1>
-    <h1> 새로발급한 임시비밀번호입니다</h1>
-    <br>
-    <p> 아래 임시비밀번호로 로그인해주세요.</p>
-    <br>
-
-    <div align="center" style="border:1px solid black; font-family:verdana;">
-        <h3 style="color:blue"> 아래비밀번호로변경되었습니다. </h3>
-        <div style="font-size:130%" th:text="${code}"> </div>
-    </div>
-    <br/>
+<div style="display:none; max-height:0; overflow:hidden; opacity:0; color:transparent;">
+    임시 비밀번호로 로그인한 뒤 새 비밀번호로 바꿔주세요.
 </div>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="background:#eef1f6; padding:32px 12px;">
+<tr>
+<td align="center">
+
+    <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"
+           style="width:100%; max-width:600px; background:#ffffff; border:1px solid #e2e8f0;
+                  border-radius:16px; overflow:hidden;
+                  font-family:'Apple SD Gothic Neo','Malgun Gothic','맑은 고딕',sans-serif;">
+
+        <!-- 헤더 -->
+        <tr>
+            <td style="background:#2f7fe0; padding:20px 28px;">
+                <span style="font-size:20px; font-weight:800; color:#ffffff; letter-spacing:-0.5px;">Weave</span>
+                <span style="font-size:12px; color:#cfe3fa; padding-left:8px;">오늘의 하늘을 나누다</span>
+            </td>
+        </tr>
+
+        <!-- 본문 -->
+        <tr>
+            <td style="padding:34px 28px 0;">
+                <p style="margin:0 0 6px; font-size:20px; font-weight:700; color:#12181f; letter-spacing:-0.5px;">
+                    임시 비밀번호를 보내드립니다
+                </p>
+                <p style="margin:0 0 20px; font-size:14px; line-height:1.7; color:#5b6672;">
+                    <strong th:text="${username}" style="color:#12181f;">이메일</strong> 계정의 비밀번호를
+                    아래 임시 비밀번호로 <strong style="color:#12181f;">이미 변경했습니다.</strong><br/>
+                    기존 비밀번호로는 로그인되지 않습니다.
+                </p>
+            </td>
+        </tr>
+
+        <!-- 비밀번호 -->
+        <tr>
+            <td style="padding:0 28px 22px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+                       style="background:#f5f7fb; border:1px solid #e2e8f0; border-radius:12px;">
+                    <tr>
+                        <td align="center" style="padding:22px 16px;">
+                            <div style="font-size:11px; letter-spacing:1.5px; color:#8b95a1; padding-bottom:10px;">
+                                임시 비밀번호
+                            </div>
+                            <div th:text="${code}"
+                                 style="font-family:Consolas,Menlo,'Courier New',monospace; font-size:26px;
+                                        font-weight:700; letter-spacing:4px; color:#12181f;">CODE0000</div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <!-- 꼭 해야 할 일 -->
+        <tr>
+            <td style="padding:0 28px 26px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+                       style="background:#fff4f5; border:1px solid #f2c2c8; border-radius:12px;">
+                    <tr>
+                        <td style="padding:14px 16px; font-size:12.5px; line-height:1.75; color:#5b6672;">
+                            <strong style="color:#d1435b;">로그인한 뒤 비밀번호를 꼭 바꿔주세요.</strong><br/>
+                            임시 비밀번호는 이 메일에 그대로 적혀 있어서, 메일함을 보는 사람은 누구나 로그인할 수 있습니다.
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <!-- 본인이 아닐 때 -->
+        <tr>
+            <td style="padding:0 28px 30px;">
+                <p style="margin:0; font-size:12.5px; line-height:1.75; color:#8b95a1;">
+                    <strong style="color:#12181f;">비밀번호 찾기를 요청하지 않으셨다면</strong>,
+                    다른 사람이 이메일 주소를 잘못 입력했을 수 있습니다.
+                    비밀번호는 이미 바뀐 상태이므로, 위 임시 비밀번호로 로그인해서
+                    본인만 아는 새 비밀번호로 바꿔 두시는 것이 안전합니다.
+                </p>
+            </td>
+        </tr>
+
+        <!-- 푸터 -->
+        <tr>
+            <td style="padding:18px 28px 22px; border-top:1px solid #e2e8f0; background:#fafbfd;">
+                <p style="margin:0 0 4px; font-size:11.5px; line-height:1.7; color:#8b95a1;">
+                    이 메일은 발신 전용입니다. 문의는
+                    <a th:href="'mailto:'+${contactemail}" th:text="${contactemail}"
+                       style="color:#2f7fe0; text-decoration:none;">문의 메일</a> 로 보내주세요.
+                </p>
+                <p style="margin:0; font-size:11.5px; color:#a9b3bf;">Weave · 날씨와 타임라인</p>
+            </td>
+        </tr>
+
+    </table>
+
+</td>
+</tr>
+</table>
 
 </body>
 </html>

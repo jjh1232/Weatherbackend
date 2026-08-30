@@ -2,6 +2,7 @@ package com.example.firstproject.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.MalformedURLException;
 
 import java.nio.charset.StandardCharsets;
@@ -12,16 +13,26 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.attoparser.ICommentHandler;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -38,25 +49,33 @@ import org.springframework.web.util.UriUtils;
 
 import com.example.firstproject.Dto.Detachupdateform;
 import com.example.firstproject.Dto.MemberDto;
+import com.example.firstproject.Dto.NoticeDetailDto;
 import com.example.firstproject.Dto.NoticeDto;
 import com.example.firstproject.Dto.NoticeDtointer;
+import com.example.firstproject.Dto.NoticeImageDto;
 import com.example.firstproject.Dto.NoticeUpdate;
 import com.example.firstproject.Dto.Noticeform;
+import com.example.firstproject.Dto.TwitformnoticeDto;
 import com.example.firstproject.Dto.datachfiledto;
 import com.example.firstproject.Dto.detachVo;
 import com.example.firstproject.Dto.removetestDto;
 import com.example.firstproject.Dto.Comment.CommentDto;
 import com.example.firstproject.Dto.Comment.Commentform;
+import com.example.firstproject.Dto.Previewimage.PreviewimageDto;
 import com.example.firstproject.Entity.CommentEntity;
 import com.example.firstproject.Entity.FavoriteEntity;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
 import com.example.firstproject.Entity.detachfile;
+import com.example.firstproject.Entity.block.NoticeblockEntity;
 import com.example.firstproject.Entity.follow.FollowEntity;
+import com.example.firstproject.Handler.Blockhandler;
 import com.example.firstproject.Handler.MemberHandler;
 import com.example.firstproject.Handler.NoticeHandler;
 import com.example.firstproject.Repository.DetachfileRepository;
+import com.example.firstproject.Repository.LikeRepository;
 import com.example.firstproject.Service.Memberservice.SseService;
+import com.mysql.cj.result.LongValueFactory;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -65,10 +84,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @Transactional
+
 public class NoticeServiceImpl implements NoticeService {
 
 	@Autowired
 	private NoticeHandler noticehandler;
+	
 	
 	@Autowired
 	private SimpMessageSendingOperations operations;
@@ -76,41 +97,102 @@ public class NoticeServiceImpl implements NoticeService {
 	private final MemberHandler memberhandler;
 	
 	private final DetachfileRepository detachrepo;
+
+	//업로드 루트(application.yml: app.upload.public-dir)
+	//예전에는 옛 프로젝트의 절대경로가 그대로 박혀 있었다.
+	//그 경로는 지금 머신에 없어서, 이 값을 타는 기능은 전부 깨진 상태였다.
+	@Value("${app.upload.public-dir}")
+	private String uploadroot;
 	
 	private final SseService sseservice;
 	
+	private final Blockhandler blockhandler;
+	
+	
 	@Override
-	public Page<NoticeDto> read(Pageable page) {
+	public Page<TwitformnoticeDto> read(Long userid,String option,String keyword,int page) {
 		System.out.println("게시판리드서비스");
-		Page<NoticeEntity> entity = noticehandler.read(page);
-		
-		/*
-		Page<NoticeDto> dtlist =entity.map
-				(m->m.toDto(m.getNoticeid(),
-						m.getNoticeuser(),m.getNoticenick(), m.getTitle()
-						,m.getText(),m.getRed()
-						,m.getLikeuser().size()
-						,m.getTemp(),m.getSky(),m.getPty(),m.getRain()
-						,m.getMember().getProfileimg()
-						)
-						
-						);
-		*/
-		Page<NoticeDto> dtlist=entity.map(m-> new NoticeDto(m));
-		//Page<NoticeDto> dtlist=entity.map(m-> new NoticeDto());//페이지맵핑dto로
-		
-		// TODO Auto-generated method stub
-		return dtlist;
+		PageRequest pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"id"));
+		if(keyword !=null&& !keyword.isBlank()) {
+			//검색
+			if(userid !=null) {
+				//로그인+검색
+				System.out.println("로그인검색");
+				return noticehandler.searchtwitform(userid, option, keyword, pageable);
+			}else {
+				//로그인 +비검색
+				System.out.println("비로그인검색");
+				return noticehandler.searchtwitform(userid, option, keyword, pageable);
+			}
+		}
+		else {
+			//비검색
+			if(userid!=null) {
+				//로그인 비검색
+				System.out.println("로그인비검색");
+				return noticehandler.twitformnoticelist(userid, pageable);
+			}
+			else {
+				//비로그인 비검색
+				System.out.println("비로그인비검색");
+				return noticehandler.twitformnoticelist(userid, pageable);
+			}
+			
+		}
+
 	}
 
 	@Override
-	public Page<NoticeDto> search(String option, String content,int page) {
+	public Page<NoticeDto> search(Long loginid,String option, String content,int page) {
 		// TODO Auto-generated method stub
 		log.info("서비스시작"+option);
-		PageRequest pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"red"));
+		PageRequest pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"id"));
 		//페이지객체옵션
 		
+		Page<NoticeEntity> entitypage;
+		switch (option) {
+		case "titletext":
+			//entitypage=noticehandler.searchtitletext(content,pageable);
+			//Page<NoticeDto> dtlist=entitypage.map(m-> new NoticeDto(m));
+			break;
+		case "title":
+         
+            //entitypage = noticehandler.searchtitle(content, pageable);
+            break;
+        case "text":
+        
+            //entitypage = noticehandler.searchtext(content, pageable);
+            break;
+        default:
+       
+            //entitypage = noticehandler.searchname(content, pageable);
+            break;
 		
+		}
+		// 2. 로그인 여부에 따라 block/like 리스트 준비 셋이더빠르다함 
+		 Set<Long> blockNoticeIds = new HashSet<>();
+		    Set<Long> likeNoticeIds = new HashSet<>();
+
+	    if (loginid != null) {
+	    	//노티스아이디추출
+	       // List<Long> noticeIds = entitypage.getContent().stream()
+	       //    .map(NoticeEntity::getNoticeid)
+	        //    .collect(Collectors.toList());
+
+	        // 차단/좋아요 정보 조회 (Set으로 변환해 contains 성능 향상)
+	        //재할당없이 데이터추가
+	      //  blockNoticeIds.addAll(blockhandler.getblocknoticenum(loginid));
+	      //  likeNoticeIds.addAll(noticehandler.favoritenoticeids(loginid, noticeIds));
+	    }
+	    
+	    //반환
+	//    return entitypage.map(entity -> {
+	 //   	NoticeDto dto=new NoticeDto(entity);
+	  //  	dto.setIsblock(blockNoticeIds.contains(entity.getNoticeid()));
+	   // 	dto.setLikeusercheck(likeNoticeIds.contains(entity.getNoticeid()));
+	   // 	return dto;
+	    //});
+	    /*
 		if (option.equals("titletext")) {
 			log.info("타이틀+텍스트서비스");
 			String option1="title";
@@ -145,8 +227,8 @@ public class NoticeServiceImpl implements NoticeService {
 			return dtlist;
 		}
 			
-		
-		
+		*/
+		return null;
 	}
 
 	  
@@ -156,7 +238,7 @@ public class NoticeServiceImpl implements NoticeService {
 	   List<NoticeDto> dtlist=new ArrayList();
 	  for(NoticeEntity a:entity) { NoticeDto dto =a.toDto(a.getNoticeid(),a.getNoticeuser(),
 	  a.getNoticenick(),a.getTitle(),a.getText(),a.getRed(),a.getLikeuser().size()
-	  ,a.getTemp(),a.getSky(),a.getPty(),a.getRain()
+	  ,a.getTemp(),a.getSky(),a.getPty(),a.getRain(),a.getViews()
 			  );
 	  dtlist.add(dto); }
 	  
@@ -183,21 +265,23 @@ public class NoticeServiceImpl implements NoticeService {
 			 			.sky(form.getSky())
 			 			.pty(form.getPty())
 			 			.rain(form.getRain())
+			 			.reh(form.getReh())
+			 			.wsd(form.getWsd())
 			 			.build();
 	 log.info(form.getFiles().toString());
 	 if(form.getFiles() != null) {
-		 log.info("이미지파일존재함!");
+		 log.info("이미지파일존재함!"+form.getFiles());
 		 
 	 
 		List<detachfile> detachfiles=new ArrayList<>();
 	 for(datachfiledto file:form.getFiles()) {
-			if(file.getId()==null) {
+			if(file.getUrl().equals("")) {
 				log.info("널이왜있어씹;");
 			}else {
 				log.info(form.toString());
 			detachfile detachentity=detachfile.builder()
 					.filename(file.getFilename())
-					.idx(file.getId())
+					.idx(file.getIdx())
 					.path(file.getUrl())
 					.rangeindex(file.getIndex())
 					.notice(Entity)
@@ -241,33 +325,61 @@ public class NoticeServiceImpl implements NoticeService {
 		NoticeEntity Entity=find.get();
 		Entity.setTitle(update.getTitle());
 		Entity.setText(update.getText());
-		
+		MemberEntity member=Entity.getMember();
 		log.info(Entity.getFiles().toString());
 		List<removetestDto> remove=new ArrayList<>();
 		List<detachfile> newdetach=new ArrayList<>();
-		Iterator<detachfile> dbfileiterator=Entity.getFiles().iterator();
+		
+		
 	
-		
+		if(Entity.getFiles().isEmpty()) {
+			System.out.println("기존값비었음");
+			if(!update.getDetach().isEmpty()) {
+				System.out.println("새로운이미지있음");
+				for(Detachupdateform data:update.getDetach()) {
+				detachfile detach=detachfile.builder()
+						.idx(data.getIdx())
+						.rangeindex(data.getRangeindex())
+						.filename(data.getFilename())
+						.path(data.getPath())
+						.notice(Entity)
+						.member(member)
+						.build();
+				
+				member.adddetachfiles(detach);
+				newdetach.add(detach);
+				
+				}
+				Entity.setFiles(newdetach);
+				
+				
+			}
+}
+		else {
 					
-		
+	Iterator<detachfile> dbfileiterator=Entity.getFiles().iterator();
 		while(dbfileiterator.hasNext()) {
 				detachfile dbdata=dbfileiterator.next(); //다음값삽입
 				
 				removetestDto removedto=removetestDto.builder().id(dbdata.getId()).url(dbdata.getPath()).test(false).build();
 				remove.add(removedto);
 		}
-		for(removetestDto removedata:remove) {
-			log.info("삭제체크기존데이터:"+removedata.getId());
+	
+			
 			for(Detachupdateform data:update.getDetach()) {
 					log.info("폼시작데이터:"+data.getId());
-				
+					for(removetestDto removedata:remove) {
 					
-					if(removedata.getId()==data.getId()) {
+					if(removedata.getIdx()==data.getIdx()) {
 						log.info("수정하지않은데이터:"+data.getId());
 						removedata.setTest(true);
+						data.setCurrent(true);
 						break;
 						
-					}else if(data.getId()==0) {
+					}
+					
+					}
+					if(!data.isCurrent()) {
 						log.info("새데이터");
 						detachfile detach=detachfile.builder()
 								.idx(data.getIdx())
@@ -280,19 +392,14 @@ public class NoticeServiceImpl implements NoticeService {
 						
 					newdetach.add(detach);
 					log.info("이게문제?"+detach.getPath());
-					
-						break;
-					
-					}else {
-						log.info("해당하지않는데이터");
-						
 					}
+					
 					
 									
 				
 			//폴문끝
 			//Entity.setFiles(newdetach);
-		}
+		
 			
 			}
 			
@@ -301,7 +408,7 @@ public class NoticeServiceImpl implements NoticeService {
 		//noticehandler.update(Entity);
 		
 		log.info("삭제예정");
-		String filepublic="D:/study프로그램/react/bootproject/public";
+		String filepublic=uploadroot;
 		for(removetestDto removes:remove) {
 			log.info(removes.getId().toString());
 			System.out.println(removes.isTest());
@@ -319,12 +426,13 @@ public class NoticeServiceImpl implements NoticeService {
 				}
 			}
 		}
+}
 		Entity.setFiles(newdetach);
 		
 		NoticeDto dto =Entity.toDto(Entity.getNoticeid(),Entity.getNoticeuser(),
 				  Entity.getNoticenick(),Entity.getTitle(),Entity.getText(),Entity.getRed()
 				,Entity.getLikeuser().size(),
-				Entity.getTemp(),Entity.getSky(),Entity.getPty(),Entity.getRain()
+				Entity.getTemp(),Entity.getSky(),Entity.getPty(),Entity.getRain(),Entity.getViews()
 				);;
 				  
 				  return dto;
@@ -333,24 +441,30 @@ public class NoticeServiceImpl implements NoticeService {
 
 	//게시판디테일===================================================
 	@Override
-	public NoticeDto detail(Long num) {
+	public NoticeDetailDto detail(Long noticeid,Long userid) {
+		//게시글 일부가져오기
+		NoticeDetailDto dto=noticehandler.detail(noticeid);
+		//커멘트는따로
+		//List<CommentEntity> comments=noticehandler.showcomments(noticeid);
 		
-		NoticeEntity Entity=noticehandler.detail(num);
+		if(userid!=null) {
+			//카운트가져오기
+			boolean liked=noticehandler.Likenoticecheck(userid, noticeid);	
+			boolean blocked=blockhandler.userblockcheck(userid, noticeid);
+			dto.setIsblock(blocked);
+			System.out.println("좋아요여부:"+liked);
+			dto.setLikeusercheck(liked);
+			
+		//	boolean decled=blockhandler.noticedeclecheck(userid, noticeid);
+			
+			return dto;
+			
+		}
 		
-		System.out.println("코멘트:"+Entity.getComments());
-		NoticeDto dto=Entity.toDto
-						(Entity.getNoticeid(),
-						Entity.getNoticeuser(),
-						Entity.getNoticenick(),
-						Entity.getTitle(), 
-						Entity.getText(),
-						Entity.getRed(),
-						Entity.getComments(),
-						Entity.getFiles(), 
-						Entity.getLikeuser().size(),
-						Entity.getTemp(),Entity.getSky(),Entity.getPty(),Entity.getRain()
-								);
+	
+		//List<Detachfile> images=
 		
+	
 		
 		
 		// TODO Auto-generated method stub
@@ -427,7 +541,10 @@ public class NoticeServiceImpl implements NoticeService {
 		}
 		else {
 			List<CommentDto> dtolist = new ArrayList();
-			for(CommentEntity a:findlist) {CommentDto dto = a.toDto(a.getId(),
+			
+			for(CommentEntity a:findlist) {
+				
+				CommentDto dto = a.toDto(a.getId(),
 					a.getDepth(),
 					a.getCnum(),
 					a.getUsername(),
@@ -469,9 +586,25 @@ public class NoticeServiceImpl implements NoticeService {
 
 
 	@Override
+	@Transactional
 	public void commentdelete(Long id) {
 		// TODO Auto-generated method 
-		noticehandler.deletecomment(id);
+		//이거 대댓글이 있으니까 확인후 완전삭제할지 그냥할지
+		log.info("딜리트메소드서비스시작");
+		boolean childis=noticehandler.childparuntcount(id);
+		log.info("대댓글여부찾기성공");
+		if(childis) {
+			//자식있으면 isdelete만바꾸자
+			log.info("딜리트엔티티가져오기");
+			CommentEntity entity=noticehandler.deletecommentget(id).orElseThrow(()->new IllegalAccessError());
+			log.info("딜리트메소드가져오기성공");
+			entity.setIsdelete(true);
+			
+		}else {
+			//뭐연습용으로 완전삭제
+			noticehandler.deletecomment(id);
+		}
+		
 		
 	}
 
@@ -494,14 +627,14 @@ public class NoticeServiceImpl implements NoticeService {
 		log.info("날짜포맷생성"+filesaveData);
 		String fileforder=filesaveData.replace("/", File.separator);
 		log.info("날짜포맷경로sepa:"+fileforder);
-		File savefolder=new File("D:/프로젝트간단정리/weathertw/frontend/bootproject/public/noticeimages",fileforder);
+		File savefolder=new File(uploadroot+File.separator+"noticeimages",fileforder);
 		if(savefolder.exists()==false) {//폴더가 있으면 트루없으면폴스
 			savefolder.mkdirs();
 			
 		}
 		String uuid=UUID.randomUUID().toString();
 		String oriname=image.getOriginalFilename(); //png붙어서그런가
-		String savefilename=savefolder.toPath()+File.separator+uuid+"_"+oriname;//+".png";
+		String savefilename=savefolder.toPath()+File.separator+uuid+"_"+oriname+".png";//+".png";
 		log.info("궁금해서topath내용:"+savefolder.toPath());
 		Path savePath=Paths.get(savefilename);
 		log.info("최종생성경로:"+savePath);
@@ -519,7 +652,7 @@ public class NoticeServiceImpl implements NoticeService {
 			
 		}
 				
-		return filesaveData+"/"+uuid+"_"+oriname;
+		return filesaveData+"/"+uuid+"_"+oriname+".png";
 	}
 
 
@@ -528,7 +661,7 @@ public class NoticeServiceImpl implements NoticeService {
 	public void saveimagecut(String id,String path) {
 		// TODO Auto-generated method stub
 		log.info("서비스단"+path);
-		String pathre="D:/프로젝트간단정리/weathertw/frontend/bootproject/public"+path;
+		String pathre=uploadroot+path;
 		String repath=pathre.replace("/", File.separator);
 		log.info("수정패스:"+repath);
 		Path deletepath=Paths.get(repath);
@@ -558,7 +691,7 @@ public class NoticeServiceImpl implements NoticeService {
 		
 		String urlname="/noticeimages/"+checkdate;
 		log.info("현재시간-"+urlname);
-		String filedirectory="D:/study프로그램/react/bootproject/public"+urlname;
+		String filedirectory=uploadroot+urlname;
 		String path=filedirectory.replace("/",File.separator);
 		log.info("패스:"+path);
 		File dir=new File(path);
@@ -623,7 +756,7 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public ResponseEntity getdetach(detachVo detach) {
 		// TODO Auto-generated method stub
-		Path filepath = Paths.get("D:/프로젝트간단정리/weathertw/frontend/bootproject/public"+detach.getUri());
+		Path filepath = Paths.get(uploadroot+detach.getUri());
 		try {
 			UrlResource resource=new UrlResource(filepath.toUri());
 			//한글파일이름 꺠질수있으니인코딩
@@ -657,12 +790,12 @@ public class NoticeServiceImpl implements NoticeService {
 					.build();
 			noticehandler.favoritesave(likes);
 			//int likesnum=notice.getLikeuser().size()+1;
-			return ResponseEntity.ok("좋아요");
+			return ResponseEntity.ok(true);
 		}else {
 			//좋아요누른적있음
 			noticehandler.favoritedelete(found.get());
 			//int likesnum=notice.getLikeuser().size()-1;
-			return ResponseEntity.ok("좋아요해제");
+			return ResponseEntity.ok(false);
 		}
 		
 	}
@@ -677,39 +810,341 @@ public class NoticeServiceImpl implements NoticeService {
 	}
 
 	//========================좋아요한 글만가져오기=================================
+	// 예전엔 NoticeEntity 를 받아 NoticeDto 로 손매핑했는데, 거기에 lazy 컬렉션인
+	// getFiles() 를 그대로 담았다. open-in-view:false 라서 컨트롤러가 JSON 으로 굽는
+	// 시점엔 세션이 닫혀 있어 LazyInitializationException -> 500 이 났다.
+	// 이제 저장소가 메인 피드와 같은 TwitformnoticeDto 를 바로 만들어 준다.
 	@Override
-	public  Map<String,Object> favoritenotice(MemberEntity member, Pageable pageable) {
-		// TODO Auto-generated method stub
-		 	Page<FavoriteEntity> followlist=noticehandler.favoritenoticefind(member, pageable);
-		 	System.out.println("좋아요글서비스단어떻게적용되나보자");
-		 	
-		 	//페이지객체생성법
-		 	List<NoticeDto> pagedto=new ArrayList<>();
-		 	//이거페이징어차피안되서안씀..생각해보니총페이지도필요없음
-		 	//Page<NoticeDto> dtolist=new PageImpl<>(pagedto);
-		 	
-		 	
-		 	for(FavoriteEntity favoriteentity:followlist) {
-		 		//아이거내가거꾸로좋아요했음
-		 		NoticeEntity notice=favoriteentity.getNotice();
-		 		NoticeDto dto=NoticeDto.builder().comments(notice.getComments()).detachfiles(notice.getFiles())
-		 				.likes(notice.getLikeuser().size()).nickname(notice.getNoticenick()).num(notice.getNoticeid())
-		 				.pty(notice.getPty()).temp(notice.getTemp()).sky(notice.getSky()).rain(notice.getRain())
-		 				.text(notice.getText()).title(notice.getTitle()).username(notice.getNoticeuser())
-		 				.likeusercheck(true)
-		 				.red(notice.getRed())
-		 				.userprofile(notice.getMember().getProfileimg())
-		 				.build();
-		 		
-		 		pagedto.add(dto);
-		 	}
-		 	
-		 	
-		 	Map<String,Object> data=new HashMap<>();
-		 	data.put("totalpage", followlist.getTotalPages());
-		 	data.put("notice", pagedto);
-		return data;
+	public  Page<TwitformnoticeDto> favoritenotice(MemberEntity member, Pageable pageable,String option,String keyword) {
+		Long userid=member.getId();
+
+		if(keyword==null || keyword.isBlank()) {
+			return noticehandler.twitfavoritelist(userid,pageable);
+		}
+		return noticehandler.twitfavoritesearch(userid,pageable,option,keyword);
 	}
+
+	//팔로잉 타임라인. 검색은 아직 붙이지 않았다(좋아요 탭처럼 나중에 확장 가능).
+	@Override
+	public Page<TwitformnoticeDto> followingnotice(Long userid, Pageable pageable) {
+		return noticehandler.twitfollowinglist(userid, pageable);
+	}
+
+	
+	//로그인시 차단서비스를위해 새로생성
+	@Override
+	public Page<NoticeDto> loginnoticeget(Long userid,int page) {
+		// TODO Auto-generated method stub
+		/*
+		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"id"));
+		Page<NoticeEntity> entitylist=noticehandler.read(pageable);
+		System.out.println("서비스시작");
+		
+		//아이디추출
+		List<Long> noticeids=entitylist.getContent().stream()
+				.map(NoticeEntity::getNoticeid)
+				.collect(Collectors.toList());
+		
+		//위정보로 좋아요엔티티가져오기
+		List<Long> likenoticeids=noticehandler.favoritenoticeids(userid, noticeids);
+	
+		//이게 Long이돌아야하다보니 이렇게가져오는게나은듯
+		long start2=System.currentTimeMillis();
+		List<Long> blocklistid=blockhandler.getblocknoticenum(userid);
+		long end2=System.currentTimeMillis();
+		
+		//좋아요도똑같이하면될듯
+		
+		//System.out.println("리스트채로:"+(end1-start1/1000)+"초걸림");
+		System.out.println("리스트채로:"+(end2-start2/1000)+"초걸림");
+		
+		Page<NoticeDto> dtolist=entitylist.map((m)->{
+			NoticeDto dto=new NoticeDto(m);
+			
+			dto.setIsblock(blocklistid.contains(m.getNoticeid()));
+			dto.setLikeusercheck(likenoticeids.contains(m.getNoticeid()));
+			return dto;
+		});
+		*/
+		return null;
+	}
+
+	@Override
+	public Page<NoticeDto> loginnoticesearchget(Long userid,String option, String content, int page) {
+		// TODO Auto-generated method stub
+		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"id"));
+		System.out.println("서비스시작");
+		long start1=System.currentTimeMillis();
+		List<NoticeblockEntity> blocklist=blockhandler.getuserblock(userid);
+		long end1=System.currentTimeMillis();
+		
+		/*얘가더느리네?
+		long start2=System.currentTimeMillis();
+		List<Long> blocklistid=blockhandler.getblocknoticenum(userid);
+		long end2=System.currentTimeMillis();
+		
+		System.out.println("리스트채로:"+(end1-start1/1000)+"초걸림");
+		System.out.println("리스트채로:"+(end2-start2/1000)+"초걸림");
+			*/
+		return null;
+	}
+
+	@Override
+	public Page<CommentDto> showcomments(Long noticeid,int page) {
+		// TODO Auto-generated method stub
+		//원댓글은 최신순(DESC). 작성창이 목록 위에 있어서 오래된순이면
+		//방금 쓴 댓글이 마지막 페이지로 가버려 1페이지에선 안 보인다.
+		//(대댓글은 대화 흐름대로 읽어야 하므로 findChildComments 에서 오래된순으로 정렬한다)
+		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"createdDate"));
+		System.out.println("문제구간찾기");
+	
+		Page<CommentDto> dtolist=noticehandler.showdirectc(noticeid, pageable);
+		//자식찾기위한로직
+		List<Long> parentids=dtolist.stream().map(CommentDto::getId).collect(Collectors.toList());
+		
+		//페이징객체안의내용이 불변객체라 뭐 안붙여진다해서 새로 복사해야함;
+		//새로만들어야하는게 dto프로덕션으로 가져올떈 child값이 null이되버림
+		List<CommentDto> parentList = dtolist.getContent().stream()
+			    .map(dto -> {
+			        // 복사 생성자나 builder로 새 객체 생성
+			        return CommentDto.builder()
+			            .id(dto.getId())
+			            .cid(dto.getCid())
+			            .noticenum(dto.getNoticenum())
+			            .depth(dto.getDepth())
+			            .cnum(dto.getCnum())
+			            .username(dto.getUsername())
+			            .nickname(dto.getNickname())
+			            .text(dto.getText())
+			            .redtime(dto.getRedtime())
+			            .userprofile(dto.getUserprofile())
+			            .isdelete(dto.isIsdelete())
+			            .isblocked(dto.isIsblocked())
+			            .profileid(dto.getProfileid())
+			            .build();
+			    })
+			    .collect(Collectors.toList());
+		
+		List<CommentEntity> childentitys=noticehandler.childcomments(noticeid, parentids);
+		
+		List <CommentDto> childdtos=childentitys.stream().map(child ->
+				CommentDto.builder()
+				.id(child.getId())
+				.cid(child.getMember().getId())
+				.noticenum(child.getNotice().getNoticeid())
+				.depth(child.getDepth())
+				.cnum(child.getCnum())
+				.username(child.getMember().getUsername())
+				.nickname(child.getMember().getNickname())
+				//부모 쿼리(showcomments)와 같은 순서·같은 문구여야 한다
+				.text(child.isIsblocked()?"운영자에 의해 차단된 댓글입니다"
+						:child.isIsdelete()?"삭제된 댓글입니다":child.getText())
+				.redtime(child.getCreatedDate())
+				.userprofile(child.getMember().getProfileimg())
+				.isdelete(child.isIsdelete())
+				.isblocked(child.isIsblocked())
+				.profileid(child.getMember().getProfileid())
+				.build()
+				).collect(Collectors.toList());
+		//부모id로 부모dto저장
+		//FUNCTION클래스에 identity는 자기자신 자바8에추가된거라고함 ;
+		//기존에 저기대신 commentdto -> commentdto 랑똑같음 
+		Map<Long, CommentDto> parrentmap=parentList.stream()
+				.collect(Collectors.toMap(CommentDto::getId,Function.identity()));
+	
+		
+		//자식댓글을 부모에붙이기
+		for (CommentDto child:childdtos) {
+			//cnum이부모아이디임
+			
+			Long parentId=child.getCnum();
+			
+			CommentDto parent=parrentmap.get(parentId);
+			
+			if(parent !=null) {
+				
+				parent.getChilds().add(child);
+			}
+			
+		}
+		
+		System.out.println("문제구간찾기디비까지꺼내옴");
+		//return dtolist;
+		//새페이지객체생성
+		return new PageImpl<>(parentList,dtolist.getPageable(),dtolist.getTotalElements());
+	}
+
+	@Override
+	public Page<NoticeImageDto> getimagelist(Long userid,int page,String option,String keyword) {
+		// TODO Auto-generated method stub
+		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"id"));
+		Page<Object[]> object;
+
+	
+		
+		if(keyword==null || keyword.isBlank()) {
+			System.out.println("기본");
+			object=noticehandler.getImagelist(pageable);
+		}
+		else {
+			System.out.println("검색");
+			object=noticehandler.getsearchImagelist(pageable, option, keyword);
+		}
+		//아이디추출
+		List<Long> noticeids=object.getContent().stream()
+				.map(obj -> ((Number) obj[0]).longValue())
+				.collect(Collectors.toList());
+		
+		//위정보로 좋아요엔티티가져오기
+				List<Long> likenoticeids=(userid !=null)
+						? noticehandler.favoritenoticeids(userid, noticeids)
+						:Collections.emptyList();
+				
+				Set<Long> likedset=new HashSet<>(likenoticeids);
+				List<Long> blocklistid=(userid != null)
+						? blockhandler.getuserblocknotices(userid,noticeids)
+						: Collections.emptyList();
+				//블록목록가져오기
+				Set<Long> blockset=new HashSet<>(blocklistid);	
+		Page<NoticeImageDto> dto=object.map(obj->
+								{
+								Long id=((Number) obj[0]).longValue();
+								boolean liked=userid != null && likedset.contains(id);
+								boolean blockcheck=userid !=null &&blockset.contains(id);
+								return NoticeImageDto.builder()
+								.id(id)
+								.title((String) obj[1])
+								.username((String) obj[2])
+								.nickname((String) obj[3])
+								.userprofile((String) obj[4])
+								.mainimage((String) obj[5])
+								.red((String) obj[6].toString())
+								.imagenum(((BigInteger) obj[7]).longValue())
+								.likes(((BigInteger) obj[8]).intValue())
+								.likely(liked)
+								.blockcheck(blockcheck)
+								.views(((BigInteger) obj[9]).longValue())
+								.build();
+								});
+				
+	
+		
+		return dto;
+	}
+
+	@Override
+	public List<PreviewimageDto> getPreviewimage(Long userid, Long noticeid) {
+		// TODO Auto-generated method stub
+		//유저아이디는받을필요없었겠다..
+		List<detachfile> entity=noticehandler.getPrevimage(noticeid);
+		
+		List<PreviewimageDto> dto=entity.stream().map((en)-> PreviewimageDto.builder()
+															.id(en.getId())
+															.filename(en.getFilename())
+															.path(en.getPath())
+															.build()
+															)
+				.collect(Collectors.toList());
+			
+		
+		return dto;
+	}
+
+	//유저페이지 게시글가져오기
+	@Override
+	public Page<TwitformnoticeDto> userpagenotice(Long loginid, int page, Long searchid,String option,String keyword,String sortoption) {
+		// TODO Auto-generated method stub
+		Page<TwitformnoticeDto> notice;//선언
+		PageRequest pageable;
+		if(sortoption.equals("date")) {
+		pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"id"));
+		notice=noticehandler.getuserpagepostsearch(loginid, searchid, option, keyword, pageable);
+		}
+		else  {
+		pageable =PageRequest.of(page-1, 10);
+		notice=noticehandler.getuserpagehighlightpost(loginid, searchid, option, keyword, pageable);
+		}
+		
+		
+		
+		return notice;
+	}
+
+	@Override
+	public Page<NoticeImageDto> getuserpageimagelist(Long searchid,String option,String keyword, int page,Long loginid) {
+		// TODO Auto-generated method stub
+		Pageable pageable =PageRequest.of(page-1, 10,Sort.by(Sort.DEFAULT_DIRECTION.DESC,"id"));
+		
+		System.out.println("유저페이지실행");
+		Page<Object[]> object=noticehandler.getuserpageimages(pageable,option,keyword, searchid);;
+		System.out.println("object가져옴");
+		if(loginid ==null) {
+			Page<NoticeImageDto> dto=object.map(obj->
+			{
+			Long id=((Number) obj[0]).longValue();
+			
+			return NoticeImageDto.builder()
+			.id(id)
+			.title((String) obj[1])
+			.username((String) obj[2])
+			.nickname((String) obj[3])
+			.userprofile((String) obj[4])
+			.mainimage((String) obj[5])
+			.red((String) obj[6].toString())
+			.imagenum(((BigInteger) obj[7]).longValue())
+			.likes(((BigInteger) obj[8]).intValue())
+			.likely(false)
+			.blockcheck(false)
+			.views(((BigInteger) obj[9]).longValue())
+			.build();
+			});
+
+
+			return dto;
+		}
+		
+		//아이디추출
+		List<Long> noticeids=object.getContent().stream()
+				.map(obj -> ((Number) obj[0]).longValue())
+				.collect(Collectors.toList());
+		
+		//위정보로 좋아요엔티티가져오기
+				List<Long> likenoticeids=(loginid !=null)
+						? noticehandler.favoritenoticeids(loginid, noticeids)
+						:Collections.emptyList();
+				
+				Set<Long> likedset=new HashSet<>(likenoticeids);
+				List<Long> blocklistid=(loginid != null)
+						? blockhandler.getuserblocknotices(loginid,noticeids)
+						: Collections.emptyList();
+				//블록목록가져오기
+				Set<Long> blockset=new HashSet<>(blocklistid);	
+		Page<NoticeImageDto> dto=object.map(obj->
+								{
+								Long id=((Number) obj[0]).longValue();
+								boolean liked=loginid != null && likedset.contains(id);
+								boolean blockcheck=loginid !=null &&blockset.contains(id);
+								return NoticeImageDto.builder()
+								.id(id)
+								.title((String) obj[1])
+								.username((String) obj[2])
+								.nickname((String) obj[3])
+								.userprofile((String) obj[4])
+								.mainimage((String) obj[5])
+								.red((String) obj[6].toString())
+								.imagenum(((BigInteger) obj[7]).longValue())
+								.likes(((BigInteger) obj[8]).intValue())
+								.likely(liked)
+								.blockcheck(blockcheck)
+								.views(((BigInteger) obj[9]).longValue())
+								.build();
+								});
+				
+	
+		return dto;
+	}
+
+	
 	}
 	 
 	

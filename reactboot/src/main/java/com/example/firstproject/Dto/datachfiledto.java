@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class datachfiledto {
 
-	private Long id;
+	private Long idx;
 	
 	private Long index;
 	private String filename;

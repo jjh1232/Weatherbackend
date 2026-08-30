@@ -18,6 +18,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -25,7 +26,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import com.example.firstproject.Dto.MemberDto;
 import com.example.firstproject.Entity.StompRoom.MemberRoom;
 import com.example.firstproject.Entity.StompRoom.Room;
+import com.example.firstproject.Entity.StompRoom.chatmessage;
+import com.example.firstproject.Entity.block.NoticeblockEntity;
+import com.example.firstproject.Entity.block.NoticedecleEntity;
 import com.example.firstproject.Entity.follow.FollowEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,7 +42,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity(name="member")
-@Getter@Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -50,14 +57,20 @@ public class MemberEntity {
 	
 	@Column(unique = true,nullable = false)
 	private String username;
+	//로그인 필터가 요청 바디를 MemberEntity 로 역직렬화하므로(authenticationfilter)
+	//들어오는 방향은 살려두고, 응답으로 나가는 방향만 막는다.
+	//@JsonIgnore 를 쓰면 password 가 null 로 파싱되어 로그인이 깨진다.
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@Column(nullable = false)
 	private String password;
-	
+
 	private String profileimg;
 	
 	@Column(unique=false,nullable=false)
 	private String nickname;
 	
+	@Column(unique=true,nullable=true)
+	private String profileid;
 	@CreatedDate
 	@Column(updatable = false, name="REGDATE") //업데이트불가
 	private String regdate;
@@ -77,8 +90,16 @@ public class MemberEntity {
 	    	this.updatered=LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd/HH:mm:ss"));
 	    }
 	    
+		//필수 약관(이용약관 · 개인정보 수집이용 · 만14세)에 동의한 시각.
+	//"동의를 받았다"는 사실은 나중에 증명할 수 있어야 하므로 남겨 둔다.
+	//소셜 가입은 별도 절차를 타므로 값이 없을 수 있다.
+	private String agreedat;
+
 	private String role;
-	
+
+	//요청으로 받을 일이 없으므로 양방향 모두 차단.
+	//클라이언트에는 응답 헤더 Refreshtoken 으로 따로 내려간다(authenticationfilter).
+	@JsonIgnore
 	private String refreshtoken;
 	
 	private String provider;
@@ -113,6 +134,15 @@ public class MemberEntity {
 	@OneToMany(mappedBy="member",fetch=FetchType.LAZY,cascade =CascadeType.ALL)
 	private List<detachfile> detachfiles;
 	
+	@OneToMany(mappedBy="member",fetch=FetchType.LAZY,cascade=CascadeType.PERSIST)
+	private List<chatmessage> chats;
+	
+	@OneToMany(mappedBy="member",fetch=FetchType.LAZY,cascade=CascadeType.ALL)
+	private List<NoticeblockEntity> noticeblocks;
+	
+	@OneToMany(mappedBy="member",fetch=FetchType.LAZY,cascade=CascadeType.PERSIST)
+	private List<NoticedecleEntity> noticedecle;
+	
 	public void addnotices(NoticeEntity notice) {
 		notices.add(notice);
 	}
@@ -125,6 +155,9 @@ public class MemberEntity {
 	}
 	public void addchatroom(MemberRoom room) {
 		chatrooms.add(room);
+	}
+	public void adddetachfiles(detachfile detach) {
+		detachfiles.add(detach);
 	}
 
 	 //팔로우================================================
@@ -141,19 +174,19 @@ public class MemberEntity {
     @OneToMany(mappedBy="member",fetch= FetchType.LAZY,cascade = CascadeType.ALL)
     private List<FavoriteEntity> favorite;
     
+    private String Profilebackground;
     
-    
+	//password / refreshtoken 은 응답으로 나가면 안되므로 MemberDto 에서 제거했다.
 	public MemberDto toDto(Long id,
-			String username,String password,String nickname,String role,
-			String refreshtoken,String provider,String providerid,Address region,
+			String username,String profileid,String nickname,String role,
+			String provider,String providerid,Address region,
 			String red,String updatered) {
 		return MemberDto.builder()
 				.id(id)
 				.username(username)
-				.password(password)
+				.profileid(profileid)
 				.nickname(nickname)
 				.role(role)
-				.refreshtoken(refreshtoken)
 				.provider(provider)
 				.providerid(providerid)
 				.homeaddress(region)

@@ -5,12 +5,16 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.example.firstproject.Dto.userdataDto.UserDto;
+import com.example.firstproject.Dto.userdataDto.UserPageDto;
 import com.example.firstproject.Entity.MemberEntity;
 
 @Repository
@@ -23,9 +27,27 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long>{
 	@Query(value="Select Count(username) from member where username =:username" ,nativeQuery=true)
 	Long emailcheck(@Param("username") String username);
 	
+	//유저심플아이디생성을위해 중복인지체크
+	boolean existsByProfileid(String profileId);
 	
 
 	Optional<MemberEntity> findByUsername(String username);
+	
+	@Query("SELECT new com.example.firstproject.Dto.userdataDto.UserPageDto"
+			+ "(m.id,m.username,m.nickname,m.myintro,m.profileimg,m.regdate,"
+			+ "(SELECT COUNT(f) FROM FollowEntity f Where f.frommember.id=m.id), "
+			+ "(SELECT COUNT(f) FROM FollowEntity f WHERE f.tomember.id = m.id), "
+			+ "CASE WHEN (EXISTS (SELECT 1 FROM FollowEntity f where f.frommember.id=:loginid AND f.tomember.id =m.id)) THEN true ELSE false END, "
+			+ "m.profileid, "
+			+ "m.Profilebackground"
+			+ ") "
+			//프론트의 /userpage 링크는 대부분 username(이메일)을 넘긴다.
+			//profileid 는 이메일 앞부분으로 만들어진 별도 핸들이라 그것만 보면
+			//해당유저를 못 찾고 IllegalArgumentException -> 500 이 났다.
+			//둘 다 받아준다.
+			+ "from member m where m.profileid = :profileid or m.username = :profileid"
+			)
+	Optional<UserPageDto> findByProfileid(String profileid,Long loginid);
 	//executeQuery로 전송되기때문에 update,delete,insult문은 리턴값이없어 안됨 따라서 executeupdtq()로전송되는 modifying을사용
 	@Modifying(clearAutomatically = true)//해당쿼리메서드실행직호 영속성컨텍스트를클리어할것인지아닌지 기본은디폴트임 
 	@Transactional
@@ -35,4 +57,11 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long>{
 
 
 	List<MemberEntity> findByNicknameContaining(String keyword);
+	
+	Page<MemberEntity> findByUsernameContaining(Pageable page,String keyowrd);
+	
+	Page<MemberEntity> findByNicknameContaining(Pageable page,String keyword);
+
+	
+	boolean existsByUsername(String username);
 }

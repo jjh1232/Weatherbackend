@@ -50,6 +50,13 @@ public class detachfile extends BaseTime{
 	
 	@Column(nullable = false)
 	public String path;
+
+	/* 차단 전 원본 경로. 차단할 때만 채워지고 복구하면 다시 비운다.
+	   이걸 안 남기면 path 와 글 본문이 둘 다 차단 이미지로 덮여서
+	   원본이 어느 파일이었는지 알 방법이 사라진다(오차단을 못 되돌린다).
+	   기존 행은 null 이므로 nullable 이어야 한다. */
+	@Column(nullable = true)
+	public String originalpath;
 	
 	
 	

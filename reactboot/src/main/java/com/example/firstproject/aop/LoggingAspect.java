@@ -13,6 +13,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import lombok.extern.slf4j.Slf4j;
+import com.example.firstproject.tools.ClientIp;
 
 @Aspect //advide+pointcut 어드바이스는 부가기능모듈설정 포인트컷은 어드바이스적용할조인포인트선별
 @Component
@@ -26,7 +27,8 @@ public class LoggingAspect {
 		//근데이거 bcycreept 빈이생성이안되서 실행을못시킴..
 	}
 	
-	@Pointcut("execution(* com.example.firstproject.controller..*.*(..))")
+	@Pointcut("execution(* com.example.firstproject.controller..*.*(..))||"
+			+ "execution(* com.example.firstproject.admin.admincontroller.*(..))")
 	public void controller() {
 		//컨트롤러에 적용 
 	}
@@ -60,6 +62,8 @@ public class LoggingAspect {
 		} catch (Throwable e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			//여기서처리해야지안그러면 start가무조건나감;
+			throw e;
 		}finally {
 			long end=System.currentTimeMillis();
 			long timein=end-start;
@@ -67,7 +71,7 @@ public class LoggingAspect {
 			log.info("조인포인트시그네이처:{} 걸린시간:{}ms",joinpoint.getSignature(),timein);
 		}
 		
-		return start;
+		
 		
 		
 		
@@ -90,7 +94,7 @@ public void beforeloging(JoinPoint joinpoint) {
 	
 	
 	log.info("before에서 요청로케일정보:"+request.getLocale());
-	String userip=getClientIP(request);
+	String userip=ClientIp.resolve(request);
 	log.info("before에서 요청ip주소:"+userip);
 	//이방식으로 하면 ip가프록시나따른거때매 이상하게나옴 설정검색
 	
@@ -113,35 +117,5 @@ public void beforeloging(JoinPoint joinpoint) {
 	
 }
 
-//아이피구하는표준스태틱
-public static String getClientIP(HttpServletRequest request) {
-	
-    String ip = request.getHeader("X-Forwarded-For");
-    //log.info("X-FORWARDED-FOR : " + ip);
-
-    if (ip == null) {
-        ip = request.getHeader("Proxy-Client-IP");
-        //log.info("Proxy-Client-IP : " + ip);
-    }
-    if (ip == null) {
-        ip = request.getHeader("WL-Proxy-Client-IP");
-       // log.info("WL-Proxy-Client-IP : " + ip);
-    }
-    if (ip == null) {
-        ip = request.getHeader("HTTP_CLIENT_IP");
-      //  log.info("HTTP_CLIENT_IP : " + ip);
-    }
-    if (ip == null) {
-        ip = request.getHeader("HTTP_X_FORWARDED_FOR");
-        //log.info("HTTP_X_FORWARDED_FOR : " + ip);
-    }
-    if (ip == null) {
-        ip = request.getRemoteAddr();
-      //  log.info("getRemoteAddr : "+ip);
-    }
-    log.info("Result : IP Address : "+ip);
-
-    return ip;
-}
 
 }

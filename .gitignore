@@ -1,0 +1,19 @@
+# === 이클립스 / IDE 산출물 ===
+# 저장소 루트가 곧 이클립스 워크스페이스 폴더라 .metadata 가 여기 있다.
+/.metadata/
+
+# 프로젝트 폴더 안에도 예전 워크스페이스 잔재가 있다.
+# 소스와 무관한 IDE 설정/인덱스/로그뿐이라 추적하지 않는다.
+reactboot/.metadata/
+
+# === 빌드 산출물 ===
+target/
+
+# === 시크릿 ===
+# 실제 값. 절대 커밋 금지. 채우는 방법은 application-secret.yml.example 참고.
+application-secret.yml
+
+# === 실행 로그 ===
+# 소스가 아니라 산출물이다. 예전엔 wrsungRestApi.log 가 커밋돼 있었다.
+log/
+*.log
