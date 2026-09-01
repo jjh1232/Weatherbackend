@@ -15,9 +15,9 @@
 [v] STEP 0  도메인 · 저장소
 [v] STEP 3  도커 구성        (mysql / redis / app)
 [v] STEP 4  백엔드 배포      (Named Tunnel + 도메인 연결)
-[ ] STEP 4-1 OAuth 콘솔 등록  ← 지금 여기
-[ ] STEP 5  프론트 배포
-[ ] STEP 6  통합 점검
+[v] STEP 4-1 OAuth 콘솔 등록
+[v] STEP 5  프론트 배포
+[ ] STEP 6  통합 점검          ← 지금 여기
 ```
 
 **주소**
@@ -149,29 +149,29 @@ docker run --rm -v "...:/home/nonroot/.cloudflared" \
 | `APP_CORS_ORIGINS` | `https://weave.prelaps.com` — 쉼표로 여러 개 · **끝 슬래시 금지** |
 | `MAIL_*` `GOOGLE_*` `NAVER_*` `JWT_SECRET` `WEATHER_API_KEY` | `reactboot/application-secret.yml` 을 `/app` 에 ro 마운트해서 전달 |
 
-## STEP 4-1 · OAuth 콘솔 등록 ← 지금 여기
+## STEP 4-1 · OAuth 콘솔 등록 (완료)
 
-- [ ] **구글** — `console.cloud.google.com` → API 및 서비스 → 사용자 인증 정보 →
+- [x] **구글** — `console.cloud.google.com` → API 및 서비스 → 사용자 인증 정보 →
       OAuth 2.0 클라이언트 ID → **승인된 리디렉션 URI** 에 추가
       `https://weave-api.prelaps.com/callback/google`
       · 기존 `http://localhost:8081/...` 은 로컬 개발용이므로 **지우지 말 것**
       · 동의 화면이 "테스트" 상태면 등록된 테스트 사용자만 로그인됩니다
-- [ ] **네이버** — `developers.naver.com` → 내 애플리케이션 → API 설정
+- [x] **네이버** — `developers.naver.com` → 내 애플리케이션 → API 설정
       · 서비스 URL `https://weave.prelaps.com` (프론트 · 경로 없이)
       · Callback URL `https://weave-api.prelaps.com/callback/naver`
       · 개발 상태에서는 지정한 계정만 로그인됩니다(공개하려면 검수 신청)
 
-## STEP 5 · 프론트 배포
+## STEP 5 · 프론트 배포 (완료)
 
-- [ ] `weather_react` 가 push 돼 있는지 확인
-- [ ] Pages 연결 — 저장소 `jjh1232/weather_react` · 빌드 `npm run build` · 출력 `build`
+- [x] `weather_react` 가 push 돼 있는지 확인
+- [x] Pages 연결 — 저장소 `jjh1232/weather_react` · 빌드 `npm run build` · 출력 `build`
       (루트 디렉터리는 비워둠 — 저장소 최상위가 곧 프로젝트)
-- [ ] Pages 빌드 환경변수에 `REACT_APP_API_URL=https://weave-api.prelaps.com`
+- [x] Pages 빌드 환경변수에 `REACT_APP_API_URL=https://weave-api.prelaps.com`
       (비워두면 `localhost:8081` 로 빌드됩니다)
-- [ ] Pages 커스텀 도메인 `weave.prelaps.com` 연결
+- [x] Pages 커스텀 도메인 `weave.prelaps.com` 연결
 - [ ] 배포 후 `.env` 의 `APP_CORS_ORIGINS` 에서 `http://localhost:3001` 제거 → 앱 재기동
 
-## STEP 6 · 통합 점검
+## STEP 6 · 통합 점검 ← 지금 여기
 
 - [ ] 일반 로그인 / 로그아웃
 - [ ] 소셜 로그인 — 구글
@@ -185,6 +185,40 @@ docker run --rm -v "...:/home/nonroot/.cloudflared" \
 - [ ] `/login` 등 내부 주소에서 **새로고침** → 404 안 나는지
 - [ ] 관리자 페이지 접근 제어
 - [ ] PC 재부팅 후 `restart: unless-stopped` 로 4개가 자동 복구되는지
+
+---
+
+## 평소 운영 — 필요할 때만 켠다
+
+24시간 돌릴 서버가 아니다. 보여줄 일이 있을 때만 켜고 평소엔 꺼둔다.
+
+```bash
+cd backend
+docker compose stop     # ■ 정지. 볼륨(데이터)은 그대로 남는다
+docker compose up -d    # ▶ 시작. 4개가 healthy 될 때까지 30초쯤
+docker compose ps       # wt-app 이 (healthy) 여야 준비 끝
+```
+
+`restart: unless-stopped` 는 이름 그대로 **"내가 직접 멈춘 게 아니면 다시 켠다"** 다.
+PC 를 재부팅하면 자동으로 뜨지만, 위처럼 직접 멈춘 뒤에는 켤 때까지 꺼진 상태를 지킨다.
+
+꺼져 있는 동안 `weave.prelaps.com` 은 Cloudflare 가 계속 서비스하므로 화면은 뜬다.
+다만 백엔드가 없어서 날씨·글 목록이 전부 실패하고, `weave-api...` 는 Cloudflare
+오류 페이지(1033 등)가 나온다. 남에게 보여주기 전에 미리 켜둘 것.
+
+**디스크 관리**
+
+빌드할 때마다 1단계(JDK+메이븐+의존성, 1GB 넘음)가 캐시로 쌓인다.
+덕분에 두 번째 빌드부터 20초에 끝나지만, 하루에 열 번 배포하면 12GB 가 쌓인다.
+
+```bash
+docker builder prune -f    # 빌드 캐시. 많이 배포한 날 한 번씩
+docker image prune -f      # 태그 없는 옛 이미지
+```
+
+⚠ `docker system prune -a --volumes` 는 절대 쓰지 말 것. DB 가 통째로 날아간다.
+vhdx 파일 자체는 비워도 안 줄어든다. C 드라이브를 돌려받으려면
+도커 데스크톱 Settings → Resources 에서 Compact 를 따로 해야 한다(도커 정지 필요).
 
 ---
 
@@ -228,6 +262,40 @@ if(member.getRole().equals("ROLE_TEMP")) { member.setRole("ROLE_User"); }
 - **게시글 상세에 가입 이메일을 노출하는 것은 의도한 동작입니다.**
   목록은 `@profileid`, 상세는 `username`(이메일)을 보여줍니다.
   스팸 수집 위험은 인지하고 있으나 현재 설계를 유지합니다.
+
+## 배포하며 잡은 것 (2026-09-01)
+
+전부 **빈 DB · 빈 서버 · 남의 브라우저에서만 드러나는** 부류였다.
+로컬에는 데이터도 파일도 이미 있어서 여태 몰랐던 것들이다.
+
+| 증상 | 진짜 원인 |
+|---|---|
+| `member` 테이블이 안 생김 | `@ColumnDefault` 한글 기본값에 따옴표 없음 → DDL 문법 오류 |
+| 스케줄러가 12시간마다 사망 | `dir.list()` 가 폴더 없으면 null |
+| 프로필 사진이 상세에서만 깨짐 | 저장값이 `/uuid.png` 인데 코드가 슬래시를 더 붙임 → `//` → 400 |
+| 게시글 상세가 가끔 백지 | 댓글이 먼저 오면 `post.id` 접근 → 렌더 예외 |
+| 자기 자신을 팔로우 가능 | `frommember == tomember` 참조 비교 (항상 false) |
+| 상세페이지 메뉴가 전부 무반응 | prop 이름 불일치 `isclose` vs `closeisMenu` |
+| 차단 이미지가 안 보임 | 프론트 정적 자산(`/front/...`)을 백엔드에 요청 |
+| 이미지 차단해도 본문은 그대로 | 프론트가 `API_BASE` 를 이중으로 붙여 치환 실패 → 저장 시 덮어씀 |
+| 채팅 기능 전체가 500 | **하드코딩된 회원 id 43** 을 시스템 계정으로 조회 |
+| 관리자 목록이 "회원이 없습니다" | 광고 차단 확장이 `/admin/` 요청을 막았는데 `.catch` 가 없어 조용히 실패 |
+
+**🔴 경로 탈출 취약점** — `/open/atagdown?path=/../../../etc/hostname` 으로
+인증 없이 서버의 아무 파일이나 읽을 수 있었다. `/app/application-secret.yml` 이
+읽히면 JWT 서명키가 넘어가 관리자 토큰 위조가 가능했다.
+`tools/UploadPath` 로 정규화 후 업로드 폴더 안인지 확인하도록 고쳤고,
+JWT 서명키도 교체했다.
+
+**응답 코드가 상황을 안 알려주면 진단이 몇 배로 길어진다**는 것이 오늘의 교훈이다.
+빈 200, 500 남발 때문에 매번 "요청이 갔는지"부터 확인해야 했다.
+그래서 다음을 고쳤다.
+  - `//` 든 URL: 500 → 400 (`RequestRejectedHandler`)
+  - 서명 안 맞는 토큰: 500 → 401 (`JWTVerificationException` 처리)
+  - 없는 파일: 500 → 404
+  - 목록 조회 실패: "비어 있음" → "불러오지 못했습니다" (`loaderror`)
+
+---
 
 ## 배포 후에도 남는 숙제
 - **토큰 저장 위치** — 프론트가 비-HttpOnly 쿠키에 넣습니다(XSS 시 탈취 가능).
