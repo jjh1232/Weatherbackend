@@ -127,8 +127,9 @@ public class MemberServiceImpl implements MemberService{
 				.build();
 		
 		
-		System.out.println(entity.toString());
+		//MemberEntity 를 그대로 찍으면 가입 이메일과 비번 해시가 로그에 남는다.
 		MemberEntity saved=handler.membercreate(entity);
+		log.info("회원가입 완료: memberId={} provider={}", saved.getId(), saved.getProvider());
 
 		//인증 토큰 발급 + 메일 발송. 토큰 원본은 메일에만 실리고 DB 에는 해시만 남는다.
 		emailverifyservice.issue(saved);
