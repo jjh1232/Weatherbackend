@@ -16,6 +16,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import org.springframework.security.web.firewall.HttpStatusRequestRejectedHandler;
+import org.springframework.security.web.firewall.RequestRejectedHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -75,6 +77,18 @@ public class securityconfig {
 		
 	}
 */
+	/* StrictHttpFirewall 이 거부한 요청의 응답 코드.
+	   시큐리티는 URL 에 "//" 나 인코딩된 경로 구분자처럼 경로 매칭을 우회할 수 있는
+	   패턴이 있으면 필터체인 앞단에서 RequestRejectedException 을 던진다.
+	   그런데 이 예외를 받아주는 곳이 없으면 서블릿 컨테이너까지 올라가 500 이 나간다.
+	   잘못된 요청이므로 400 이 맞다. 500 이면 진짜 장애와 구분이 안 되고,
+	   봇이 "//" 를 뿌리고 다닐 때 에러 로그가 500 으로 도배된다.
+	   기본 생성자가 400(Bad Request)을 쓴다. */
+	@Bean
+	public RequestRejectedHandler requestRejectedHandler() {
+		return new HttpStatusRequestRejectedHandler();
+	}
+
 	//스프링 부트 시큐리트 cors설정
 	//스프링 부트 시큐리트 cors설정
 	@Bean

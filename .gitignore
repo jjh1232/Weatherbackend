@@ -22,3 +22,10 @@ log/
 # compose 가 읽는 실제 값(DB 비번 등). application-secret.yml 과 같은 이유로 커밋 금지.
 # 채우는 방법은 .env.example 참고.
 .env
+
+# === Cloudflare Tunnel ===
+# cert.pem 은 이 계정의 터널을 만들고 지울 수 있는 열쇠고,
+# <터널id>.json 은 이 터널로 트래픽을 받을 수 있는 자격증명이다.
+# 유출되면 남이 내 도메인으로 자기 서버를 붙일 수 있다. .env 와 같은 등급.
+cloudflared/*.pem
+cloudflared/*.json
