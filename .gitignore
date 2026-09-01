@@ -17,3 +17,8 @@ application-secret.yml
 # 소스가 아니라 산출물이다. 예전엔 wrsungRestApi.log 가 커밋돼 있었다.
 log/
 *.log
+
+# === 도커 ===
+# compose 가 읽는 실제 값(DB 비번 등). application-secret.yml 과 같은 이유로 커밋 금지.
+# 채우는 방법은 .env.example 참고.
+.env

@@ -26,6 +26,11 @@ public class Redisconfig {
 	
 	@Value("${spring.data.redis.port}")
 	private int port;
+
+	// 비번을 안 건 로컬 redis 도 그대로 돌아가야 하므로 기본값을 빈 문자열로 둔다.
+	// (${VAR:} 는 "없으면 빈 값" 이라는 뜻. 시크릿이지만 로컬 호환 때문에 예외로 기본값을 준다)
+	@Value("${spring.data.redis.password:}")
+	private String password;
 	
 	
 	//redis연결을위한 커넥션생성
@@ -41,7 +46,16 @@ public class Redisconfig {
 
         conf.setHostName(host);
         conf.setPort(port);
-		return new LettuceConnectionFactory(host,port);
+		// 비번이 설정돼 있을 때만 넘긴다. 빈 문자열을 그대로 넘기면
+		// 비번을 안 건 서버가 "AUTH 를 왜 보내냐" 며 거절한다.
+		if (password != null && !password.isBlank()) {
+			conf.setPassword(password);
+		}
+
+		// 위에서 만든 conf 를 실제로 넘긴다.
+		// 예전에는 conf 를 만들어놓고 (host, port) 를 따로 넘겨서 conf 가 통째로 버려졌다.
+		// 그래서 setPassword 를 추가해도 아무 효과가 없었다.
+		return new LettuceConnectionFactory(conf);
 	}
 	
 	

@@ -71,6 +71,9 @@ spring:
    redis:
     host: ${REDIS_HOST:localhost}
     port: ${REDIS_PORT:6379}
+    # 도커 redis 는 requirepass 로 비번을 건다. 로컬 redis 는 비번이 없어서
+    # 기본값을 빈 값으로 두면 양쪽 다 그대로 돈다.
+    password: ${REDIS_PASSWORD:}
     type: redis
 
 
