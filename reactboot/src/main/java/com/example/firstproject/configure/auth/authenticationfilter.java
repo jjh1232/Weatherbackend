@@ -77,7 +77,8 @@ public class authenticationfilter extends UsernamePasswordAuthenticationFilter{
 			System.out.println("맵형식:"+userna.get("username"));
 			*/
 			MemberEntity entity=obmap.readValue(requestwr.getInputStream(),MemberEntity.class);
-			System.out.println("로그인정보:"+entity.getUsername());
+			//가입 이메일을 로그에 남기지 않는다. 로그인 시도가 있었다는 사실만 남긴다.
+			System.out.println("로그인 시도 수신");
 			request.setAttribute("username", entity.getUsername());
 			//어센티케이션토큰사용  자동으로 bcryp디코딩이되나봄? 
 			UsernamePasswordAuthenticationToken authenticationtoken=
@@ -93,10 +94,11 @@ public class authenticationfilter extends UsernamePasswordAuthenticationFilter{
 			System.out.println("이후프린시펄디테일자동실행ㅇ");
 			
 			 PrincipalDetails principalDetails=(PrincipalDetails) authentication.getPrincipal();
-			   System.out.println("username: "+principalDetails.getUsername());
-			   System.out.println("password: "+principalDetails.getPassword());
-			   System.out.println("authorities: "+principalDetails.getMember().getNickname());
-			   System.out.println("==================================");
+			   /* 예전엔 username(가입 이메일)·password(비번 해시)·닉네임을 그대로 찍었다.
+			      비번은 해시라도 로그에 남길 값이 아니고, 이메일은 개인정보다.
+			      문제 추적에는 회원 id 면 충분하다. */
+			   System.out.println("로그인 성공: memberId="
+					   +(principalDetails.getMember()!=null?principalDetails.getMember().getId():null));
 			   //4.authentication반환
 			   return authentication;
 		
@@ -128,8 +130,8 @@ public class authenticationfilter extends UsernamePasswordAuthenticationFilter{
 		
 		//
 		PrincipalDetails principal=(PrincipalDetails) authResult.getPrincipal();
-		System.out.println("프린시펄");
-		System.out.println(principal);
+		//PrincipalDetails 를 그대로 찍으면 MemberEntity(이메일·비번해시)가 통째로 남는다.
+		System.out.println("프린시펄 확인: memberId="+(principal.getMember()!=null?principal.getMember().getId():null));
 		
 		//임시유저객체생성 근데안해도될ㄷㅅ?
 		/*
@@ -153,8 +155,9 @@ public class authenticationfilter extends UsernamePasswordAuthenticationFilter{
 		response.addHeader("Authorization", jwttoken); //
 		response.addHeader("Refreshtoken", refreshtoken);
 		
-		System.out.println("jwttoken:"+jwttoken);
-		System.out.println("refreshtoken:"+refreshtoken);
+		//토큰 전문은 남기지 않는다. 발급됐다는 사실만.
+		System.out.println("액세스토큰 발급 완료");
+		//리프레시 토큰은 수명이 길어 더 위험하다. 전문은 남기지 않는다.
 		//로그인 히스토리 
 		String clientip=ClientIp.resolve(request);
 		LoginHistory history=LoginHistory.builder()
@@ -179,7 +182,7 @@ public class authenticationfilter extends UsernamePasswordAuthenticationFilter{
 			if(code.equals("자격 증명에 실패하였습니다.")) {
 			
 			System.out.println("비밀번호실패");
-				System.out.println("로그인실패리스폰스"+username);
+				//실패 로그에 이메일을 남기지 않는다. 로그인 기록 테이블에는 그대로 저장된다.
 				
 				//이거근데자격증명코드가 비번틀렸을시만하자
 				

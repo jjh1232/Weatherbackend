@@ -68,7 +68,7 @@ public class oauth2loginservice extends DefaultOAuth2UserService{
 		
 		String username=oauth2user.getusername();
 		
-		System.out.println("유저:"+username);
+		//소셜이 준 이메일을 로그에 남기지 않는다.
 		Optional<MemberEntity> opuser=repository.findByUsername(username);
 		MemberEntity entity=opuser.orElse(null);
 		if(entity==null) {
@@ -128,7 +128,9 @@ public class oauth2loginservice extends DefaultOAuth2UserService{
 			
 			}
 		}
-		System.out.println("네이버도잘나오나어트리뷰트스"+user.getAttributes());
+		//소셜이 준 속성 전체에는 이메일·프로필사진 URL·고유ID 가 들어 있다.
+		//디버깅 때 유용했지만 로그에 개인정보를 그대로 쌓게 되므로 키 이름만 남긴다.
+		log.info("소셜 속성 수신: keys={}", user.getAttributes().keySet());
 		return new PrincipalDetails(entity,user.getAttributes());
 		
 	}

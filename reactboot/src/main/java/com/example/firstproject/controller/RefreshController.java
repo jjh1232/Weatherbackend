@@ -32,7 +32,9 @@ public class RefreshController {
 		//여기서 엑세스토큰을 제발급하고 다시 authentication을하는느낌
 		String refreshheader=request.getHeader("Refreshtoken");
 		if(refreshheader !=null&&refreshheader.startsWith("Bearer ")) {
-			log.info("리프레쉬토큰문제없음:"+refreshheader);
+			//토큰 전문을 찍으면 로그를 본 사람이 그대로 그 계정 행세를 할 수 있다.
+			//리프레시 토큰은 수명이 길어 더 위험하다. 헤더 형식이 맞는지만 남긴다.
+			log.info("리프레쉬토큰 헤더 확인됨");
 			String refreshtoken=refreshheader.replace("Bearer ", "");
 			//리프레쉬토큰 유효기간체크
 			if(jwtservice.checktokenvalid(refreshtoken)) {
@@ -52,7 +54,7 @@ public class RefreshController {
 					log.info("12시간이내에만료임 재발급");
 					//새리프레쉬토큰생성후 유저데이터에 셋한다
 					String newrefreshtoken=jwtservice.createrefreshtoken();
-					System.out.println("재발급한리프레쉬토큰"+newrefreshtoken);
+					log.info("리프레쉬토큰 재발급 완료");
 					jwtservice.Setrefreshtoken(principal.getUsername(), newrefreshtoken);
 					response.addHeader("Authorization", newjwttoken);
 					response.addHeader("Refreshtoken",newrefreshtoken);

@@ -24,10 +24,12 @@ import com.example.firstproject.tools.Userinfoheader;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
 
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class oauth2successfilter implements AuthenticationSuccessHandler{
 
@@ -44,22 +46,23 @@ public class oauth2successfilter implements AuthenticationSuccessHandler{
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
 		
-		System.out.println("oauth2로그인석세스");
-		 System.out.println("석세스핸들러이건머지:"+authentication.getAuthorities().stream().map(Object::toString).collect(Collectors.joining(" ")));
-		
-	
-		 PrincipalDetails principal=(PrincipalDetails) authentication.getPrincipal();
-		 
-		 System.out.println("어트리뷰트스:"+principal.getMember());
-	      System.out.println("어트리뷰트스:"+principal.getUsername());
-	      System.out.println("어트리뷰트스:"+ principal.getAuthorities());
-	      
+		/* 로그에 남기면 안 되는 것들.
+		   예전에는 아래를 전부 찍고 있었다.
+		     - JWT 액세스 토큰 / 리프레시 토큰 전문
+		     - principal.getMember()  (MemberEntity toString - 이메일·비번해시 등)
+		     - principal.getUsername() (가입 이메일)
+		   토큰이 로그에 남으면 로그를 볼 수 있는 사람은 누구나 그 계정 행세를 할 수 있다.
+		   리프레시 토큰은 수명이 길어 더 위험하다.
+		   문제 추적에 필요한 건 "누가 어떤 권한으로 로그인했나" 뿐이라 회원 id 만 남긴다. */
+		PrincipalDetails principal=(PrincipalDetails) authentication.getPrincipal();
+
+		log.info("oauth2 로그인 성공: memberId={} authorities={}",
+				principal.getMember()!=null?principal.getMember().getId():null,
+				authentication.getAuthorities().stream().map(Object::toString).collect(Collectors.joining(" ")));
+
 	      String jwttoken=jwtservice.createtoken(principal);
 	      String refreshtoken=jwtservice.createrefreshtoken();
 	      jwtservice.Setrefreshtoken(principal.getUsername(), refreshtoken);
-	      
-	      System.out.println("jwt토큰"+jwttoken);
-	      System.out.println("리프레쉬토큰토큰"+refreshtoken);
 	      
 	 	
 	      //response.addHeader("Authorization", jwttoken);

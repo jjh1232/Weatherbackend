@@ -88,7 +88,8 @@ public class Authorizationdfilter extends BasicAuthenticationFilter{
 		//String refreshheader=request.getHeader("Refreshtoken");
 		
 		
-		System.out.println("jwtheader: "+jwtheader);
+		//토큰 전문을 찍으면 로그를 본 사람이 그대로 그 계정 행세를 할 수 있다. 유무만 남긴다.
+		System.out.println("Authorization 헤더 "+(jwtheader!=null?"있음":"없음"));
 		System.out.println("===========================================");
 	if(request.getServletPath().startsWith("/open/")) {
 			//open경로===============================================================================
@@ -137,7 +138,7 @@ public class Authorizationdfilter extends BasicAuthenticationFilter{
 		else {
 		System.out.println("토큰이제대로됫음");
 		String jwttoken=jwtheader.replace("Bearer ","");
-		System.out.println("jwttoken"+jwttoken);
+		//토큰 전문은 남기지 않는다.
 		
 		//토큰 기간체크 
 		if(jwtservice.checktokenvalid(jwttoken)) {
@@ -199,14 +200,15 @@ public class Authorizationdfilter extends BasicAuthenticationFilter{
 			System.out.println("리프레쉬토큰 사용가능");
 			//리프레쉬토큰시간계산
 			//액세스토큰재발급?
-			System.out.println("dma"+refreshtoken);
+			//리프레시 토큰 전문은 남기지 않는다.
 			MemberEntity entity=repository.findByrefreshtoken(refreshtoken).orElseThrow();
 			
 			System.out.println("리프레쉬토큰으로겟");//영속성컨테스트문제라는데왜안되지이거엔티티불러오면.. ;
 			
 			
 			PrincipalDetails principal=new PrincipalDetails(entity);
-			System.out.println("다시액세스토큰정보"+principal);
+			//PrincipalDetails 를 그대로 찍으면 MemberEntity(이메일·비번해시)가 통째로 남는다.
+			System.out.println("액세스토큰 재발급 대상 memberId="+(principal.getMember()!=null?principal.getMember().getId():null));
 			String newjwttoken=jwtservice.createtoken(principal);
 			//리프레쉬토큰재발급
 			String newrefreshtoken=jwtservice.createrefreshtoken();

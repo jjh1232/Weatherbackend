@@ -188,16 +188,60 @@ docker run --rm -v "...:/home/nonroot/.cloudflared" \
 
 ---
 
-## 배포 후에도 남는 숙제
+## 다음에 만들 것 — 소셜 가입 추가정보 화면
 
-- **`profileimagesave()` 가 파일명에 이메일을 넣습니다** — `MemberController:219`.
-  확장자 없이 `uuid_이메일` 로 저장해서 공개 URL 에 가입 이메일이 노출됩니다.
-  `imagesave()` 가 이미 대체 구현이므로 호출부만 바꾸면 됩니다.
+**지금 소셜 신규 가입은 막다른 길입니다.** 백엔드는 `ROLE_TEMP` 로 만들고
+`/signup/extrainfo` 로 보내는데, 그 화면(`MemberPage/Oauth2userextra.jsx`)이
+토큰만 쿠키에 넣고 끝나는 **빈 화면**입니다. 코드에도 `//TODO 추가정보 입력 폼은
+아직 구현 전이다` 라고 적혀 있습니다.
+
+정식 회원 전환은 `MemberServiceImpl.profileupdate()` 가 합니다.
+
+```java
+if(member.getRole().equals("ROLE_TEMP")) { member.setRole("ROLE_User"); }
+```
+
+즉 **우연히 "정보수정" 을 눌러야** 가입이 끝납니다. 신규 가입자는 알 수 없습니다.
+(구글 계정 id=1 이 그렇게 ROLE_User 가 됐고, 네이버 계정 id=2 는 아직 ROLE_TEMP 입니다.)
+
+**받아야 할 값**
+
+| 항목 | 소셜에서 오나 | 비고 |
+|---|---|---|
+| 이메일(`username`) | ✅ 온다 | 표시만. 수정 불가로 두는 게 맞다 |
+| 닉네임 | ✅ 온다 | 중복이 있을 수 있어 확인·수정이 필요하다 |
+| **지역(`Address`)** | ❌ 안 온다 | **실제로 받아야 하는 핵심 값** |
+| 프로필 사진 | 제공사마다 다름 | 선택. 비우면 기본 이미지 |
+
+지역은 지금 기본값(`서울특별시  종로구  청운효자동`)이 그냥 들어갑니다.
+날씨가 이 앱의 중심 기능인데 **모든 신규 회원이 종로구로 시작**한다는 뜻입니다.
+지역 선택 UI 는 `UI/weatherregion` 과 `/open/regionsearch` 가 이미 있으니 재사용합니다.
+
+- [ ] `Oauth2userextra` 에 폼 구현 (닉네임 확인 + 지역 선택 + 프로필 사진(선택))
+- [ ] 제출 시 기존 프로필 수정 API 재사용 → `ROLE_TEMP` → `ROLE_User` 전환
+- [ ] `ROLE_TEMP` 상태로 다른 화면에 접근하면 이 화면으로 되돌리기
+
+---
+
+## 결정 사항 (숙제 아님)
+
+- **게시글 상세에 가입 이메일을 노출하는 것은 의도한 동작입니다.**
+  목록은 `@profileid`, 상세는 `username`(이메일)을 보여줍니다.
+  스팸 수집 위험은 인지하고 있으나 현재 설계를 유지합니다.
+
+## 배포 후에도 남는 숙제
 - **토큰 저장 위치** — 프론트가 비-HttpOnly 쿠키에 넣습니다(XSS 시 탈취 가능).
   같은 상위 도메인이므로 리프레쉬 토큰만 `Domain=.prelaps.com; HttpOnly; Secure` 로
   옮길 수 있습니다. 바꿀 곳은 `oauth2successfilter` 한 메서드입니다.
 - **Security 인가 규칙이 `Authorizationdfilter` 단독 의존** (`antMatchers("/**").permitAll()`)
 - **인증 실패 응답이 200** — 토큰이 없거나 잘못돼도 빈 본문 200 이 나갑니다. 401 이 맞습니다.
+- ~~토큰·개인정보가 로그에 그대로 기록~~ **해결(2026-09-01)** — JWT/리프레시 토큰 전문,
+  비번 해시, 가입 이메일, 소셜 속성 전체를 찍고 있었습니다. 회원 id 와 속성 키 이름만
+  남기도록 바꿨습니다. (`oauth2successfilter` `authenticationfilter` `RefreshController`
+  `oauth2loginservice`)
+- ~~렌더 중 예외에 화면 전체가 백지~~ **해결(2026-09-01)** — `UI/Feedback/ErrorBoundary`
+  로 라우터를 감쌌습니다. 이벤트 핸들러·async 콜백 안의 예외는 여전히 안 잡히므로
+  그쪽은 각자 try/catch 가 필요합니다.
 - **볼륨 백업 절차 부재** — DB 와 업로드가 도커 볼륨 안에만 있습니다.
   `docker run --rm -v backend_mysql-data:/data -v .:/backup alpine tar czf /backup/db.tar.gz /data`
 - **테스트 부재** — `application-test.yml` + 슬라이스 테스트 (`ImageExtensionTest` 하나뿐)
