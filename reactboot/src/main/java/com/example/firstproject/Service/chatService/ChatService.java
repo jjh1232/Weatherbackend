@@ -121,8 +121,12 @@ public class ChatService {
 			log.info("챗룸목록에추가");
 			member.addchatroom(memberroom);
 			log.info("맴버객체에챗룸추가");
-			Long a=(long) 43;
-			MemberEntity System=memberrepo.findById(a).orElseThrow();
+			/* ★ 예전엔 43번 회원을 시스템 계정으로 찾아 썼다. 개발하던 로컬 DB 의 id 가
+			   그대로 박힌 것이라, 새 DB(배포판)에는 43번이 없어 orElseThrow 가 터지고
+			   채팅방 생성·입장·퇴장이 전부 500 이 났다.
+			   시스템 메시지는 보낸 회원이 없는 것이 맞다. member_id 는 nullable 이고
+			   이 값을 읽는 곳도 없다(sender="System" 으로 구분한다). */
+			MemberEntity System=null;
 			chatmessage enterchat=chatmessage.builder()
 					.sender("System") //이렇게설정할까 
 					.member(System)//시스템일경우
@@ -327,8 +331,12 @@ public class ChatService {
 	
 		//유저가 나간것도 채팅으로저장 시스템 멤버가져오기 
 		//근데매번 Db에 가는것도 비효율적인거같긴해서 그냥내가 생성할까
-		Long a=(long) 43;
-		MemberEntity System=memberrepo.findById(a).orElseThrow();
+		/* ★ 예전엔 43번 회원을 시스템 계정으로 찾아 썼다. 개발하던 로컬 DB 의 id 가
+		   그대로 박힌 것이라, 새 DB(배포판)에는 43번이 없어 orElseThrow 가 터지고
+		   채팅방 생성·입장·퇴장이 전부 500 이 났다.
+		   시스템 메시지는 보낸 회원이 없는 것이 맞다. member_id 는 nullable 이고
+		   이 값을 읽는 곳도 없다(sender="System" 으로 구분한다). */
+		MemberEntity System=null;
 		
 		chatmessage enterchat=chatmessage.builder()
 				.sender("System") //이렇게설정할까 
@@ -390,8 +398,12 @@ public class ChatService {
 			//추가
 			entity.addchatroom(memberroom);
 			room.adduserlist(memberroom);
-			Long a=(long) 43;
-			MemberEntity System=memberrepo.findById(a).orElseThrow();
+			/* ★ 예전엔 43번 회원을 시스템 계정으로 찾아 썼다. 개발하던 로컬 DB 의 id 가
+			   그대로 박힌 것이라, 새 DB(배포판)에는 43번이 없어 orElseThrow 가 터지고
+			   채팅방 생성·입장·퇴장이 전부 500 이 났다.
+			   시스템 메시지는 보낸 회원이 없는 것이 맞다. member_id 는 nullable 이고
+			   이 값을 읽는 곳도 없다(sender="System" 으로 구분한다). */
+			MemberEntity System=null;
 	
 			chatmessage enterchat=chatmessage.builder()
 					.sender("System") //이렇게설정할까 
