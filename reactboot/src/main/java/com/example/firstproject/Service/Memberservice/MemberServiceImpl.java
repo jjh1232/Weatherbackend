@@ -41,6 +41,7 @@ import com.example.firstproject.Dto.follow.findDto;
 import com.example.firstproject.Dto.userdataDto.UserDto;
 import com.example.firstproject.Dto.userdataDto.ProfileUpdateDto;
 import com.example.firstproject.Dto.userdataDto.UserPageDto;
+import com.example.firstproject.tools.ImageExtension;
 import com.example.firstproject.Entity.Address;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Entity.NoticeEntity;
@@ -329,11 +330,10 @@ public class MemberServiceImpl implements MemberService{
 			savefolder.mkdirs();
 		}
 
-		String ext=".png";
-		String origin=file.getOriginalFilename();
-		if(origin!=null&&origin.lastIndexOf('.')>-1) {
-			ext=origin.substring(origin.lastIndexOf('.')).toLowerCase();
-		}
+		// 업로더가 보낸 확장자를 그대로 쓰면 x.html 이 그대로 저장되고
+		// /userprofileimg/x.html 이 text/html 로 서빙된다(저장형 XSS).
+		// 허용 목록에 없으면 400 으로 끊는다.
+		String ext=ImageExtension.resolve(file);
 
 		String savename=UUID.randomUUID().toString()+ext;
 		Path savepath=Paths.get(savefolder.getAbsolutePath(),savename);

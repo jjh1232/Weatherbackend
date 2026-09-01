@@ -20,15 +20,18 @@ import lombok.NoArgsConstructor;
 public class Address {
 
 	@Column(name="adress")
-	@ColumnDefault("서울특별시  종로구  청운효자동")
+	// @ColumnDefault 는 값을 SQL 에 그대로 붙여넣는다. 문자열이면 따옴표를 직접 넣어야 한다.
+	// 없으면 "default 서울특별시 ..." 가 되어 create table 이 문법 오류로 실패한다.
+	// (로컬은 member 테이블이 이미 있어서 ddl-auto:update 가 건너뛰느라 안 드러났다)
+	@ColumnDefault("'서울특별시  종로구  청운효자동'")
 	@NotBlank
 	private String juso="서울특별시  종로구  청운효자동";
 	 //빌더사용시 기본값이라는디
 	
-	@ColumnDefault("60")
+	@ColumnDefault("'60'")
 	@NotBlank
 	private String gridx="60";
-	@ColumnDefault("127")
+	@ColumnDefault("'127'")
 	@NotBlank
 	private String gridy="127";
 

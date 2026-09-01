@@ -47,6 +47,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriUtils;
 
+import com.example.firstproject.tools.ImageExtension;
 import com.example.firstproject.Dto.Detachupdateform;
 import com.example.firstproject.Dto.MemberDto;
 import com.example.firstproject.Dto.NoticeDetailDto;
@@ -633,8 +634,12 @@ public class NoticeServiceImpl implements NoticeService {
 			
 		}
 		String uuid=UUID.randomUUID().toString();
-		String oriname=image.getOriginalFilename(); //png붙어서그런가
-		String savefilename=savefolder.toPath()+File.separator+uuid+"_"+oriname+".png";//+".png";
+		// 원본 파일명을 경로에 그대로 붙이면 안 된다.
+		// "../../evil" 같은 이름이 오면 업로드 폴더 밖에 파일을 쓸 수 있다.
+		// 그리고 예전에는 확장자와 무관하게 .png 를 강제로 붙여서, jpg 를 올려도
+		// 파일명이 .png 가 됐다. UUID + 검사를 통과한 실제 확장자만 쓴다.
+		String ext=ImageExtension.resolve(image);
+		String savefilename=savefolder.toPath()+File.separator+uuid+ext;
 		log.info("궁금해서topath내용:"+savefolder.toPath());
 		Path savePath=Paths.get(savefilename);
 		log.info("최종생성경로:"+savePath);
@@ -652,7 +657,7 @@ public class NoticeServiceImpl implements NoticeService {
 			
 		}
 				
-		return filesaveData+"/"+uuid+"_"+oriname+".png";
+		return filesaveData+"/"+uuid+ext;
 	}
 
 
@@ -696,8 +701,15 @@ public class NoticeServiceImpl implements NoticeService {
 		log.info("패스:"+path);
 		File dir=new File(path);
 		
-		String[] filenames=dir.list(); //배열로받아야함
-			//여기즘파일네임널오류인데 일단보류
+		String[] filenames=dir.list();
+
+		// list() 는 폴더가 없으면 빈 배열이 아니라 null 을 준다.
+		// 어제 업로드가 하나도 없었으면(배포 직후 등) 폴더 자체가 안 만들어져 있어서
+		// 아래 for 문에서 NPE 가 나고 스케줄러가 죽는다. 정리할 게 없는 것이지 오류가 아니다.
+		if (filenames == null) {
+			log.info("정리할 폴더가 없음(어제 업로드 없음): " + path);
+			return;
+		}
 		List<removetestDto> removet=new ArrayList<>();
 		for(String filename: filenames) {
 			removetestDto dto=removetestDto.builder().url(filedirectory+"/"+filename).test(false).build();
