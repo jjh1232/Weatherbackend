@@ -48,6 +48,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriUtils;
 
 import com.example.firstproject.tools.ImageExtension;
+import com.example.firstproject.tools.UploadPath;
 import com.example.firstproject.Dto.Detachupdateform;
 import com.example.firstproject.Dto.MemberDto;
 import com.example.firstproject.Dto.NoticeDetailDto;
@@ -665,11 +666,12 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public void saveimagecut(String id,String path) {
 		// TODO Auto-generated method stub
-		log.info("서비스단"+path);
-		String pathre=uploadroot+path;
-		String repath=pathre.replace("/", File.separator);
-		log.info("수정패스:"+repath);
-		Path deletepath=Paths.get(repath);
+		/* path 는 클라이언트가 보낸 값이다. 그대로 이어붙이면 업로드 폴더 밖의
+		   파일을 지울 수 있다. 게다가 저장된 값이 절대주소인 경우가 있어
+		   uploadroot+"https://..." 가 되면 삭제가 조용히 실패했다.
+		   UploadPath 가 두 경우를 모두 처리한다. */
+		Path deletepath=UploadPath.resolve(uploadroot, path);
+		log.info("삭제 대상 경로 확인 완료");
 		Long longid=Long.parseLong(id);
 		//detachfile detachEntity=detachrepo.findById(longid).orElseThrow();
 		try {
@@ -768,7 +770,8 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public ResponseEntity getdetach(detachVo detach) {
 		// TODO Auto-generated method stub
-		Path filepath = Paths.get(uploadroot+detach.getUri());
+		//uri 는 클라이언트가 보낸 값이다. 그대로 이어붙이면 업로드 폴더 밖으로 나갈 수 있다.
+		Path filepath = UploadPath.resolve(uploadroot, detach.getUri());
 		try {
 			UrlResource resource=new UrlResource(filepath.toUri());
 			//한글파일이름 꺠질수있으니인코딩

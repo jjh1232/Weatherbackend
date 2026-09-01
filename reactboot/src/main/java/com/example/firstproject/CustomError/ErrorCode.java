@@ -11,6 +11,7 @@ public enum ErrorCode {
 	UNKNOWN("000_UNKOWN","알수없는에러가발생했습니다"),
 	NOT_ALLOW_EMAIL("009_NOT_ALLOW_EMAIL","인증되지 않은이메일입니다!"),
 	NOT_ALLOW_IMAGE_TYPE("010_NOT_ALLOW_IMAGE_TYPE","허용하지 않는 이미지 형식입니다. (png, jpg, jpeg, gif, webp)"),
+	INVALID_UPLOAD_PATH("011_INVALID_UPLOAD_PATH","잘못된 파일 경로입니다"),
 	
 	//401
 	INVALID_TOKEN("101_INVALID_TOKEN","유효하지 않은 토큰입니다"),

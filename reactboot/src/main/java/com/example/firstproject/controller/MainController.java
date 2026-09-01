@@ -2,6 +2,7 @@ package com.example.firstproject.controller;
 
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -55,6 +56,7 @@ import com.example.firstproject.Service.NoticeService;
 import com.example.firstproject.Service.Memberservice.MemberService;
 import com.example.firstproject.configure.PrincipalDetails;
 import com.example.firstproject.tools.NoticeViewtools;
+import com.example.firstproject.tools.UploadPath;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -410,24 +412,34 @@ public class MainController {
 	
 	@GetMapping("/open/atagdown") //a태그는 스프링부트에서막는다.. 
 	public ResponseEntity atagdown(@RequestParam String path) {
-		log.info(path);
-		Path filepath = Paths.get(uploadroot+path);
+		/* ★ 예전엔 Paths.get(uploadroot+path) 로 그대로 이어붙였다.
+		     이 엔드포인트는 /open/** 이라 인증이 없어서, path 에 "/../../../etc/hostname"
+		     같은 값을 넣으면 업로드 폴더 밖의 아무 파일이나 내려받을 수 있었다.
+		     마운트된 /app/application-secret.yml 이 읽히면 JWT 서명키까지 넘어간다.
+		     UploadPath 가 정규화 후 업로드 폴더 안인지 확인하고, 벗어나면 400 으로 끊는다. */
+		Path filepath = UploadPath.resolve(uploadroot, path);
+
+		/* 없는 파일이면 404 를 준다.
+		   예전엔 UrlResource 를 그대로 body 에 실어서, 파일이 없으면 응답을 쓰는 시점에
+		   터져 500 이 나갔다. 없는 파일은 서버 오류가 아니다. */
+		if(!Files.isRegularFile(filepath)) {
+			return ResponseEntity.notFound().build();
+		}
+
 		try {
 			UrlResource resource=new UrlResource(filepath.toUri());
 			//한글파일이름 꺠질수있으니인코딩
 			String encodeupload=UriUtils.encode("파일",StandardCharsets.UTF_8);
 			String contentDisposition = "attachment; filename=\"" + encodeupload + "\"";
-			
+
 			return ResponseEntity.ok()
 					.header(HttpHeaders.CONTENT_DISPOSITION,contentDisposition)
 					.body(resource);
-			
+
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			log.info("오류!");
-			e.printStackTrace();
+			log.info("첨부 다운로드 경로 변환 실패");
+			return ResponseEntity.notFound().build();
 		}
-		return null;
 	}
 	
 	//==================================게시글좋아요기능 =================================
