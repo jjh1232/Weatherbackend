@@ -28,10 +28,12 @@ public class FollowService {
 	
 	public void follow(MemberEntity frommember, MemberEntity tomember) throws Exception {
 		// TODO Auto-generated method stub
-		if(frommember ==tomember) {
-			//본인이 본인하는경우 
+		//본인이 본인을 팔로우하는 경우.
+		//예전에는 frommember == tomember 로 비교했는데, == 는 "같은 객체인가" 를 본다.
+		//컨트롤러가 findemail() 을 두 번 따로 부르므로 같은 사람이어도 인스턴스가 달라
+		//항상 false 였고, 자기 자신을 팔로우할 수 있었다. id 로 비교해야 한다.
+		if(frommember.getId().equals(tomember.getId())) {
 			throw new Exception("자기자신을팔로우할수없습니다");
-			
 		}
 		//팔로우 이미한경우 보통 to와 프롬 값을 가져와서 비교
 		if(followhandler.checkfollow(frommember.getId(), tomember.getId()).isPresent()) {

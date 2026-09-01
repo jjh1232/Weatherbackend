@@ -20,6 +20,11 @@ class ImageExtensionTest {
 		return new MockMultipartFile("image", filename, null, "내용".getBytes());
 	}
 
+	/** 파일명과 Content-Type 을 같이 주는 경우. */
+	private MockMultipartFile file(String filename, String contentType) {
+		return new MockMultipartFile("image", filename, contentType, "내용".getBytes());
+	}
+
 	@Test
 	@DisplayName("허용된 확장자는 소문자로 정규화해서 돌려준다")
 	void 허용확장자() {
@@ -46,6 +51,33 @@ class ImageExtensionTest {
 		String bs = String.valueOf((char) 92);
 		assertThrows(CustomException.class, () -> ImageExtension.resolve(file("a." + bs + ".." + bs + "evil")));
 		assertThrows(CustomException.class, () -> ImageExtension.resolve(file("a./../../evil")));
+	}
+
+	@Test
+	@DisplayName("파일명에 확장자가 없으면 Content-Type 으로 판단한다 - Blob 업로드 경로")
+	void 블롭업로드() {
+		//프론트가 캔버스 리사이즈 후 Blob 으로 올리면 브라우저가 filename="blob" 으로 보낸다.
+		assertEquals(".png", ImageExtension.resolve(file("blob", "image/png")));
+		assertEquals(".jpg", ImageExtension.resolve(file("blob", "image/jpeg")));
+		//"image/png; charset=UTF-8" 처럼 파라미터가 붙어 오는 경우
+		assertEquals(".png", ImageExtension.resolve(file("blob", "image/png; charset=UTF-8")));
+		//대문자로 오는 경우
+		assertEquals(".webp", ImageExtension.resolve(file("blob", "IMAGE/WEBP")));
+	}
+
+	@Test
+	@DisplayName("Content-Type 이 이미지가 아니면 여전히 막는다")
+	void 콘텐츠타입도차단() {
+		assertThrows(CustomException.class, () -> ImageExtension.resolve(file("blob", "text/html")));
+		assertThrows(CustomException.class, () -> ImageExtension.resolve(file("blob", "application/octet-stream")));
+		assertThrows(CustomException.class, () -> ImageExtension.resolve(file("blob", null)));
+	}
+
+	@Test
+	@DisplayName("확장자가 위험해도 Content-Type 이 이미지면 이미지 확장자로 저장한다")
+	void 위험한확장자는이미지로내려앉는다() {
+		//저장되는 파일명이 .png 라 html 로 서빙될 길이 없다. 이게 이 검사의 목적이다.
+		assertEquals(".png", ImageExtension.resolve(file("evil.html", "image/png")));
 	}
 
 	@Test
