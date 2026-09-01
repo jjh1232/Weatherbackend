@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.example.firstproject.Entity.MemberEntity;
 import com.example.firstproject.Repository.MemberRepository;
@@ -189,6 +190,15 @@ public class JwtService {
 		}
 		catch(TokenExpiredException e){
 			System.out.println("토큰만료");
+			return false;
+		}
+		/* 예전엔 만료만 잡았다. 그래서 서명이 안 맞는 토큰(JWT_SECRET 을 교체했거나
+		   위조된 토큰)은 SignatureVerificationException 이 그대로 튀어나가 500 이 됐다.
+		   "이 토큰은 못 쓴다" 는 서버 오류가 아니라 인증 실패다.
+		   JWTVerificationException 은 만료·서명불일치·형식오류의 공통 부모라
+		   토큰이 유효하지 않은 모든 경우를 여기서 false 로 돌린다. */
+		catch(JWTVerificationException e){
+			System.out.println("토큰 검증 실패: "+e.getClass().getSimpleName());
 			return false;
 		}
 		return true;
