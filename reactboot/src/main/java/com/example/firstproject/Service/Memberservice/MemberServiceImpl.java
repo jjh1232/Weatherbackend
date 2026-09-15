@@ -252,29 +252,24 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public String deletemember(String username,String authkey) {
 		// TODO Auto-generated method stub
-		MemberEntity entity=handler.findemail(username).get();
-		log.info("유저네임:"+username);
-		log.info("인증키:"+authkey);
+		MemberEntity entity=handler.findemail(username).orElseThrow(()->
+			new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_USER));
+		// 코드 값은 로그에 남기지 않는다(로그만 보면 탈퇴시킬 수 있게 된다)
 		String authkeyconfirm=deleterepo.getdeletecode(username);
-		log.info("저장소확인:"+authkeyconfirm);
-		
+
+		// 코드가 틀리면 예전엔 로그만 찍고 200 이 나가서 화면은 「삭제 완료」 를 띄웠다
+		if(authkeyconfirm==null || !authkey.equals(authkeyconfirm)) {
+			log.info("탈퇴 코드 불일치 id={}",entity.getId());
+			throw new CustomException(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_DELETE_CODE);
+		}
+
 		//일단 팔로우 연관관계 삭제
 		List<FollowEntity> followlist=followhandler.findbytofrom(entity.getId());
-		
-		followlist.stream().forEach(System.out::println);
-		
-		if(authkey.equals(authkeyconfirm)) {
-			log.info("인증키가같습니다!");
-			for (FollowEntity fols:followlist) {
-				fols.setFrommember(null);
-				fols.setTomember(null);
-			}
-			
-			handler.deletemember(entity);
+		for (FollowEntity fols:followlist) {
+			fols.setFrommember(null);
+			fols.setTomember(null);
 		}
-		else {
-			log.info("인증키가다릅니다 ㅜ!");
-		}
+		handler.deletemember(entity);
 		
 		return null;
 	}

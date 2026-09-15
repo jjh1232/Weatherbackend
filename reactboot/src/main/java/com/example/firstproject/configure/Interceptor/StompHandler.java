@@ -59,6 +59,8 @@ public class StompHandler implements ChannelInterceptor{ //채널인섭셉터 �
 	
 	//라스트챗리포지토리
 	private final LastchatreadRepository chatreadrepo;
+	private final com.example.firstproject.tools.OwnerCheck owner;
+	private static final java.util.regex.Pattern ROOM_TOPIC = java.util.regex.Pattern.compile("^/sub/channel/(\\d+)$");
 	//websocket을 통해 들어온 요청이 처리되기전에 실행됨 
 	@Override  
 		public Message<?> preSend(Message<?> message, MessageChannel channel) {
@@ -251,6 +253,21 @@ public class StompHandler implements ChannelInterceptor{ //채널인섭셉터 �
 			String loginid =useridobj;
 			System.out.println("유저로그인아이디:"+loginid);
 			accessor.setUser(new StompPrincipal(loginid));
+		}
+
+		/* [2026-09-15] 구독은 확인 없이 받아서, 방 번호만 알면 남의 방 대화를 실시간으로 엿볼 수 있었다.
+		   방 토픽(/sub/channel/{숫자})을 구독할 때는 참여자인지 본다. 아니면 프레임을 버린다(null). */
+		if(StompCommand.SUBSCRIBE.equals(accessor.getCommand()) && accessor.getDestination()!=null) {
+			java.util.regex.Matcher m=ROOM_TOPIC.matcher(accessor.getDestination());
+			if(m.matches()) {
+				Long subroom=Long.valueOf(m.group(1));
+				Long subuser=null;
+				try { subuser=useridobj==null ? null : Long.valueOf(useridobj); } catch (NumberFormatException e) { subuser=null; }
+				if(!owner.isRoomMember(subroom,subuser)) {
+					log.warn("[stomp] 참여자가 아닌 구독을 버림 room={} user={}",subroom,subuser);
+					return null;
+				}
+			}
 		}
 		
 		//이걸로보내야 setuser같은 헤더도 다된다고함;

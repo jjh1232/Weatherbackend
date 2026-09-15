@@ -20,10 +20,14 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import com.example.firstproject.Dto.ChatDto.ChatResponseDto;
 import com.example.firstproject.Dto.ChatDto.stompchatDto;
+import com.example.firstproject.Dto.ChatDto.Roomdata.EzmemberDto;
 import com.example.firstproject.Dto.ChatDto.Roomdata.MeseageDto;
+import com.example.firstproject.Entity.MemberEntity;
+import com.example.firstproject.Repository.MemberRepository;
 import com.example.firstproject.Service.Followservice.FollowService;
 import com.example.firstproject.Service.chatService.ChatService;
 import com.example.firstproject.aop.NoLogging;
+import com.example.firstproject.tools.OwnerCheck;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +42,9 @@ public class StompController {
 	
 	//db에저장하자
 	private final ChatService chatservice;
-	
+	private final OwnerCheck owner;
+	private final MemberRepository memberrepo;
+
 	@Qualifier("redisTemplateString")
 	private final RedisTemplate<String, String> redistemplate;
 	//이벤트리스너가 실행이안되는데 이유를 모르겠어.. 그냥 채널인터셉터에서핵ㄹ
@@ -78,11 +84,31 @@ public class StompController {
 	@NoLogging
 	@MessageMapping("/channel/{roomid}") //pub를 붙여 메세지 발행시 들어오는 처리 ex)pub/chat/{userid}
 	//@Sendto("주소") //이걸로리턴으로 보낼수도있다고함
-	public void sendMessage(@DestinationVariable Long roomid,stompchatDto messageDto ) throws IllegalAccessException { //만든 챗메세지 dto와 @Header등으로 헤더정보나 메세지를 가져옴
+	public void sendMessage(@DestinationVariable Long roomid,stompchatDto messageDto,Principal principal) throws IllegalAccessException { //만든 챗메세지 dto와 @Header등으로 헤더정보나 메세지를 가져옴
 		log.info("해당챗방룸아이디 :"+roomid);
-		log.info("챗룸데이터:"+messageDto.getMessage());
-		
-		//@PathVariable ("userid") String userid
+
+		/* [2026-09-15] 보낸 사람을 메시지 본문의 sender 로 믿고, 방 참여자인지도 안 봤다.
+		   본문을 바꾸면 남의 이름으로, 들어가지도 않은 방에 메시지를 넣을 수 있었다.
+		   보낸 사람은 연결 때 토큰으로 확인한 사용자(StompHandler 가 넣은 Principal)로 정한다. */
+		Long userid=null;
+		try {
+			userid=principal==null ? null : Long.valueOf(principal.getName());
+		} catch (NumberFormatException e) {
+			userid=null;
+		}
+		if(userid==null || !owner.isRoomMember(roomid,userid)) {
+			log.warn("[stomp] 참여자가 아닌 발행을 버림 room={} user={}",roomid,userid);
+			return;
+		}
+		MemberEntity me=memberrepo.findById(userid).orElse(null);
+		if(me==null) return;
+		messageDto.setSender(EzmemberDto.builder()
+				.userid(me.getId())
+				.email(me.getUsername())
+				.nickname(me.getNickname())
+				.profileurl(me.getProfileimg())
+				.build());
+
 		MeseageDto dto=chatservice.chatsave(roomid,messageDto);
 		
 		

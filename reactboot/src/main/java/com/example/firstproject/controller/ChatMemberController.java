@@ -42,6 +42,7 @@ import com.example.firstproject.Service.Memberservice.MemberService;
 import com.example.firstproject.Service.chatService.ChatService;
 import com.example.firstproject.aop.Logoutano;
 import com.example.firstproject.configure.PrincipalDetails;
+import com.example.firstproject.tools.OwnerCheck;
 
 
 import lombok.RequiredArgsConstructor;
@@ -56,6 +57,10 @@ public class ChatMemberController {
 	private final MemberRepository memberrepository;
 	
 	private final ChatService chatservice;
+
+	/* [2026-09-15] 방 번호만 알면 참여하지 않은 방의 대화·참여자를 읽고, 사람을 초대하고,
+	   남의 방 이름을 바꿀 수 있었다. 방을 건드리는 요청은 전부 참여자인지 먼저 본다. */
+	private final OwnerCheck owner;
 	
 	
 
@@ -204,8 +209,9 @@ public class ChatMemberController {
 	
 	//채팅방디테일
 	@GetMapping("/chatroomdataget")
-	public ResponseEntity chatroomdata(@RequestParam Long roomid){
+	public ResponseEntity chatroomdata(@RequestParam Long roomid,Authentication authentication){
 		log.info("방데이터가죠오기");
+		owner.roomMember(roomid,owner.me(authentication));
 		/* 기존코드가 1초느리다
 		long start1=System.currentTimeMillis();
 		Room room=chatservice.findbychatroom(roomid);
@@ -251,6 +257,7 @@ public class ChatMemberController {
 			,@PathVariable Long memberroomid
 			,@RequestBody ChangeRoomnameDto dto) {
 			System.out.println("룸네임변경"+memberroomid+"새이름:"+dto.getRoomname());
+			owner.memberRoom(memberroomid,owner.me(authentication));
 			MemberRoom memberroom=chatservice.roonnamechange(memberroomid, dto.getRoomname());
 		
 	
@@ -258,9 +265,11 @@ public class ChatMemberController {
 	}
 	//채티방 멤버추가하기
 	@PostMapping("/chatroominvite")
-	public ResponseEntity chatmemberadd(@RequestBody Roomuseradd adddto) throws Exception {
-		
+	public ResponseEntity chatmemberadd(@RequestBody Roomuseradd adddto,Authentication authentication) throws Exception {
+
 		log.info("유저초대!");
+		// 방에 없는 사람이 초대하면 자기 자신을 넣어 남의 대화를 읽을 수 있었다
+		owner.roomMember(adddto.getRoomid(),owner.me(authentication));
 		
 		Room roomdata=chatservice.Roomadduser(adddto.getUserlist(),adddto.getRoomid());
 		
@@ -275,8 +284,9 @@ public class ChatMemberController {
 	}
 	//채팅방 정보 가져오기
 	@GetMapping("/chatroomdata/info/{roomid}")
-	public ResponseEntity<Roominfo> chatroomdetailinfo(@PathVariable Long roomid){
+	public ResponseEntity<Roominfo> chatroomdetailinfo(@PathVariable Long roomid,Authentication authentication){
 		log.info("채팅방정보가져오기");
+		owner.roomMember(roomid,owner.me(authentication));
 		
 		long start2=System.currentTimeMillis();
 		Roominfo roominfo=chatservice.roominfoget(roomid);
@@ -292,6 +302,7 @@ public class ChatMemberController {
 	public ResponseEntity<ChatdataDto> chatroomdetailchatdata(@PathVariable Long roomid,Authentication authenticcation){
 		log.info("채팅가져오기");
 		PrincipalDetails details=(PrincipalDetails) authenticcation.getPrincipal();
+		owner.roomMember(roomid,details.getid());
 		long start2=System.currentTimeMillis();
 		ChatdataDto newdata=chatservice.chatdataget(roomid,details.getid());
 		long end2=System.currentTimeMillis();

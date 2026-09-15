@@ -12,6 +12,13 @@ public enum ErrorCode {
 	NOT_ALLOW_EMAIL("009_NOT_ALLOW_EMAIL","인증되지 않은이메일입니다!"),
 	NOT_ALLOW_IMAGE_TYPE("010_NOT_ALLOW_IMAGE_TYPE","허용하지 않는 이미지 형식입니다. (png, jpg, jpeg, gif, webp)"),
 	INVALID_UPLOAD_PATH("011_INVALID_UPLOAD_PATH","잘못된 파일 경로입니다"),
+	INVALID_DELETE_CODE("012_INVALID_DELETE_CODE","탈퇴 확인 코드가 올바르지 않습니다"),
+	//403
+	NOT_OWNER("301_NOT_OWNER","본인만 할 수 있습니다"),
+	NOT_ROOM_MEMBER("302_NOT_ROOM_MEMBER","참여 중인 채팅방이 아닙니다"),
+	//404
+	NOT_FOUND_NOTICE("NOT_FOUND_NOTICE","게시글이 없습니다"),
+	NOT_FOUND_COMMENT("NOT_FOUND_COMMENT","댓글이 없습니다"),
 	
 	//401
 	INVALID_TOKEN("101_INVALID_TOKEN","유효하지 않은 토큰입니다"),

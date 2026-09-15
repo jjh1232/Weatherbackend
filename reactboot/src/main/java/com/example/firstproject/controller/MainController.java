@@ -56,6 +56,7 @@ import com.example.firstproject.Service.NoticeService;
 import com.example.firstproject.Service.Memberservice.MemberService;
 import com.example.firstproject.configure.PrincipalDetails;
 import com.example.firstproject.tools.NoticeViewtools;
+import com.example.firstproject.tools.OwnerCheck;
 import com.example.firstproject.tools.UploadPath;
 
 import lombok.RequiredArgsConstructor;
@@ -76,6 +77,7 @@ public class MainController {
 	private MemberService memberservice;
 	
 	private final NoticeViewtools noticeviewservice;
+	private final OwnerCheck owner;
 
 	//업로드 루트(application.yml: app.upload.public-dir)
 	//예전에는 옛 프로젝트의 절대경로가 그대로 박혀 있었다.
@@ -224,8 +226,12 @@ public class MainController {
 
 
 	@PostMapping(value="/noticecreate")
-	public void create(@Validated @RequestBody Noticeform form) {//리퀘스트바디와 겟터셋터필수임;
+	public void create(@Validated @RequestBody Noticeform form,Authentication authentication) {//리퀘스트바디와 겟터셋터필수임;
 		System.out.println("게시글작성!");
+		// 작성자는 본문이 아니라 로그인 정보로 채운다. 본문 값을 믿으면 남의 이름으로 글이 써진다.
+		MemberEntity me=((PrincipalDetails) authentication.getPrincipal()).getMember();
+		form.setUsername(me.getUsername());
+		form.setNickname(me.getNickname());
 		noticeservice.noticecreate(form);
 		System.out.println("컨트롤러크레딧");
 		
@@ -253,42 +259,18 @@ public class MainController {
 
 	//=====================수정검사==========================================
 	@GetMapping("/noticeupdate/{num}")
-	public NoticeDetailDto noticeupdatedetail(@PathVariable Long num,Authentication authentication) throws Exception {
-		PrincipalDetails principal=(PrincipalDetails) authentication.getPrincipal();
-		String username=principal.getUsername();
-		Long userid=principal.getMember().getId();
-		NoticeDetailDto dto=noticeservice.detail(num,userid);
-		if(username.equals(dto.getUsername())) {
-			log.info("유저가일치합니다!");
-			return dto;
-		}
-		else {
-			log.info("유저가 일치하지않아요 로그인정보를확인해주세요");
-			throw new Exception("아이디불일치");
-		}
-		
-
+	public NoticeDetailDto noticeupdatedetail(@PathVariable Long num,Authentication authentication) {
+		Long userid=owner.me(authentication);
+		owner.notice(num,userid);          // 아니면 403 (예전엔 Exception → 500)
+		return noticeservice.detail(num,userid);
 	}
 	
 	//=======================삭제===============================
 	@DeleteMapping("/noticedelete/{num}")
-	public void delete(@PathVariable Long num,Authentication authentication) throws Exception {
+	public void delete(@PathVariable Long num,Authentication authentication) {
 		log.info("게시글삭제");
-		PrincipalDetails principal=(PrincipalDetails) authentication.getPrincipal();
-		String username=principal.getUsername();
-		Long userid=principal.getMember().getId();
-		NoticeDetailDto dto=noticeservice.detail(num,userid);
-		
-		if(username.equals(dto.getUsername())) {
-			log.info("유저가일치합니다!");
-			noticeservice.delete(num);
-		}
-		else {
-			log.info("유저가 일치하지않아요 로그인정보를확인해주세요");
-			throw new Exception("아이디불일치");
-		}
-		
-		
+		owner.notice(num,owner.me(authentication));
+		noticeservice.delete(num);
 	}
 	//코멘트 가져오기
 	@GetMapping("/open/commentshow")
@@ -300,14 +282,20 @@ public class MainController {
 	}
 	//실제수정
 	@PutMapping("/noticeupdate/{num}")
-	public NoticeDto update(@PathVariable Long num,@Validated @RequestBody NoticeUpdate update) {
+	public NoticeDto update(@PathVariable Long num,@Validated @RequestBody NoticeUpdate update,Authentication authentication) {
+		// 수정 화면(GET)만 막고 저장(PUT)은 안 막고 있었다. 요청을 직접 보내면 남의 글이 바뀌었다.
+		owner.notice(num,owner.me(authentication));
 		NoticeDto dto=noticeservice.noticeupdate(num,update);
 		return dto;
 	}
 	//==================코멘트생성========================================
 	@PostMapping("/commentcreate")
-	public void comment(@RequestBody Commentform form ) {
+	public void comment(@RequestBody Commentform form,Authentication authentication) {
 		System.out.println("댓글작성");
+		// 작성자는 로그인 정보로. 본문의 username 을 믿으면 남의 이름으로 댓글이 달린다.
+		MemberEntity me=((PrincipalDetails) authentication.getPrincipal()).getMember();
+		form.setUsername(me.getUsername());
+		form.setNickname(me.getNickname());
 		System.out.println(form.toString());
 		noticeservice.Commentcreate(form);
 		System.out.println("댓글알람성공시 작성");
@@ -352,19 +340,20 @@ public class MainController {
 	}
 	
 	@PutMapping("/commentupdate")
-	public void commentupdate(@RequestBody HashMap<String,Object> updatedata) {
+	public void commentupdate(@RequestBody HashMap<String,Object> updatedata,Authentication authentication) {
 		Long id=Long.valueOf(updatedata.get("id").toString());
-		String email=updatedata.get("username").toString();
 		String text=updatedata.get("text").toString();
-		
-		noticeservice.commentupdate(id,email,text);
-		
+		// 본문의 username 은 받기만 하고 비교하지 않았다. 이제 쓰지 않는다.
+		MemberEntity me=((PrincipalDetails) authentication.getPrincipal()).getMember();
+		owner.comment(id,me.getId());
+		noticeservice.commentupdate(id,me.getUsername(),text);
+
 	}
-	
+
 	@DeleteMapping("/commentdelete/{id}")
-	public void commentdelete(@PathVariable Long id) {
+	public void commentdelete(@PathVariable Long id,Authentication authentication) {
 		System.out.println("댓글삭제!");
-		
+		owner.comment(id,owner.me(authentication));
 		noticeservice.commentdelete(id);
 	}
 
@@ -392,14 +381,10 @@ public class MainController {
 		return path;
 	}
 	//이미지데이터삭제
-	@DeleteMapping("/deletecontentimage")
-	public void saveimagecut(@RequestBody Map<String,String> detach) {
-		log.info(detach.get("path"));
-		//파일데이터삭제만했는데 Db의파일도 삭제해줘야함 
-		noticeservice.saveimagecut(detach.get("id"),detach.get("path"));
-		
-		
-	}
+	/* [막음 2026-09-15] DELETE /deletecontentimage
+	   로그인만 하면 경로를 보내 남이 올린 이미지 파일까지 지울 수 있었다.
+	   프론트에서 부르는 곳이 없어 엔드포인트째 내렸다. 서비스 메서드(saveimagecut)는 남겨 둔다.
+	   다시 쓰려면 파일의 주인(detachfile.member)을 확인한 뒤에 지워야 한다. */
 	//이미지데이터 첨부파일
 	@PostMapping("/open/getdetach")
 	public ResponseEntity detachget(@RequestBody detachVo detach) {

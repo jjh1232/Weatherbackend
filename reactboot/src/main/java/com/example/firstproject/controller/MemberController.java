@@ -214,19 +214,25 @@ public class MemberController {
 	    System.out.println("현재프로파일"+newprofile);
 	   
 	    MemberEntity member=new MemberEntity();
-	    
+	    /* [2026-09-15] 누구를 고칠지를 dto.getEmail() 로 정하고 있었다 — 본문에 남의 이메일을 넣으면
+	       남의 닉네임·지역·프로필이 바뀌었다. 로그인 정보의 이메일만 쓴다.
+	       지울 옛 프로필도 본문 값(dto.getProfileimage())이 아니라 DB 에 있던 내 값으로 정한다.
+	       본문 값을 믿으면 남의 프로필 파일을 지울 수 있다. */
+	    String myemail=user.getUsername();
+	    String myoldprofile=user.getMember().getProfileimg();
+
 	   if(newprofile !=null) {
-	   String profileurl=memberservice.profileimagesave(newprofile, user.getUsername());
-	   
+	   String profileurl=memberservice.profileimagesave(newprofile, myemail);
+
 	   log.info(profileurl);
-	  member=memberservice.memberupdate(dto.getEmail(),dto, profileurl);
-	   if(dto.getProfileimage() !=null) {
+	  member=memberservice.memberupdate(myemail,dto, profileurl);
+	   if(myoldprofile !=null) {
 		   log.info("기존프로필이미지삭제");
-		   memberservice.existingprofile(dto.getProfileimage());
+		   memberservice.existingprofile(myoldprofile);
 	   }
-	   
+
 	   }else {
-		 member=memberservice.memberupdate(dto.getEmail(),dto, dto.profileimage);
+		 member=memberservice.memberupdate(myemail,dto, myoldprofile);
 	   }
 	   
 	
@@ -258,6 +264,9 @@ public class MemberController {
 			HttpServletResponse response) throws UnsupportedEncodingException {
 
 		PrincipalDetails user=(PrincipalDetails) authentication.getPrincipal();
+		//지울 옛 파일은 본문 값이 아니라 수정 전 DB 값으로 정한다(본문 값을 믿으면 남의 파일을 지운다)
+		String oldprofile=user.getMember().getProfileimg();
+		String oldbackground=user.getMember().getProfilebackground();
 
 		//새 파일이 없으면 null 이 넘어가고, 서비스는 기존 이미지를 그대로 둔다
 		String profileurl=memberservice.imagesave(newprofile,"userprofileimg");
@@ -267,10 +276,10 @@ public class MemberController {
 
 		//교체됐을 때만 옛 파일을 지운다
 		if(profileurl!=null) {
-			memberservice.imagedelete("userprofileimg",dto.getProfileimage());
+			memberservice.imagedelete("userprofileimg",oldprofile);
 		}
 		if(backgroundurl!=null) {
-			memberservice.imagedelete("userbackgroundimg",dto.getProfilebackground());
+			memberservice.imagedelete("userbackgroundimg",oldbackground);
 		}
 
 		//바뀐 닉네임/프로필이 헤더에 바로 반영되도록 userinfo 를 다시 내려준다
@@ -280,22 +289,27 @@ public class MemberController {
 	}
 
 	//회원 탈퇴 코드 인증
+	/* [2026-09-15] 누구에게 보낼지를 본문의 email 로 정하고, 만든 탈퇴 코드를 **응답으로 돌려주고** 있었다.
+	   아래 /memberdelete 도 본문의 username 을 믿어서, 로그인한 누구나 남의 계정을 탈퇴시킬 수 있었다.
+	   이제 대상은 로그인 정보로만 정하고, 코드는 메일로만 간다. 비교는 서버가 한다. */
 	@PostMapping("/memberdeletemail")
-	public String memberdeleteemail(@RequestBody HashMap<String,Object> data) {
+	public ResponseEntity<Void> memberdeleteemail(Authentication authentication) {
 		log.info("멤버삭제이메일보내기!");
-		String email=data.get("email").toString();
-		String deletecode=memberservice.deletecodesend(email);
-		log.info("성공적");
-		return deletecode;
-	
+		PrincipalDetails user=(PrincipalDetails) authentication.getPrincipal();
+		memberservice.deletecodesend(user.getUsername());
+		return ResponseEntity.ok().build();
 	}
-	
+
 	@DeleteMapping("/memberdelete")
-	public void memberdelete(@RequestBody Map<String,Object> data) {
-		log.info("멤버딜리트시도!"+data.get("username"));
-		log.info("authkey:"+data.get("authkey"));
-		
-		memberservice.deletemember(data.get("username").toString(),data.get("authkey").toString());
+	public ResponseEntity<Void> memberdelete(Authentication authentication,@RequestBody Map<String,Object> data) {
+		PrincipalDetails user=(PrincipalDetails) authentication.getPrincipal();
+		Object authkey=data.get("authkey");
+		if(authkey==null || authkey.toString().isBlank()) {
+			throw new CustomException(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_DELETE_CODE);
+		}
+		log.info("멤버딜리트시도 id={}",user.getMember().getId());
+		memberservice.deletemember(user.getUsername(),authkey.toString().trim());
+		return ResponseEntity.ok().build();
 	}
 	
 	
