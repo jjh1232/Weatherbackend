@@ -800,12 +800,7 @@ NoticeEntity Entity=adminhandler.noticedetail(noticeid);
 				.messagetype(c.getMessageType())
 				.message(c.getMessage())
 				.red(c.getCreatedDate())
-				.sender(EzmemberDto.builder()
-						.userid(c.getMember().getId())
-						.email(c.getMember().getUsername())
-						.nickname(c.getMember().getNickname())
-						.profileurl(c.getMember().getProfileimg())
-						.build())
+				.sender(EzmemberDto.of(c.getMember()))
 				.build()
 				)
 				.collect(Collectors.toList());

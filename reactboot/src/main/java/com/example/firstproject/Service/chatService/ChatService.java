@@ -341,7 +341,7 @@ public class ChatService {
 		chatmessage enterchat=chatmessage.builder()
 				.sender("System") //이렇게설정할까 
 				.member(System)//시스템일경우
-				.MessageType("Message")
+				.MessageType("System")   //예전엔 "Message" 라 방 안에서 일반 말풍선으로 그려졌다
 				.message(member.getNickname()+"님이 퇴장하셨습니다!")
 				.room(room)
 				.build();
@@ -579,12 +579,7 @@ public class ChatService {
 				.messagetype(c.getMessageType())
 				.message(c.getMessage())
 				.red(c.getCreatedDate())
-				.sender(EzmemberDto.builder()
-						.userid(c.getMember().getId())
-						.email(c.getMember().getUsername())
-						.nickname(c.getMember().getNickname())
-						.profileurl(c.getMember().getProfileimg())
-						.build())
+				.sender(EzmemberDto.of(c.getMember()))
 				.build()
 				)
 				.collect(Collectors.toList());
@@ -648,12 +643,7 @@ public class ChatService {
 				.messagetype(c.getMessageType())
 				.message(c.getMessage())
 				.red(c.getCreatedDate())
-				.sender(EzmemberDto.builder()
-						.userid(c.getMember().getId())
-						.email(c.getMember().getUsername())
-						.nickname(c.getMember().getNickname())
-						.profileurl(c.getMember().getProfileimg())
-						.build())
+				.sender(EzmemberDto.of(c.getMember()))
 				.build()
 				)
 				.collect(Collectors.toList());
